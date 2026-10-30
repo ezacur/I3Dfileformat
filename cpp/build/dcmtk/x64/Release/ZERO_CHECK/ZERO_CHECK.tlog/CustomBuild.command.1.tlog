@@ -1,0 +1,10 @@
+^C:\REPOS\I3DFILEFORMAT\CPP\BUILD\DCMTK\CMAKEFILES\F85DF98D9ACD82019A29E10C51612126\GENERATE.STAMP.RULE
+setlocal
+C:\Win\CMake\bin\cmake.exe -SC:/repos/I3Dfileformat/third_party/dcmtk-3.7.0 -BC:/repos/I3Dfileformat/cpp/build/dcmtk --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/repos/I3Dfileformat/cpp/build/dcmtk/DCMTK.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

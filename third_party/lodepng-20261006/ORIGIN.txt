@@ -1,0 +1,16 @@
+LodePNG 20261006 -- PNG decoder/encoder. Copied VERBATIM, do not edit.
+
+source : https://github.com/lvandeve/lodepng (no release tags: master)
+commit : e584a8490db1b76b81bf298c11c09d3b55d9c270  (2026-10-06T16:47:17Z)
+         downloaded 2026-10-13 from raw.githubusercontent.com at that commit
+sha256 : 6aec876971ec860527859458d3095220fc5ee1258ec37eb59e1e7dd9cf136a81  lodepng.cpp
+         9a1fca0238c38333bdc8545336961b73fd0b76957bbacf033186991be9d7cf85  lodepng.h
+         bdafa318b8e637d600ca1b60545e894881977a16a16b74809c95e805701621e3  LICENSE
+copied : lodepng.cpp, lodepng.h, LICENSE, README.md. Left out: examples,
+         pngdetail, unit tests, the benchmark.
+licence: zlib licence (LICENSE): keep the notice with the source; altered
+         versions must be marked as such (this one is not altered).
+
+Used by cpp/ to decode <png> aux arrays (the thumbnails of SPEC 7). It carries
+its own inflate; the bundled zlib is not involved.
+Chosen by Ernesto 2026-10-13 (asked: own minimal decoder, lodepng or libspng).

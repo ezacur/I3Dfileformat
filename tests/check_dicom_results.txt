@@ -1,0 +1,348 @@
+transfer syntax           BA  BS  HB PR  S MF  result
+1.2.840.10008.1.2          8   8   7  0  1  0  EXACT
+1.2.840.10008.1.2          8   8   7  0  1  1  EXACT
+W: DcmMetaInfo: Group Length of Meta Information Header has incorrect value
+1.2.840.10008.1.2         16   8   7  0  1  0  EXACT
+1.2.840.10008.1.2         16  12  11  0  1  0  EXACT
+1.2.840.10008.1.2         16  13  12  1  1  0  EXACT
+1.2.840.10008.1.2         16  16  15  0  1  0  EXACT
+1.2.840.10008.1.2         16  16  15  1  1  0  EXACT
+1.2.840.10008.1.2.1        8   8   7  0  1  0  EXACT
+1.2.840.10008.1.2.1        8   8   7  0  1  1  EXACT
+1.2.840.10008.1.2.1        8   8   7  0  3  0  C++ read_I3D:unsupportedEncoding (SamplesPerPixel > 1: v0) -- <dicom> with SamplesPerPixel 3 is not supported yet: D:/DICOMS/MR 001/DICOM/000062D6/AA77D
+1.2.840.10008.1.2.1       16   8   7  1  1  0  DIFF  13 px differ, max |d| 256  (D:/DICOMS/_test_readers/gdcmData/gdcmData/MR16BitsAllocated_8BitsStored.dcm)
+1.2.840.10008.1.2.1       16  12  11  0  1  0  EXACT
+1.2.840.10008.1.2.1       16  12  11  0  1  1  EXACT
+1.2.840.10008.1.2.1       16  12  11  0  3  0  C++ read_I3D:unsupportedEncoding (SamplesPerPixel > 1: v0) -- <dicom> with SamplesPerPixel 3 is not supported yet: D:/DICOMS/_test_readers/gdcmData/gdcm
+1.2.840.10008.1.2.1       16  14  13  0  1  0  REF MATLAB:badsubscript
+1.2.840.10008.1.2.1       16  14  13  1  1  0  EXACT
+1.2.840.10008.1.2.1       16  16  15  0  1  0  EXACT
+1.2.840.10008.1.2.1       16  16  15  0  1  1  EXACT
+1.2.840.10008.1.2.1       16  16  15  1  1  0  EXACT
+[Warning: Not enough data imported.  Attempted to read 3066813407 bytes at position 344.  Only read 172287.] 
+[> In dicomread>newDicomread (line 207)
+In dicomread (line 91)
+In check_dicom (line 32)
+] 
+1.2.840.10008.1.2.1.99    16  16  15  1  1  0  REF images:dicomread:unsupportedEncoding
+1.2.840.10008.1.2.2        8   8   7  0  3  0  C++ read_I3D:unsupportedEncoding (SamplesPerPixel > 1: v0) -- <dicom> with SamplesPerPixel 3 is not supported yet: D:/DICOMS/_test_readers/gdcmData/gdcm
+1.2.840.10008.1.2.2       16  12  11  0  1  1  EXACT
+1.2.840.10008.1.2.2       16  16  15  0  1  0  EXACT
+1.2.840.10008.1.2.2       16  16  15  1  1  0  EXACT
+1.2.840.10008.1.2.4.201    8   8   7  0  3  0  REF images:dicomread:unsupportedEncoding
+1.2.840.10008.1.2.4.203    8   8   7  0  3  0  REF images:dicomread:unsupportedEncoding
+W: DcmItem: Wrong VR for encapsulated PixelData (7fe0,0010), should be 'OB' instead of 'OW'
+1.2.840.10008.1.2.4.50     8   8   7  0  1  0  EXACT
+1.2.840.10008.1.2.4.50     8   8   7  0  3  0  C++ read_I3D:unsupportedEncoding (SamplesPerPixel > 1: v0) -- <dicom> with SamplesPerPixel 3 is not supported yet: D:/DICOMS/_test_readers/gdcmData/gdcm
+1.2.840.10008.1.2.4.50     8   8   7  0  3  1  C++ read_I3D:unsupportedEncoding (SamplesPerPixel > 1: v0) -- <dicom> with SamplesPerPixel 3 is not supported yet: D:/DICOMS/_test_readers/pydicom-data/
+1.2.840.10008.1.2.4.51     8   8   7  0  3  0  C++ read_I3D:unsupportedEncoding (SamplesPerPixel > 1: v0) -- <dicom> with SamplesPerPixel 3 is not supported yet: D:/DICOMS/_test_readers/gdcmData/gdcm
+1.2.840.10008.1.2.4.51    12  12  11  0  1  0  EXACT
+[Warning: JPEG library error (12 bit), "Invalid SOS parameters for sequential JPEG".] 
+[> In readjpg (line 15)
+In imread/call_format_specific_reader (line 443)
+In imread (line 434)
+In dicomread>decompressJpegFrame (line 1047)
+In dicomread>processEncapsulatedPixels (line 886)
+In dicomread>newDicomread (line 242)
+In dicomread (line 91)
+In check_dicom (line 32)
+] 
+W: Invalid SOS parameters for sequential JPEG
+1.2.840.10008.1.2.4.51    16  10   9  0  1  0  DIFF  2746872 px differ, max |d| 2048  (D:/DICOMS/_test_readers/gdcmData/gdcmData/D_CLUNIE_RG2_JPLY.dcm)
+[Warning: JPEG library error (12 bit), "Invalid SOS parameters for sequential JPEG".] 
+[> In readjpg (line 15)
+In imread/call_format_specific_reader (line 443)
+In imread (line 434)
+In dicomread>decompressJpegFrame (line 1047)
+In dicomread>processEncapsulatedPixels (line 886)
+In dicomread>newDicomread (line 242)
+In dicomread (line 91)
+In check_dicom (line 32)
+] 
+W: Invalid SOS parameters for sequential JPEG
+1.2.840.10008.1.2.4.51    16  12  11  0  1  0  DIFF  27263 px differ, max |d| 2048  (D:/DICOMS/_test_readers/gdcmData/gdcmData/D_CLUNIE_MR1_JPLY.dcm)
+1.2.840.10008.1.2.4.57    16  12  11  0  1  0  EXACT
+1.2.840.10008.1.2.4.57    16  16  15  1  1  0  EXACT
+[Warning: Attribute (FFFE,E000) has an illegal length (81511).
+Switching to a safe reading mode.  This operation may fail.] 
+[> In dicomread>newDicomread (line 207)
+In dicomread (line 91)
+In check_dicom (line 32)
+] 
+1.2.840.10008.1.2.4.70     8   8   7  0  1  1  REF MATLAB:nomem
+[Warning: File not found or permission denied] 
+[> In dicomread>@()delete(tempfile) (line 1044)
+In onCleanup/delete (line 23)
+In dicomread>decompressJpegFrame (line 1052)
+In dicomread>processEncapsulatedPixels (line 886)
+In dicomread>newDicomread (line 242)
+In dicomread (line 91)
+In check_dicom (line 32)] 
+W: DcmMetaInfo: No Group Length available in Meta Information Header
+1.2.840.10008.1.2.4.70     8   8   7  0  3  0  C++ read_I3D:unsupportedEncoding (SamplesPerPixel > 1: v0) -- <dicom> with SamplesPerPixel 3 is not supported yet: D:/DICOMS/_test_readers/gdcmData/gdcm
+[Warning: JPEG library error (12 bit), "Premature end of JPEG file".] 
+[> In readjpg (line 15)
+In imread/call_format_specific_reader (line 443)
+In imread (line 434)
+In dicomread>decompressJpegFrame (line 1047)
+In dicomread>processEncapsulatedPixels (line 886)
+In dicomread>newDicomread (line 242)
+In dicomread (line 91)
+In check_dicom (line 32)
+] 
+[Warning: File not found or permission denied] 
+[> In dicomread>@()delete(tempfile) (line 1044)
+In onCleanup/delete (line 23)
+In dicomread>decompressJpegFrame (line 1052)
+In dicomread>processEncapsulatedPixels (line 886)
+In dicomread>newDicomread (line 242)
+In dicomread (line 91)
+In check_dicom (line 32)] 
+1.2.840.10008.1.2.4.70    16  10   9  0  1  0  DIFF  3641837 px differ, max |d| 866  (D:/DICOMS/_test_readers/gdcmData/gdcmData/D_CLUNIE_RG2_JPLL.dcm)
+[Warning: File not found or permission denied] 
+[> In dicomread>@()delete(tempfile) (line 1044)
+In onCleanup/delete (line 23)
+In dicomread>decompressJpegFrame (line 1052)
+In dicomread>processEncapsulatedPixels (line 886)
+In dicomread>newDicomread (line 242)
+In dicomread (line 91)
+In check_dicom (line 32)] 
+1.2.840.10008.1.2.4.70    16  12  11  0  1  0  EXACT
+[Warning: JPEG library error (16 bit), "Premature end of JPEG file".] 
+[> In readjpg (line 19)
+In imread/call_format_specific_reader (line 443)
+In imread (line 434)
+In dicomread>decompressJpegFrame (line 1047)
+In dicomread>processEncapsulatedPixels (line 886)
+In dicomread>newDicomread (line 242)
+In dicomread (line 91)
+In check_dicom (line 32)
+] 
+[Warning: File not found or permission denied] 
+[> In dicomread>@()delete(tempfile) (line 1044)
+In onCleanup/delete (line 23)
+In dicomread>decompressJpegFrame (line 1052)
+In dicomread>processEncapsulatedPixels (line 886)
+In dicomread>newDicomread (line 242)
+In dicomread (line 91)
+In check_dicom (line 32)] 
+1.2.840.10008.1.2.4.70    16  15  14  0  1  0  DIFF  3543823 px differ, max |d| 60660  (D:/DICOMS/_test_readers/gdcmData/gdcmData/D_CLUNIE_RG1_JPLL.dcm)
+[Warning: File not found or permission denied] 
+[> In dicomread>@()delete(tempfile) (line 1044)
+In onCleanup/delete (line 23)
+In dicomread>decompressJpegFrame (line 1052)
+In dicomread>processEncapsulatedPixels (line 886)
+In dicomread>newDicomread (line 242)
+In dicomread (line 91)
+In check_dicom (line 32)] 
+W: DcmItem: Wrong VR for encapsulated PixelData (7fe0,0010), should be 'OB' instead of 'OW'
+1.2.840.10008.1.2.4.70    16  16  15  0  1  0  EXACT
+[Warning: File not found or permission denied] 
+[> In dicomread>@()delete(tempfile) (line 1044)
+In onCleanup/delete (line 23)
+In dicomread>decompressJpegFrame (line 1052)
+In dicomread>processEncapsulatedPixels (line 886)
+In dicomread>newDicomread (line 242)
+In dicomread (line 91)
+In check_dicom (line 32)] 
+1.2.840.10008.1.2.4.70    16  16  15  1  1  0  EXACT
+1.2.840.10008.1.2.4.80     8   7   6  0  1  0  REF images:dicomread:unsupportedEncoding
+1.2.840.10008.1.2.4.80    16  12  11  0  1  1  REF images:dicomread:unsupportedEncoding
+1.2.840.10008.1.2.4.80    16  15  14  1  1  0  REF images:dicomread:unsupportedEncoding
+1.2.840.10008.1.2.4.80    16  16  15  1  1  0  REF images:dicomread:unsupportedEncoding
+1.2.840.10008.1.2.4.81    16  16  15  1  1  0  REF images:dicomread:unsupportedEncoding
+[Warning: File not found or permission denied] 
+[> In dicomread>@()delete(tempfile) (line 1044)
+In onCleanup/delete (line 23)
+In dicomread>decompressJpegFrame (line 1052)
+In dicomread>processEncapsulatedPixels (line 886)
+In dicomread>newDicomread (line 242)
+In dicomread (line 91)
+In check_dicom (line 32)] 
+1.2.840.10008.1.2.4.90     8   8   7  0  3  0  C++ read_I3D:unsupportedEncoding (SamplesPerPixel > 1: v0) -- DCMTK cannot decode the pixel data of 'D:/DICOMS/_test_readers/gdcmData/gdcmData/GDCMJ2K_T
+[Warning: Attribute (FFFE,E000) has an illegal length (3742501).
+Switching to a safe reading mode.  This operation may fail.] 
+[> In dicomread>newDicomread (line 207)
+In dicomread (line 91)
+In check_dicom (line 32)
+] 
+[Warning: File not found or permission denied] 
+[> In dicomread>@()delete(tempfile) (line 1044)
+In onCleanup/delete (line 23)
+In dicomread>decompressJpegFrame (line 1052)
+In dicomread>processEncapsulatedPixels (line 886)
+In dicomread>newDicomread (line 242)
+In dicomread (line 91)
+In check_dicom (line 32)] 
+W: DcmItem: Invalid Element (0005,0005) found in data set
+W: DcmItem: Invalid Element (0005,0006) found in data set
+W: DcmItem: Invalid Element (0005,000b) found in data set
+W: DcmItem: Wrong VR for encapsulated PixelData (7fe0,0010), should be 'OB' instead of 'OW'
+W: DcmSequenceOfItems: Length of item in sequence PixelData (7fe0,0010) is odd
+1.2.840.10008.1.2.4.90    16  12  11  0  1  0  C++ read_I3D:unsupportedEncoding  -- DCMTK cannot decode the pixel data of 'D:/DICOMS/_test_readers/gdcmData/gdcmData/NM_Kakadu
+[Warning: File not found or permission denied] 
+[> In dicomread>@()delete(tempfile) (line 1044)
+In onCleanup/delete (line 23)
+In dicomread>decompressJpegFrame (line 1052)
+In dicomread>processEncapsulatedPixels (line 936)
+In dicomread>newDicomread (line 242)
+In dicomread (line 91)
+In check_dicom (line 32)] 
+[Warning: File not found or permission denied] 
+[> In dicomread>@()delete(tempfile) (line 1044)
+In onCleanup/delete (line 23)
+In dicomread>decompressJpegFrame (line 1052)
+In dicomread>processEncapsulatedPixels (line 936)
+In dicomread>newDicomread (line 242)
+In dicomread (line 91)
+In check_dicom (line 32)] 
+[Warning: File not found or permission denied] 
+[> In dicomread>@()delete(tempfile) (line 1044)
+In onCleanup/delete (line 23)
+In dicomread>decompressJpegFrame (line 1052)
+In dicomread>processEncapsulatedPixels (line 936)
+In dicomread>newDicomread (line 242)
+In dicomread (line 91)
+In check_dicom (line 32)] 
+[Warning: File not found or permission denied] 
+[> In dicomread>@()delete(tempfile) (line 1044)
+In onCleanup/delete (line 23)
+In dicomread>decompressJpegFrame (line 1052)
+In dicomread>processEncapsulatedPixels (line 936)
+In dicomread>newDicomread (line 242)
+In dicomread (line 91)
+In check_dicom (line 32)] 
+[Warning: File not found or permission denied] 
+[> In dicomread>@()delete(tempfile) (line 1044)
+In onCleanup/delete (line 23)
+In dicomread>decompressJpegFrame (line 1052)
+In dicomread>processEncapsulatedPixels (line 936)
+In dicomread>newDicomread (line 242)
+In dicomread (line 91)
+In check_dicom (line 32)] 
+[Warning: File not found or permission denied] 
+[> In dicomread>@()delete(tempfile) (line 1044)
+In onCleanup/delete (line 23)
+In dicomread>decompressJpegFrame (line 1052)
+In dicomread>processEncapsulatedPixels (line 936)
+In dicomread>newDicomread (line 242)
+In dicomread (line 91)
+In check_dicom (line 32)] 
+[Warning: File not found or permission denied] 
+[> In dicomread>@()delete(tempfile) (line 1044)
+In onCleanup/delete (line 23)
+In dicomread>decompressJpegFrame (line 1052)
+In dicomread>processEncapsulatedPixels (line 936)
+In dicomread>newDicomread (line 242)
+In dicomread (line 91)
+In check_dicom (line 32)] 
+[Warning: File not found or permission denied] 
+[> In dicomread>@()delete(tempfile) (line 1044)
+In onCleanup/delete (line 23)
+In dicomread>decompressJpegFrame (line 1052)
+In dicomread>processEncapsulatedPixels (line 936)
+In dicomread>newDicomread (line 242)
+In dicomread (line 91)
+In check_dicom (line 32)] 
+[Warning: File not found or permission denied] 
+[> In dicomread>@()delete(tempfile) (line 1044)
+In onCleanup/delete (line 23)
+In dicomread>decompressJpegFrame (line 1052)
+In dicomread>processEncapsulatedPixels (line 936)
+In dicomread>newDicomread (line 242)
+In dicomread (line 91)
+In check_dicom (line 32)] 
+[Warning: File not found or permission denied] 
+[> In dicomread>@()delete(tempfile) (line 1044)
+In onCleanup/delete (line 23)
+In dicomread>decompressJpegFrame (line 1052)
+In dicomread>processEncapsulatedPixels (line 936)
+In dicomread>newDicomread (line 242)
+In dicomread (line 91)
+In check_dicom (line 32)] 
+W: DcmItem: Wrong VR for encapsulated PixelData (7fe0,0010), should be 'OB' instead of 'OW'
+1.2.840.10008.1.2.4.90    16  12  11  0  1  1  C++ read_I3D:unsupportedEncoding  -- DCMTK cannot decode the pixel data of 'D:/DICOMS/_test_readers/pydicom-data/emri_small_jpe
+[Warning: File not found or permission denied] 
+[> In dicomread>@()delete(tempfile) (line 1044)
+In onCleanup/delete (line 23)
+In dicomread>decompressJpegFrame (line 1052)
+In dicomread>processEncapsulatedPixels (line 886)
+In dicomread>newDicomread (line 242)
+In dicomread (line 91)
+In check_dicom (line 32)] 
+1.2.840.10008.1.2.4.90    16  16  15  0  1  0  C++ read_I3D:unsupportedEncoding  -- DCMTK cannot decode the pixel data of 'D:/DICOMS/_test_readers/gdcmData/gdcmData/DX_J2K_0P
+[Warning: File not found or permission denied] 
+[> In dicomread>@()delete(tempfile) (line 1044)
+In onCleanup/delete (line 23)
+In dicomread>decompressJpegFrame (line 1052)
+In dicomread>processEncapsulatedPixels (line 886)
+In dicomread>newDicomread (line 242)
+In dicomread (line 91)
+In check_dicom (line 32)] 
+1.2.840.10008.1.2.4.90    16  16  15  1  1  0  C++ read_I3D:unsupportedEncoding  -- DCMTK cannot decode the pixel data of 'D:/DICOMS/_test_readers/gdcmData/gdcmData/D_CLUNIE_
+[Warning: File not found or permission denied] 
+[> In dicomread>@()delete(tempfile) (line 1044)
+In onCleanup/delete (line 23)
+In dicomread>decompressJpegFrame (line 1052)
+In dicomread>processEncapsulatedPixels (line 886)
+In dicomread>newDicomread (line 242)
+In dicomread (line 91)
+In check_dicom (line 32)] 
+1.2.840.10008.1.2.4.91    16  12  11  0  1  0  C++ read_I3D:unsupportedEncoding  -- DCMTK cannot decode the pixel data of 'D:/DICOMS/_test_readers/gdcmData/gdcmData/ELSCINT1_
+[Warning: File not found or permission denied] 
+[> In dicomread>@()delete(tempfile) (line 1044)
+In onCleanup/delete (line 23)
+In dicomread>decompressJpegFrame (line 1052)
+In dicomread>processEncapsulatedPixels (line 886)
+In dicomread>newDicomread (line 242)
+In dicomread (line 91)
+In check_dicom (line 32)] 
+W: DcmItem: Wrong VR for encapsulated PixelData (7fe0,0010), should be 'OB' instead of 'OW'
+1.2.840.10008.1.2.4.91    16  16  15  0  1  0  C++ read_I3D:unsupportedEncoding  -- DCMTK cannot decode the pixel data of 'D:/DICOMS/_test_readers/gdcmData/gdcmData/OsirixFak
+[Warning: File not found or permission denied] 
+[> In dicomread>@()delete(tempfile) (line 1044)
+In onCleanup/delete (line 23)
+In dicomread>decompressJpegFrame (line 1052)
+In dicomread>processEncapsulatedPixels (line 886)
+In dicomread>newDicomread (line 242)
+In dicomread (line 91)
+In check_dicom (line 32)] 
+1.2.840.10008.1.2.4.91    16  16  15  1  1  0  C++ read_I3D:unsupportedEncoding  -- DCMTK cannot decode the pixel data of 'D:/DICOMS/_test_readers/gdcmData/gdcmData/D_CLUNIE_
+[Warning: Not enough RLE data.  The output will be padded.] 
+[> In dicomread>decompressRleFrame (line 1111)
+In dicomread>processEncapsulatedPixels (line 886)
+In dicomread>newDicomread (line 242)
+In dicomread (line 91)
+In check_dicom (line 32)
+] 
+W: DcmRLECodecDecoder: Detected fragmented RLE compressed pixel data, which is not allowed in DICOM
+W: DcmRLECodecDecoder: RLE decoder is finished but has produced insufficient data for this stripe, filling remaining pixels
+1.2.840.10008.1.2.5        8   8   7  0  1  0  DIFF  1 px differ, max |d| 248  (D:/DICOMS/_test_readers/gdcmData/gdcmData/ALOKA_SSD-8-MONO2-RLE-SQ.dcm)
+1.2.840.10008.1.2.5        8   8   7  0  1  1  EXACT
+1.2.840.10008.1.2.5        8   8   7  0  3  0  C++ read_I3D:unsupportedEncoding (SamplesPerPixel > 1: v0) -- <dicom> with SamplesPerPixel 3 is not supported yet: D:/DICOMS/_test_readers/gdcmData/gdcm
+1.2.840.10008.1.2.5       16  10   9  0  1  0  EXACT
+1.2.840.10008.1.2.5       16  12  11  0  1  0  EXACT
+1.2.840.10008.1.2.5       16  12  11  0  1  1  EXACT
+1.2.840.10008.1.2.5       16  15  14  0  1  0  EXACT
+W: DcmItem: Wrong VR for encapsulated PixelData (7fe0,0010), should be 'OB' instead of 'OW'
+1.2.840.10008.1.2.5       16  16  15  0  1  0  EXACT
+1.2.840.10008.1.2.5       16  16  15  0  1  1  EXACT
+1.2.840.10008.1.2.5       16  16  15  1  1  0  EXACT
+1.2.840.113619.5.2         8   8   7  0  1  1  DIFF  8644534 px differ, max |d| 225  (D:/DICOMS/_test_readers/gdcmData/gdcmData/GE_DLX-8-MONO2-PrivateSyntax.dcm)
+W: DcmItem: Length of element (0008,0020) is odd
+W: DcmItem: Length of element (0008,0022) is odd
+W: DcmItem: Length of element (0008,0023) is odd
+W: DcmItem: Length of element (0008,0030) is odd
+W: DcmItem: Length of element (0008,0032) is odd
+W: DcmItem: Length of element (0008,0033) is odd
+W: DcmItem: Length of element (0008,0070) is odd
+W: DcmItem: Length of element (0008,0080) is odd
+W: DcmItem: Length of element (0008,0081) is odd
+W: DcmItem: Length of element (0008,0090) is odd
+W: DcmItem: Length of element (0008,1040) is odd
+W: DcmItem: Length of element (0010,0030) is odd
+1.2.840.113619.5.2        16  12  11  0  1  0  EXACT
+1.3.46.670589.33.1.4.1    16  12  11  0  1  0  C++ read_I3D:badGrid  -- line 3: bad range in X
+
+34 exact, 15 wrong (grey files that dicomread reads)
+override: broken path fails 1, override reads 1

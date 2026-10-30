@@ -1,0 +1,13 @@
+In real_jpegls (line 22)] 
+D:\DICOMS\MR 001\DICOM\000062D6\AA77D253\AA0655D4\00007844
+  [288 288 159] uint16  raw 25.2 MiB
+  zlib        8.3 MiB  ratio  3.018   write   1.65 s   read   0.08 s   EXACT
+  jpegls      4.8 MiB  ratio  5.201   write   0.20 s   read   0.15 s   EXACT
+D:\DICOMS\RM_CT\Patient8_70220008_\FILESET\70720039\0\4
+  [512 512 285] uint16  raw 142.5 MiB
+  zlib       89.6 MiB  ratio  1.591   write  28.19 s   read   0.62 s   EXACT
+  jpegls     74.3 MiB  ratio  1.918   write   1.79 s   read   1.69 s   EXACT
+D:\DICOMS\RM_CT\Patient12_FOI_MPP25_mirar\FILESET\5224963\0\0
+  [512 512 554] uint16  raw 277.0 MiB
+  zlib      179.5 MiB  ratio  1.543   write  13.95 s   read   1.24 s   EXACT
+  jpegls     97.4 MiB  ratio  2.843   write   2.77 s   read   2.26 s   EXACT

@@ -1,0 +1,10 @@
+^C:\REPOS\I3DFILEFORMAT\THIRD_PARTY\DCMTK-3.7.0\OFSTD\LIBSRC\CMAKELISTS.TXT
+setlocal
+C:\Win\CMake\bin\cmake.exe -SC:/repos/I3Dfileformat/third_party/dcmtk-3.7.0 -BC:/repos/I3Dfileformat/cpp/build/dcmtk --check-stamp-file C:/repos/I3Dfileformat/cpp/build/dcmtk/ofstd/libsrc/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

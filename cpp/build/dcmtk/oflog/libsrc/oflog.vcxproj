@@ -1,0 +1,358 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+  </PropertyGroup>
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="MinSizeRel|x64">
+      <Configuration>MinSizeRel</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebInfo|x64">
+      <Configuration>RelWithDebInfo</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{B9B5AF25-9D5B-3D0A-9288-4EADD1161DBC}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0.26100.0</WindowsTargetPlatformVersion>
+    <Platform>x64</Platform>
+    <ProjectName>oflog</ProjectName>
+    <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+    <UseDebugLibraries>true</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+    <UseDebugLibraries>false</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+    <UseDebugLibraries>false</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+    <UseDebugLibraries>false</UseDebugLibraries>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\repos\I3Dfileformat\cpp\build\dcmtk\lib\Debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">oflog.dir\Debug\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">oflog</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.lib</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\repos\I3Dfileformat\cpp\build\dcmtk\lib\Release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">oflog.dir\Release\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">oflog</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.lib</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\repos\I3Dfileformat\cpp\build\dcmtk\lib\MinSizeRel\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">oflog.dir\MinSizeRel\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">oflog</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.lib</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\repos\I3Dfileformat\cpp\build\dcmtk\lib\RelWithDebInfo\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">oflog.dir\RelWithDebInfo\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">oflog</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">.lib</TargetExt>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\repos\I3Dfileformat\cpp\build\dcmtk\config\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\ofstd\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmdata\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmimgle\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmimage\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmjpeg\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmjpls\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /Zc:__cplusplus</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <MinimalRebuild></MinimalRebuild>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <SupportJustMyCode></SupportJustMyCode>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level4</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;DEBUG;oflog_EXPORTS;USE_NULL_SAFE_OFSTRING;DCMTK_BUILD_IN_PROGRESS;NOMINMAX;_CRT_FAR_MAPPINGS_NO_DEPRECATE;_CRT_IS_WCTYPE_NO_DEPRECATE;_CRT_MANAGED_FP_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE_GLOBALS;_CRT_SETERRORMODE_BEEP_SLEEP_NO_DEPRECATE;_CRT_TIME_FUNCTIONS_NO_DEPRECATE;_CRT_VCCLRIT_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;_REENTRANT;CMAKE_INTDIR="Debug"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;DEBUG;oflog_EXPORTS;USE_NULL_SAFE_OFSTRING;DCMTK_BUILD_IN_PROGRESS;NOMINMAX;_CRT_FAR_MAPPINGS_NO_DEPRECATE;_CRT_IS_WCTYPE_NO_DEPRECATE;_CRT_MANAGED_FP_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE_GLOBALS;_CRT_SETERRORMODE_BEEP_SLEEP_NO_DEPRECATE;_CRT_TIME_FUNCTIONS_NO_DEPRECATE;_CRT_VCCLRIT_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;_REENTRANT;CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\repos\I3Dfileformat\cpp\build\dcmtk\config\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\ofstd\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmdata\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmimgle\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmimage\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmjpeg\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmjpls\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\repos\I3Dfileformat\cpp\build\dcmtk\config\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\ofstd\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmdata\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmimgle\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmimage\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmjpeg\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmjpls\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\repos\I3Dfileformat\cpp\build\dcmtk\config\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\ofstd\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmdata\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmimgle\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmimage\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmjpeg\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmjpls\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /Zc:__cplusplus</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <MinimalRebuild></MinimalRebuild>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <SupportJustMyCode></SupportJustMyCode>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level4</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;oflog_EXPORTS;USE_NULL_SAFE_OFSTRING;DCMTK_BUILD_IN_PROGRESS;NOMINMAX;_CRT_FAR_MAPPINGS_NO_DEPRECATE;_CRT_IS_WCTYPE_NO_DEPRECATE;_CRT_MANAGED_FP_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE_GLOBALS;_CRT_SETERRORMODE_BEEP_SLEEP_NO_DEPRECATE;_CRT_TIME_FUNCTIONS_NO_DEPRECATE;_CRT_VCCLRIT_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;_REENTRANT;CMAKE_INTDIR="Release"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;oflog_EXPORTS;USE_NULL_SAFE_OFSTRING;DCMTK_BUILD_IN_PROGRESS;NOMINMAX;_CRT_FAR_MAPPINGS_NO_DEPRECATE;_CRT_IS_WCTYPE_NO_DEPRECATE;_CRT_MANAGED_FP_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE_GLOBALS;_CRT_SETERRORMODE_BEEP_SLEEP_NO_DEPRECATE;_CRT_TIME_FUNCTIONS_NO_DEPRECATE;_CRT_VCCLRIT_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;_REENTRANT;CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\repos\I3Dfileformat\cpp\build\dcmtk\config\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\ofstd\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmdata\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmimgle\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmimage\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmjpeg\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmjpls\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\repos\I3Dfileformat\cpp\build\dcmtk\config\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\ofstd\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmdata\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmimgle\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmimage\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmjpeg\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmjpls\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\repos\I3Dfileformat\cpp\build\dcmtk\config\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\ofstd\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmdata\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmimgle\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmimage\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmjpeg\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmjpls\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /Zc:__cplusplus</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <MinimalRebuild></MinimalRebuild>
+      <Optimization>MinSpace</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <SupportJustMyCode></SupportJustMyCode>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level4</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;oflog_EXPORTS;USE_NULL_SAFE_OFSTRING;DCMTK_BUILD_IN_PROGRESS;NOMINMAX;_CRT_FAR_MAPPINGS_NO_DEPRECATE;_CRT_IS_WCTYPE_NO_DEPRECATE;_CRT_MANAGED_FP_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE_GLOBALS;_CRT_SETERRORMODE_BEEP_SLEEP_NO_DEPRECATE;_CRT_TIME_FUNCTIONS_NO_DEPRECATE;_CRT_VCCLRIT_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;_REENTRANT;CMAKE_INTDIR="MinSizeRel"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;oflog_EXPORTS;USE_NULL_SAFE_OFSTRING;DCMTK_BUILD_IN_PROGRESS;NOMINMAX;_CRT_FAR_MAPPINGS_NO_DEPRECATE;_CRT_IS_WCTYPE_NO_DEPRECATE;_CRT_MANAGED_FP_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE_GLOBALS;_CRT_SETERRORMODE_BEEP_SLEEP_NO_DEPRECATE;_CRT_TIME_FUNCTIONS_NO_DEPRECATE;_CRT_VCCLRIT_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;_REENTRANT;CMAKE_INTDIR=\"MinSizeRel\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\repos\I3Dfileformat\cpp\build\dcmtk\config\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\ofstd\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmdata\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmimgle\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmimage\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmjpeg\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmjpls\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\repos\I3Dfileformat\cpp\build\dcmtk\config\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\ofstd\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmdata\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmimgle\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmimage\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmjpeg\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmjpls\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\repos\I3Dfileformat\cpp\build\dcmtk\config\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\ofstd\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmdata\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmimgle\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmimage\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmjpeg\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmjpls\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /Zc:__cplusplus</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <MinimalRebuild></MinimalRebuild>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <SupportJustMyCode></SupportJustMyCode>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level4</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;oflog_EXPORTS;USE_NULL_SAFE_OFSTRING;DCMTK_BUILD_IN_PROGRESS;NOMINMAX;_CRT_FAR_MAPPINGS_NO_DEPRECATE;_CRT_IS_WCTYPE_NO_DEPRECATE;_CRT_MANAGED_FP_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE_GLOBALS;_CRT_SETERRORMODE_BEEP_SLEEP_NO_DEPRECATE;_CRT_TIME_FUNCTIONS_NO_DEPRECATE;_CRT_VCCLRIT_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;_REENTRANT;CMAKE_INTDIR="RelWithDebInfo"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;oflog_EXPORTS;USE_NULL_SAFE_OFSTRING;DCMTK_BUILD_IN_PROGRESS;NOMINMAX;_CRT_FAR_MAPPINGS_NO_DEPRECATE;_CRT_IS_WCTYPE_NO_DEPRECATE;_CRT_MANAGED_FP_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE_GLOBALS;_CRT_SETERRORMODE_BEEP_SLEEP_NO_DEPRECATE;_CRT_TIME_FUNCTIONS_NO_DEPRECATE;_CRT_VCCLRIT_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;_REENTRANT;CMAKE_INTDIR=\"RelWithDebInfo\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\repos\I3Dfileformat\cpp\build\dcmtk\config\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\ofstd\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmdata\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmimgle\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmimage\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmjpeg\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmjpls\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\repos\I3Dfileformat\cpp\build\dcmtk\config\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\ofstd\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmdata\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmimgle\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmimage\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmjpeg\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmjpls\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\libsrc\CMakeLists.txt">
+      <UseUtf8Encoding>Always</UseUtf8Encoding>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule C:/repos/I3Dfileformat/third_party/dcmtk-3.7.0/oflog/libsrc/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+C:\Win\CMake\bin\cmake.exe -SC:/repos/I3Dfileformat/third_party/dcmtk-3.7.0 -BC:/repos/I3Dfileformat/cpp/build/dcmtk --check-stamp-file C:/repos/I3Dfileformat/cpp/build/dcmtk/oflog/libsrc/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\repos\I3Dfileformat\cpp\build\dcmtk\oflog\libsrc\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule C:/repos/I3Dfileformat/third_party/dcmtk-3.7.0/oflog/libsrc/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+C:\Win\CMake\bin\cmake.exe -SC:/repos/I3Dfileformat/third_party/dcmtk-3.7.0 -BC:/repos/I3Dfileformat/cpp/build/dcmtk --check-stamp-file C:/repos/I3Dfileformat/cpp/build/dcmtk/oflog/libsrc/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\repos\I3Dfileformat\cpp\build\dcmtk\oflog\libsrc\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule C:/repos/I3Dfileformat/third_party/dcmtk-3.7.0/oflog/libsrc/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+C:\Win\CMake\bin\cmake.exe -SC:/repos/I3Dfileformat/third_party/dcmtk-3.7.0 -BC:/repos/I3Dfileformat/cpp/build/dcmtk --check-stamp-file C:/repos/I3Dfileformat/cpp/build/dcmtk/oflog/libsrc/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\repos\I3Dfileformat\cpp\build\dcmtk\oflog\libsrc\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule C:/repos/I3Dfileformat/third_party/dcmtk-3.7.0/oflog/libsrc/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+C:\Win\CMake\bin\cmake.exe -SC:/repos/I3Dfileformat/third_party/dcmtk-3.7.0 -BC:/repos/I3Dfileformat/cpp/build/dcmtk --check-stamp-file C:/repos/I3Dfileformat/cpp/build/dcmtk/oflog/libsrc/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\repos\I3Dfileformat\cpp\build\dcmtk\oflog\libsrc\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\libsrc\apndimpl.cc" />
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\libsrc\appender.cc" />
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\libsrc\asyncap.cc" />
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\libsrc\clogger.cc" />
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\libsrc\config.cc" />
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\libsrc\consap.cc" />
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\libsrc\cygwin32.cc" />
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\libsrc\env.cc" />
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\libsrc\factory.cc" />
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\libsrc\fileap.cc" />
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\libsrc\fileinfo.cc" />
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\libsrc\filter.cc" />
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\libsrc\globinit.cc" />
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\libsrc\hierarchy.cc" />
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\libsrc\hierlock.cc" />
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\libsrc\layout.cc" />
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\libsrc\lloguser.cc" />
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\libsrc\lockfile.cc" />
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\libsrc\log4judp.cc" />
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\libsrc\logevent.cc" />
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\libsrc\logger.cc" />
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\libsrc\logimpl.cc" />
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\libsrc\loglevel.cc" />
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\libsrc\loglog.cc" />
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\libsrc\logmacro.cc" />
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\libsrc\mdc.cc" />
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\libsrc\ndc.cc" />
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\libsrc\ntelogap.cc" />
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\libsrc\nullap.cc" />
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\libsrc\objreg.cc" />
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\libsrc\oflog.cc" />
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\libsrc\patlay.cc" />
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\libsrc\pointer.cc" />
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\libsrc\property.cc" />
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\libsrc\queue.cc" />
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\libsrc\rootlog.cc" />
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\libsrc\sleep.cc" />
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\libsrc\snprintf.cc" />
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\libsrc\sockbuff.cc" />
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\libsrc\socket.cc" />
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\libsrc\socketap.cc" />
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\libsrc\strccloc.cc" />
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\libsrc\strcloc.cc" />
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\libsrc\strhelp.cc" />
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\libsrc\striconv.cc" />
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\libsrc\syncprims.cc" />
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\libsrc\syslogap.cc" />
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\libsrc\threads.cc" />
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\libsrc\timehelp.cc" />
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\libsrc\tls.cc" />
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\libsrc\version.cc" />
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\libsrc\winsock.cc" />
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\libsrc\windebap.cc" />
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\libsrc\winconap.cc" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="C:\repos\I3Dfileformat\cpp\build\dcmtk\ZERO_CHECK.vcxproj">
+      <Project>{6D2309F3-0FDA-3950-951A-26A8A78BA3E8}</Project>
+      <Name>ZERO_CHECK</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+    <ProjectReference Include="C:\repos\I3Dfileformat\cpp\build\dcmtk\ofstd\libsrc\ofstd.vcxproj">
+      <Project>{94553612-70AA-38EB-8FEB-F7F4B3F0BCAE}</Project>
+      <Name>ofstd</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

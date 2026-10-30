@@ -1,0 +1,202 @@
+MI-PID 52116
+[Warning: Function fread has the same name as a MATLAB builtin. We suggest you rename the function to avoid a potential name conflict.] 
+[> In path (line 109)
+In addpath (line 86)] 
+[Warning: Function fwrite has the same name as a MATLAB builtin. We suggest you rename the function to avoid a potential name conflict.] 
+[> In path (line 109)
+In addpath (line 86)] 
+[Warning: Function textscan has the same name as a MATLAB builtin. We suggest you rename the function to avoid a potential name conflict.] 
+[> In path (line 109)
+In addpath (line 86)] 
+[Warning: Function fieldnames has the same name as a MATLAB builtin. We suggest you rename the function to avoid a potential name conflict.] 
+[> In path (line 109)
+In addpath (line 86)] 
+[Warning: Function isfile has the same name as a MATLAB builtin. We suggest you rename the function to avoid a potential name conflict.] 
+[> In path (line 109)
+In addpath (line 86)] 
+[Warning: Function strrep has the same name as a MATLAB builtin. We suggest you rename the function to avoid a potential name conflict.] 
+[> In path (line 109)
+In addpath (line 86)] 
+[Warning: 1 value output(s) requested and no default given; the default(s) will be []. Add '$DEFS$' and 1 default(s) -- a char default can only be given that way. Seen at I3D line
+99. (warned once per session)] 
+[> In I3D (line 99)
+In check_roundtrip (line 60)] 
+  ok   int16_rot        canon    mex: read
+  ok   int16_rot        volume   mex: read
+  ok   int16_rot        tblocks  mex: read
+  ok   int16_rot        chunked  mex: read
+  ok   int16_rot        hidden   mex: read
+  ok   int16_rot        corrupt  mex: read_I3D:badBlock
+  ok   int16_rot        edited   mex: read
+  ok   int16_rot        plus     mex: read
+  ok   int16_rot        eof      mex: read
+  ok   int16_rot        rawhand  mex: read
+  ok   int16_rot        crcbad   mex: read_I3D:badCRC
+  ok   uint16_1slice    canon    mex: read
+  ok   uint16_1slice    volume   mex: read
+  ok   uint16_1slice    tblocks  mex: read
+  ok   uint16_1slice    chunked  mex: read
+  ok   uint16_1slice    hidden   mex: read
+  ok   single_rgb       canon    mex: read
+  ok   single_rgb       volume   mex: read
+  ok   single_rgb       tblocks  mex: read
+  ok   single_rgb       chunked  mex: read
+  ok   single_rgb       hidden   mex: read
+  ok   double_tensor    canon    mex: read
+  ok   double_tensor    volume   mex: read
+  ok   double_tensor    tblocks  mex: read
+  ok   double_tensor    chunked  mex: read
+  ok   double_tensor    hidden   mex: read
+  ok   logical          canon    mex: read
+  ok   logical          volume   mex: read
+  ok   logical          tblocks  mex: read
+  ok   logical          chunked  mex: read
+  ok   logical          hidden   mex: read
+  ok   uint8_nonunif    canon    mex: read
+  ok   uint8_nonunif    volume   mex: read
+  ok   uint8_nonunif    tblocks  mex: read
+  ok   uint8_nonunif    chunked  mex: read
+  ok   uint8_nonunif    hidden   mex: read
+  ok   int64_ext        canon    mex: read
+  ok   int64_ext        volume   mex: read
+  ok   int64_ext        tblocks  mex: read
+  ok   int64_ext        chunked  mex: read
+  ok   int64_ext        hidden   mex: read
+  ok   uint64_max       canon    mex: read
+  ok   uint64_max       volume   mex: read
+  ok   uint64_max       tblocks  mex: read
+  ok   uint64_max       chunked  mex: read
+  ok   uint64_max       hidden   mex: read
+  ok   translation      canon    mex: read
+  ok   translation      volume   mex: read
+  ok   translation      tblocks  mex: read
+  ok   translation      chunked  mex: read
+  ok   translation      hidden   mex: read
+  ok   almost_uniform   canon    mex: read
+  ok   almost_uniform   volume   mex: read
+  ok   almost_uniform   tblocks  mex: read
+  ok   almost_uniform   chunked  mex: read
+  ok   almost_uniform   hidden   mex: read
+  ok   uint8_rgb        canon    mex: read
+  ok   uint8_rgb        volume   mex: read
+  ok   uint8_rgb        tblocks  mex: read
+  ok   uint8_rgb        chunked  mex: read
+  ok   uint8_rgb        hidden   mex: read
+----- int16_rot_canon
+I3D 0.1  # write_I3D 2026-10-14 09:04:35
+X[5] = 0.0 : 0.703125 : 2.8125
+Y[4] = 0.0 : 0.1 : 0.30000000000000004
+Z[3] = 0.0 8.0 16.000000000000004  # not uniform: steps 8.0 .. 8.000000000000004
+T[2] = 0.0 : 38.5 : 38.5
+transform = 0.8660254037844386   0.0   -0.5                  -180.1  # rot 30 deg about [0 -1 0] (orthonormal to 1.1e-16)
+            0.0                  1.0    0.0                   -95.3
+            0.5                  0.0    0.8660254037844386     41.0
+data(:,:,1,1) = <jpegls int16 @0:80 crc 4e0245ac>  # 5 x 4 x 3 x 2, int16
+data(:,:,2,1) = <jpegls int16 @81:161 crc 8595d27e>
+data(:,:,3,1) = <jpegls int16 @162:241 crc 59c7914d>
+data(:,:,1,2) = <jpegls int16 @242:323 crc 9315f1d7>
+data(:,:,2,2) = <jpegls int16 @324:404 crc e449024b>
+data(:,:,3,2) = <jpegls int16 @405:486 crc dd488f3d>
+aux.thumbnailK = <png uint8 {7 5 1 2} @487:631 crc 3a44fde1>
+---
+
+----- double_tensor_canon
+I3D 0.1  # write_I3D 2026-10-14 09:04:35
+X[3] = 0.0 1.0 3.0  # not uniform: steps 1.0 .. 2.0
+Y[3] = 0.0 : 0.5 : 1.0
+Z[2] = -1.0 : 2.0 : 1.0
+T[2] = 0.0 : 10.0 : 10.0
+transform = 1.0   0.2    0.0   5.0  # rot 180 deg about [0.7071 0.7071 0] + reflection + scale/shear (singular values 1.10499 1 0.904988)
+            0.0   1.0    0.0   6.0
+            0.0   0.0   -1.0   7.0
+data(:,:,:,1,1:3,1:3) = <zlib double @0:1301 crc 93946c4c>  # 3 x 3 x 2 x 2 x 3 x 3, double
+data(:,:,:,2,1:3,1:3) = <zlib double @1302:2602 crc b2d327ec>
+aux.thumbnailK = <png uint8 {7 5 1 2} @2603:2747 crc fab8b68d>
+---
+
+----- uint8_rgb_canon
+I3D 0.1  # write_I3D 2026-10-14 09:04:36
+X[4] = 0.0 : 1.0 : 3.0
+Y[3] = 0.0 : 1.0 : 2.0
+Z[2] = 0.0 : 2.0 : 2.0
+T[2] = 0.0 : 1.0 : 1.0
+transform = 1.0   0.0   0.0   0.0  # no rotation
+            0.0   1.0   0.0   0.0
+            0.0   0.0   1.0   0.0
+data(:,:,1,1,1) = <jpegls uint8 @0:63 crc 746de977>  # 4 x 3 x 2 x 2 x 3, uint8
+data(:,:,2,1,1) = <jpegls uint8 @64:115 crc 632d60a3>
+data(:,:,1,2,1) = <jpegls uint8 @116:179 crc a292cdfd>
+data(:,:,2,2,1) = <jpegls uint8 @180:231 crc 755da6fb>
+data(:,:,1,1,2) = <jpegls uint8 @232:291 crc b803d0f8>
+data(:,:,2,1,2) = <jpegls uint8 @292:349 crc c3b3c4e4>
+data(:,:,1,2,2) = <jpegls uint8 @350:409 crc 3f403de4>
+data(:,:,2,2,2) = <jpegls uint8 @410:474 crc 787a5d01>
+data(:,:,1,1,3) = <jpegls uint8 @475:533 crc 5ae03c81>
+data(:,:,2,1,3) = <jpegls uint8 @534:590 crc 8f19965f>
+data(:,:,1,2,3) = <jpegls uint8 @591:648 crc d171d20c>
+data(:,:,2,2,3) = <jpegls uint8 @649:704 crc 81fac172>
+aux.thumbnailK = <png uint8 {7 5 1 2} @705:849 crc 864c9677>
+---
+
+  ok   almost_uniform   canon    py: ok          cpp: ok
+  ok   almost_uniform   chunked  py: ok          cpp: ok
+  ok   almost_uniform   hidden   py: ok          cpp: ok
+  ok   almost_uniform   tblocks  py: ok          cpp: ok
+  ok   almost_uniform   volume   py: ok          cpp: ok
+  ok   double_tensor    canon    py: ok          cpp: ok
+  ok   double_tensor    chunked  py: ok          cpp: ok
+  ok   double_tensor    hidden   py: ok          cpp: ok
+  ok   double_tensor    tblocks  py: ok          cpp: ok
+  ok   double_tensor    volume   py: ok          cpp: ok
+  ok   int16_rot        canon    py: ok          cpp: ok
+  ok   int16_rot        chunked  py: ok          cpp: ok
+  ok   int16_rot        corrupt  py: ok(raised)  cpp: ok(raised)
+  ok   int16_rot        crcbad   py: ok(badCRC)  cpp: ok(badCRC)
+  ok   int16_rot        edited   py: ok          cpp: ok
+  ok   int16_rot        eof      py: ok          cpp: ok
+  ok   int16_rot        hidden   py: ok          cpp: ok
+  ok   int16_rot        plus     py: ok          cpp: ok
+  ok   int16_rot        rawhand  py: ok          cpp: ok
+  ok   int16_rot        tblocks  py: ok          cpp: ok
+  ok   int16_rot        volume   py: ok          cpp: ok
+  ok   int64_ext        canon    py: ok          cpp: ok
+  ok   int64_ext        chunked  py: ok          cpp: ok
+  ok   int64_ext        hidden   py: ok          cpp: ok
+  ok   int64_ext        tblocks  py: ok          cpp: ok
+  ok   int64_ext        volume   py: ok          cpp: ok
+  ok   logical          canon    py: ok          cpp: ok
+  ok   logical          chunked  py: ok          cpp: ok
+  ok   logical          hidden   py: ok          cpp: ok
+  ok   logical          tblocks  py: ok          cpp: ok
+  ok   logical          volume   py: ok          cpp: ok
+  ok   single_rgb       canon    py: ok          cpp: ok
+  ok   single_rgb       chunked  py: ok          cpp: ok
+  ok   single_rgb       hidden   py: ok          cpp: ok
+  ok   single_rgb       tblocks  py: ok          cpp: ok
+  ok   single_rgb       volume   py: ok          cpp: ok
+  ok   translation      canon    py: ok          cpp: ok
+  ok   translation      chunked  py: ok          cpp: ok
+  ok   translation      hidden   py: ok          cpp: ok
+  ok   translation      tblocks  py: ok          cpp: ok
+  ok   translation      volume   py: ok          cpp: ok
+  ok   uint16_1slice    canon    py: ok          cpp: ok
+  ok   uint16_1slice    chunked  py: ok          cpp: ok
+  ok   uint16_1slice    hidden   py: ok          cpp: ok
+  ok   uint16_1slice    tblocks  py: ok          cpp: ok
+  ok   uint16_1slice    volume   py: ok          cpp: ok
+  ok   uint64_max       canon    py: ok          cpp: ok
+  ok   uint64_max       chunked  py: ok          cpp: ok
+  ok   uint64_max       hidden   py: ok          cpp: ok
+  ok   uint64_max       tblocks  py: ok          cpp: ok
+  ok   uint64_max       volume   py: ok          cpp: ok
+  ok   uint8_nonunif    canon    py: ok          cpp: ok
+  ok   uint8_nonunif    chunked  py: ok          cpp: ok
+  ok   uint8_nonunif    hidden   py: ok          cpp: ok
+  ok   uint8_nonunif    tblocks  py: ok          cpp: ok
+  ok   uint8_nonunif    volume   py: ok          cpp: ok
+  ok   uint8_rgb        canon    py: ok          cpp: ok
+  ok   uint8_rgb        chunked  py: ok          cpp: ok
+  ok   uint8_rgb        hidden   py: ok          cpp: ok
+  ok   uint8_rgb        tblocks  py: ok          cpp: ok
+  ok   uint8_rgb        volume   py: ok          cpp: ok
+61 files, 0 failed

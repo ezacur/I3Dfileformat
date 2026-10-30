@@ -1,0 +1,12 @@
+D:\DICOMS\MR 001\DICOM\000062D6\AA77D253\AA0655D4\00007844
+  [288 288 159] uint16  raw 25.2 MiB
+  jpg lossless 16  ratio  3.647   enc   0.47 s   dec   0.81 s   EXACT
+  jp2 lossless     ratio  5.550   enc   0.82 s   dec   1.36 s   EXACT
+D:\DICOMS\RM_CT\Patient8_70220008_\FILESET\70720039\0\4
+  [512 512 285] uint16  raw 142.5 MiB
+  jpg lossless 16  ratio  1.784   enc   2.33 s   dec   2.03 s   EXACT
+  jp2 lossless     ratio  1.897   enc   7.49 s   dec   8.97 s   EXACT
+D:\DICOMS\RM_CT\Patient2_5189648\5189648\FILESET\5189648\0\0
+  [440 640 192] uint16  raw 103.1 MiB
+  jpg lossless 16  ratio  2.496   enc   1.47 s   dec   1.28 s   EXACT
+  jp2 lossless     ratio  3.472   enc   3.59 s   dec   4.35 s   EXACT

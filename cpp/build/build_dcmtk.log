@@ -1,0 +1,1365 @@
+-- Selecting Windows SDK version 10.0.26100.0 to target Windows 10.0.26200.
+-- The C compiler identification is MSVC 19.44.35228.0
+-- The CXX compiler identification is MSVC 19.44.35228.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/cl.exe - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/cl.exe - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Warning: OpenJPEG support will be disabled because openjpeg directory was not specified. Correct path and re-enable DCMTK_WITH_OPENJPEG.
+-- Performing Test WITH_STDLIBC_ICONV
+-- Performing Test WITH_STDLIBC_ICONV - Failed
+-- Info: DCMTK will compile with built-in (compiled-in) default dictionary
+-- Info: DCMTK will load dictionaries defined by DCMDICTPATH environment variable
+-- Info: DCMTK's builtin private dictionary support will be disabled
+-- Info: Thread support will be enabled
+-- Info: Wide char file I/O functions will be disabled
+-- Info: Wide char main function for command line tools will be disabled
+-- Info: Building DCMTK without character set conversion support
+-- Looking for sys/types.h
+-- Looking for sys/types.h - found
+-- Looking for stdint.h
+-- Looking for stdint.h - found
+-- Looking for stddef.h
+-- Looking for stddef.h - found
+-- Check size of int
+-- Check size of int - done
+-- Check size of long
+-- Check size of long - done
+-- Check size of void*
+-- Check size of void* - done
+-- Looking for __FUNCTION__
+-- Looking for __FUNCTION__ - found
+-- Looking for __FUNCTION__
+-- Looking for __FUNCTION__ - found
+-- Looking for __PRETTY_FUNCTION__
+-- Looking for __PRETTY_FUNCTION__ - not found
+-- Looking for __PRETTY_FUNCTION__
+-- Looking for __PRETTY_FUNCTION__ - not found
+-- Looking for __func__
+-- Looking for __func__ - found
+-- Looking for __func__
+-- Looking for __func__ - found
+-- Looking for C++ include windows.h
+-- Looking for C++ include windows.h - found
+-- Looking for C++ include winsock.h
+-- Looking for C++ include winsock.h - found
+-- Looking for C++ include alloca.h
+-- Looking for C++ include alloca.h - not found
+-- Looking for C++ include arpa/inet.h
+-- Looking for C++ include arpa/inet.h - not found
+-- Looking for C++ include cstdint
+-- Looking for C++ include cstdint - found
+-- Looking for C++ include dirent.h
+-- Looking for C++ include dirent.h - not found
+-- Looking for C++ include err.h
+-- Looking for C++ include err.h - not found
+-- Looking for C++ include fnmatch.h
+-- Looking for C++ include fnmatch.h - not found
+-- Looking for C++ include grp.h
+-- Looking for C++ include grp.h - not found
+-- Looking for C++ include ieeefp.h
+-- Looking for C++ include ieeefp.h - not found
+-- Looking for C++ include io.h
+-- Looking for C++ include io.h - found
+-- Looking for C++ include langinfo.h
+-- Looking for C++ include langinfo.h - not found
+-- Looking for C++ include libc.h
+-- Looking for C++ include libc.h - not found
+-- Looking for C++ include mqueue.h
+-- Looking for C++ include mqueue.h - not found
+-- Looking for C++ include netdb.h
+-- Looking for C++ include netdb.h - not found
+-- Looking for C++ include png.h
+-- Looking for C++ include png.h - not found
+-- Looking for C++ include process.h
+-- Looking for C++ include process.h - found
+-- Looking for C++ include pthread.h
+-- Looking for C++ include pthread.h - not found
+-- Looking for C++ include pwd.h
+-- Looking for C++ include pwd.h - not found
+-- Looking for C++ include semaphore.h
+-- Looking for C++ include semaphore.h - not found
+-- Looking for C++ include strings.h
+-- Looking for C++ include strings.h - not found
+-- Looking for C++ include synch.h
+-- Looking for C++ include synch.h - not found
+-- Looking for C++ include sys/dir.h
+-- Looking for C++ include sys/dir.h - not found
+-- Looking for C++ include sys/errno.h
+-- Looking for C++ include sys/errno.h - not found
+-- Looking for C++ include sys/file.h
+-- Looking for C++ include sys/file.h - not found
+-- Looking for C++ include sys/mman.h
+-- Looking for C++ include sys/mman.h - not found
+-- Looking for C++ include sys/msg.h
+-- Looking for C++ include sys/msg.h - not found
+-- Looking for C++ include sys/param.h
+-- Looking for C++ include sys/param.h - not found
+-- Looking for C++ include sys/queue.h
+-- Looking for C++ include sys/queue.h - not found
+-- Looking for C++ include sys/resource.h
+-- Looking for C++ include sys/resource.h - not found
+-- Looking for C++ include sys/select.h
+-- Looking for C++ include sys/select.h - not found
+-- Looking for C++ include sys/socket.h
+-- Looking for C++ include sys/socket.h - not found
+-- Looking for C++ include sys/syscall.h
+-- Looking for C++ include sys/syscall.h - not found
+-- Looking for C++ include sys/systeminfo.h
+-- Looking for C++ include sys/systeminfo.h - not found
+-- Looking for C++ include sys/time.h
+-- Looking for C++ include sys/time.h - not found
+-- Looking for C++ include sys/timeb.h
+-- Looking for C++ include sys/timeb.h - found
+-- Looking for C++ include sys/un.h
+-- Looking for C++ include sys/un.h - not found
+-- Looking for C++ include sys/utime.h
+-- Looking for C++ include sys/utime.h - found
+-- Looking for C++ include sys/utsname.h
+-- Looking for C++ include sys/utsname.h - not found
+-- Looking for C++ include sys/wait.h
+-- Looking for C++ include sys/wait.h - not found
+-- Looking for C++ include syslog.h
+-- Looking for C++ include syslog.h - not found
+-- Looking for C++ include thread.h
+-- Looking for C++ include thread.h - not found
+-- Looking for C++ include unistd.h
+-- Looking for C++ include unistd.h - not found
+-- Looking for C++ include unix.h
+-- Looking for C++ include unix.h - not found
+-- Looking for C++ include utime.h
+-- Looking for C++ include utime.h - not found
+-- Looking for C++ include type_traits
+-- Looking for C++ include type_traits - found
+-- Looking for C++ include atomic
+-- Looking for C++ include atomic - found
+-- Looking for C++ include poll.h
+-- Looking for C++ include poll.h - not found
+-- Looking for include files sys/types.h, netinet/in_systm.h
+-- Looking for include files sys/types.h, netinet/in_systm.h - not found
+-- Looking for include files sys/types.h, netinet/in.h
+-- Looking for include files sys/types.h, netinet/in.h - not found
+-- Looking for include files sys/types.h, netinet/tcp.h
+-- Looking for include files sys/types.h, netinet/tcp.h - not found
+-- Looking for C++ include libpng/png.h
+-- Looking for C++ include libpng/png.h - not found
+-- Looking for _findfirst
+-- Looking for _findfirst - found
+-- Looking for _set_output_format
+-- Looking for _set_output_format - not found
+-- Looking for atoll
+-- Looking for atoll - found
+-- Looking for cuserid
+-- Looking for cuserid - not found
+-- Looking for fgetln
+-- Looking for fgetln - not found
+-- Looking for flock
+-- Looking for flock - not found
+-- Looking for fork
+-- Looking for fork - not found
+-- Looking for fseeko
+-- Looking for fseeko - not found
+-- Looking for ftime
+-- Looking for ftime - found
+-- Looking for geteuid
+-- Looking for geteuid - not found
+-- Looking for getgrnam
+-- Looking for getgrnam - not found
+-- Looking for gethostbyaddr_r
+-- Looking for gethostbyaddr_r - not found
+-- Looking for gethostbyname_r
+-- Looking for gethostbyname_r - not found
+-- Looking for gethostid
+-- Looking for gethostid - not found
+-- Looking for getlogin
+-- Looking for getlogin - not found
+-- Looking for getlogin_r
+-- Looking for getlogin_r - not found
+-- Looking for getpwnam
+-- Looking for getpwnam - not found
+-- Looking for gettimeofday
+-- Looking for gettimeofday - not found
+-- Looking for getuid
+-- Looking for getuid - not found
+-- Looking for gmtime_r
+-- Looking for gmtime_r - not found
+-- Looking for localtime_r
+-- Looking for localtime_r - not found
+-- Looking for lockf
+-- Looking for lockf - not found
+-- Looking for lstat
+-- Looking for lstat - not found
+-- Looking for malloc_debug
+-- Looking for malloc_debug - not found
+-- Looking for mkstemp
+-- Looking for mkstemp - not found
+-- Looking for nanosleep
+-- Looking for nanosleep - not found
+-- Looking for setuid
+-- Looking for setuid - not found
+-- Looking for sleep
+-- Looking for sleep - not found
+-- Looking for strlcat
+-- Looking for strlcat - not found
+-- Looking for strlcpy
+-- Looking for strlcpy - not found
+-- Looking for sysinfo
+-- Looking for sysinfo - not found
+-- Looking for uname
+-- Looking for uname - not found
+-- Looking for usleep
+-- Looking for usleep - not found
+-- Looking for waitpid
+-- Looking for waitpid - not found
+-- Looking for strcasestr
+-- Looking for strcasestr - not found
+-- Looking for prototype of flock
+-- Looking for prototype of flock - not found.
+-- Looking for prototype of gethostbyname_r
+-- Looking for prototype of gethostbyname_r - not found.
+-- Looking for prototype of gethostbyaddr_r
+-- Looking for prototype of gethostbyaddr_r - not found.
+-- Looking for prototype of gethostid
+-- Looking for prototype of gethostid - not found.
+-- Looking for prototype of waitpid
+-- Looking for prototype of waitpid - not found.
+-- Looking for prototype of usleep
+-- Looking for prototype of usleep - not found.
+-- Looking for prototype of _vsnprintf_s
+-- Looking for prototype of _vsnprintf_s - found
+-- Looking for prototype of vfprintf_s
+-- Looking for prototype of vfprintf_s - found
+-- Looking for prototype of vsprintf_s
+-- Looking for prototype of vsprintf_s - found
+-- Looking for prototype of std::vsnprintf
+-- Looking for prototype of std::vsnprintf - found
+-- Looking for prototype of _stricmp
+-- Looking for prototype of _stricmp - found
+-- Looking for prototype of gettimeofday
+-- Looking for prototype of gettimeofday - not found.
+-- Looking for prototype of strcasecmp
+-- Looking for prototype of strcasecmp - not found.
+-- Looking for prototype of strncasecmp
+-- Looking for prototype of strncasecmp - not found.
+-- Looking for prototype of strerror_r
+-- Looking for prototype of strerror_r - not found.
+-- Looking for prototype of SYS_gettid
+-- Looking for prototype of SYS_gettid - not found.
+-- Looking for prototype of pthread_rwlock_init
+-- Looking for prototype of pthread_rwlock_init - not found.
+-- Looking for prototype of __sync_add_and_fetch((int*)0,0)
+-- Looking for prototype of __sync_add_and_fetch((int*)0,0) - not found.
+-- Looking for prototype of __sync_sub_and_fetch((int*)0,0)
+-- Looking for prototype of __sync_sub_and_fetch((int*)0,0) - not found.
+-- Looking for prototype of InterlockedIncrement((long*)0)
+-- Looking for prototype of InterlockedIncrement((long*)0) - found
+-- Looking for prototype of InterlockedDecrement((long*)0)
+-- Looking for prototype of InterlockedDecrement((long*)0) - found
+-- Looking for prototype of getgrnam_r((char*)0,(group*)0,(char*)0,0,(group**)0)
+-- Looking for prototype of getgrnam_r((char*)0,(group*)0,(char*)0,0,(group**)0) - not found.
+-- Looking for prototype of getpwnam_r((char*)0,(passwd*)0,(char*)0,0,(passwd**)0)
+-- Looking for prototype of getpwnam_r((char*)0,(passwd*)0,(char*)0,0,(passwd**)0) - not found.
+-- Looking for prototype of readdir_r((DIR*)0,(dirent*)0,(dirent**)0)
+-- Looking for prototype of readdir_r((DIR*)0,(dirent*)0,(dirent**)0) - not found.
+-- Looking for prototype of readdir_r((DIR*)0,(dirent*)0)
+-- Looking for prototype of readdir_r((DIR*)0,(dirent*)0) - not found.
+-- Looking for prototype of &passwd::pw_gecos
+-- Looking for prototype of &passwd::pw_gecos - not found.
+-- Looking for prototype of TryAcquireSRWLockShared((PSRWLOCK)0)
+-- Looking for prototype of TryAcquireSRWLockShared((PSRWLOCK)0) - found
+-- Looking for prototype of long long definition
+-- Looking for prototype of long long definition - found
+-- Looking for prototype of unsigned long long definition
+-- Looking for prototype of unsigned long long definition - found
+-- Looking for prototype of int64_t definition
+-- Looking for prototype of int64_t definition - found
+-- Looking for prototype of uint64_t definition
+-- Looking for prototype of uint64_t definition - found
+-- Looking for prototype of char16_t definition
+-- Looking for prototype of char16_t definition - found
+-- Looking for prototype of fpos64_t definition
+-- Looking for prototype of fpos64_t definition - not found.
+-- Looking for prototype of off64_t definition
+-- Looking for prototype of off64_t definition - not found.
+-- Looking for prototype of popen
+-- Looking for prototype of popen - not found.
+-- Looking for prototype of pclose
+-- Looking for prototype of pclose - not found.
+-- Checking signedness of char
+-- Checking whether char is signed
+-- Checking whether char is signed -- yes
+-- Checking signedness of char -- signed
+-- Checking whether ENAMETOOLONG is defined
+-- Checking whether ENAMETOOLONG is defined -- yes
+-- Checking whether strerror_r returns an int
+-- Checking whether strerror_r returns an int -- no
+-- Checking whether variable length arrays are supported
+-- Checking whether variable length arrays are supported -- no
+-- Checking whether explicit large file support (LFS64) is available
+-- Checking whether explicit large file support (LFS64) is available -- no
+-- Checking whether large file support (LFS) is available
+-- Check size of fpos_t
+-- Check size of fpos_t - done
+-- Checking whether large file support (LFS) is available -- yes
+-- Info: Building DCMTK with large file support (LFS)
+-- Checking whether __alignof__ is supported
+-- Checking whether __alignof__ is supported -- no
+-- Checking whether __alignof is supported
+-- Checking whether __alignof is supported -- yes
+-- Checking whether __attribute__((aligned)) is supported
+-- Checking whether __attribute__((aligned)) is supported -- no
+-- Checking whether __attribute__((aligned)) supports templates
+-- Checking whether __attribute__((aligned)) supports templates -- no
+-- Checking whether __declspec(align) is supported
+-- Checking whether __declspec(align) is supported -- yes
+-- Checking whether the compiler supports default constructor detection via SFINAE
+-- Checking whether the compiler supports default constructor detection via SFINAE -- no
+-- Checking whether the compiler supports static_assert
+-- Checking whether the compiler supports static_assert -- yes
+-- Checking whether the compiler supports [[deprecated]]
+-- Checking whether the compiler supports [[deprecated]] -- yes
+-- Checking whether the compiler supports [[deprecated("message")]]
+-- Checking whether the compiler supports [[deprecated("message")]] -- yes
+-- Checking whether the compiler supports __attribute__((deprecated))
+-- Checking whether the compiler supports __attribute__((deprecated)) -- no
+-- Checking whether the compiler supports __attribute__((deprecated("message")))
+-- Checking whether the compiler supports __attribute__((deprecated("message"))) -- no
+-- Checking whether the compiler supports __declspec(deprecated)
+-- Checking whether the compiler supports __declspec(deprecated) -- yes
+-- Checking whether the compiler supports __declspec(deprecated("message"))
+-- Checking whether the compiler supports __declspec(deprecated("message")) -- yes
+-- Checking whether the compiler supports C++11
+-- Checking whether the compiler supports C++11 -- yes
+-- Info: C++11 features enabled
+-- Info: C++14 features disabled
+-- Info: C++17 features disabled
+-- Info: C++20 features disabled
+-- Info: STL algorithm support disabled
+-- Info: STL list support disabled
+-- Info: STL map support disabled
+-- Info: STL memory support disabled
+-- Info: STL stack support disabled
+-- Info: STL string support disabled
+-- Info: STL vector support disabled
+-- Info: STL type_traits support disabled
+-- Info: STL tuple support disabled
+-- Info: STL system_error support disabled
+-- Info: STL atomic support disabled
+-- Looking for mq_open in rt
+-- Looking for mq_open in rt - not found
+-- Configuring done (92.3s)
+-- Generating done (0.8s)
+-- Build files have been written to: C:/repos/I3Dfileformat/cpp/build/dcmtk
+MSBuild version 17.14.40+3e7442088 for .NET Framework
+
+  1>Checking Build System
+  Building Custom Rule C:/repos/I3Dfileformat/third_party/dcmtk-3.7.0/ofstd/libsrc/CMakeLists.txt
+  ofchrenc.cc
+  ofcmdln.cc
+  ofconapp.cc
+  ofcond.cc
+  ofconfig.cc
+  ofconsol.cc
+  ofcrc32.cc
+  ofdate.cc
+  ofdatime.cc
+  oferror.cc
+  offile.cc
+  offilsys.cc
+  offname.cc
+  ofipc.cc
+  ofjsmn.cc
+  oflist.cc
+  ofstd.cc
+  ofstring.cc
+  ofstrutl.cc
+  ofthread.cc
+  Generating Code...
+  Compiling...
+  oftime.cc
+  oftimer.cc
+  oftempf.cc
+  ofxml.cc
+  ofuuid.cc
+  ofmath.cc
+  ofsockad.cc
+  ofrand.cc
+  ofstub.cc
+  ofsha256.cc
+  Generating Code...
+  ofwhere.c
+  ofstd.vcxproj -> C:\repos\I3Dfileformat\cpp\build\dcmtk\lib\Release\ofstd.lib
+  Building Custom Rule C:/repos/I3Dfileformat/third_party/dcmtk-3.7.0/oflog/libsrc/CMakeLists.txt
+  apndimpl.cc
+  appender.cc
+  asyncap.cc
+  clogger.cc
+  config.cc
+  consap.cc
+  cygwin32.cc
+  env.cc
+  factory.cc
+  fileap.cc
+  fileinfo.cc
+  filter.cc
+  globinit.cc
+  hierarchy.cc
+  hierlock.cc
+  layout.cc
+  lloguser.cc
+  lockfile.cc
+  log4judp.cc
+  logevent.cc
+  Generating Code...
+  Compiling...
+  logger.cc
+  logimpl.cc
+  loglevel.cc
+  loglog.cc
+  logmacro.cc
+  mdc.cc
+  ndc.cc
+  ntelogap.cc
+  nullap.cc
+  objreg.cc
+  oflog.cc
+  patlay.cc
+  pointer.cc
+  property.cc
+  queue.cc
+  rootlog.cc
+  sleep.cc
+  snprintf.cc
+  sockbuff.cc
+  socket.cc
+  Generating Code...
+  Compiling...
+  socketap.cc
+  strccloc.cc
+  strcloc.cc
+  strhelp.cc
+  striconv.cc
+  syncprims.cc
+  syslogap.cc
+  threads.cc
+  timehelp.cc
+  tls.cc
+  version.cc
+  winsock.cc
+  windebap.cc
+  winconap.cc
+  Generating Code...
+  oflog.vcxproj -> C:\repos\I3Dfileformat\cpp\build\dcmtk\lib\Release\oflog.lib
+  Building Custom Rule C:/repos/I3Dfileformat/third_party/dcmtk-3.7.0/dcmdata/libsrc/CMakeLists.txt
+  cmdlnarg.cc
+  dcbytstr.cc
+  dcchrstr.cc
+  dccodec.cc
+  dcdatset.cc
+  dcdatutl.cc
+  dcddirif.cc
+  dcdicdir.cc
+  dcdicent.cc
+  dcdict.cc
+  dcdictbi.cc
+  dcdirrec.cc
+  dcdocdec.cc
+  dcelem.cc
+  dcencdoc.cc
+  dcerror.cc
+  dcfilefo.cc
+  dcfilter.cc
+  dchashdi.cc
+  dcistrma.cc
+  Generating Code...
+  Compiling...
+  dcistrmb.cc
+  dcistrmf.cc
+  dcistrms.cc
+  dcistrmz.cc
+  dcitem.cc
+  dcjson.cc
+  dcjsonrd.cc
+  dclist.cc
+  dcmatch.cc
+  dcmetinf.cc
+  dcobject.cc
+  dcostrma.cc
+  dcostrmb.cc
+  dcostrmf.cc
+  dcostrms.cc
+  dcostrmz.cc
+  dcpath.cc
+  dcpcache.cc
+  dcpixel.cc
+  dcpixseq.cc
+  Generating Code...
+  Compiling...
+  dcpxitem.cc
+  dcrleccd.cc
+  dcrlecce.cc
+  dcrlecp.cc
+  dcrledrg.cc
+  dcrleerg.cc
+  dcrlerp.cc
+  dcsequen.cc
+  dcspchrs.cc
+  dcstack.cc
+  dcswap.cc
+  dctag.cc
+  dctagkey.cc
+  dctypes.cc
+  dcuid.cc
+  dcvr.cc
+  dcvrae.cc
+  dcvras.cc
+  dcvrat.cc
+  dcvrcs.cc
+  Generating Code...
+  Compiling...
+  dcvrda.cc
+  dcvrds.cc
+  dcvrdt.cc
+  dcvrfd.cc
+  dcvrfl.cc
+  dcvris.cc
+  dcvrlo.cc
+  dcvrlt.cc
+  dcvrobow.cc
+  dcvrod.cc
+  dcvrof.cc
+  dcvrol.cc
+  dcvrov.cc
+  dcvrpn.cc
+  dcvrpobw.cc
+  dcvrsh.cc
+  dcvrsl.cc
+  dcvrss.cc
+  dcvrst.cc
+  dcvrsv.cc
+  Generating Code...
+  Compiling...
+  dcvrtm.cc
+  dcvruc.cc
+  dcvrui.cc
+  dcvrul.cc
+  dcvrulup.cc
+  dcvrur.cc
+  dcvrus.cc
+  dcvrut.cc
+  dcvruv.cc
+  dcwcache.cc
+  dcxfer.cc
+  vrscan.cc
+  Generating Code...
+  vrscanl.c
+  dcmdata.vcxproj -> C:\repos\I3Dfileformat\cpp\build\dcmtk\lib\Release\dcmdata.lib
+  Building Custom Rule C:/repos/I3Dfileformat/third_party/dcmtk-3.7.0/dcmimgle/libsrc/CMakeLists.txt
+  dcmimage.cc
+  dibaslut.cc
+  diciefn.cc
+  dicielut.cc
+  didislut.cc
+  didispfn.cc
+  didocu.cc
+  digsdfn.cc
+  digsdlut.cc
+  diimage.cc
+  diinpx.cc
+  diluptab.cc
+  dimo1img.cc
+  dimo2img.cc
+  dimoimg.cc
+  dimoimg3.cc
+  dimoimg4.cc
+  dimoimg5.cc
+  dimomod.cc
+  dimoopx.cc
+  Generating Code...
+  Compiling...
+  dimopx.cc
+  diovdat.cc
+  diovlay.cc
+  diovlimg.cc
+  diovpln.cc
+  diutils.cc
+  Generating Code...
+  dcmimgle.vcxproj -> C:\repos\I3Dfileformat\cpp\build\dcmtk\lib\Release\dcmimgle.lib
+  Building Custom Rule C:/repos/I3Dfileformat/third_party/dcmtk-3.7.0/dcmimage/libsrc/CMakeLists.txt
+  dcmicmph.cc
+  diargimg.cc
+  dicmyimg.cc
+  dicoimg.cc
+  dicoopx.cc
+  dicopx.cc
+  dihsvimg.cc
+  dilogger.cc
+  dipalimg.cc
+  dipipng.cc
+  dipitiff.cc
+  diqtctab.cc
+  diqtfs.cc
+  diqthash.cc
+  diqthitl.cc
+  diqtpbox.cc
+  diquant.cc
+  diregist.cc
+  dirgbimg.cc
+  diybrimg.cc
+  Generating Code...
+  Compiling...
+  diyf2img.cc
+  diyp2img.cc
+  Generating Code...
+  dcmimage.vcxproj -> C:\repos\I3Dfileformat\cpp\build\dcmtk\lib\Release\dcmimage.lib
+  Building Custom Rule C:/repos/I3Dfileformat/third_party/dcmtk-3.7.0/dcmjpeg/libijg12/CMakeLists.txt
+  jcapimin.c
+  jcapistd.c
+  jcarith.c
+  jccoefct.c
+  jccolor.c
+  jcdctmgr.c
+  jcdiffct.c
+  jchuff.c
+  jcinit.c
+  jclhuff.c
+  jclossls.c
+  jclossy.c
+  jcmainct.c
+  jcmarker.c
+  jcmaster.c
+  jcodec.c
+  jcomapi.c
+  jcparam.c
+  jcphuff.c
+  jcpred.c
+  Generating Code...
+  Compiling...
+  jcprepct.c
+  jcsample.c
+  jcscale.c
+  jcshuff.c
+  jctrans.c
+  jdapimin.c
+  jdapistd.c
+  jdarith.c
+  jdatadst.c
+  jdatasrc.c
+  jdcoefct.c
+  jdcolor.c
+  jddctmgr.c
+  jddiffct.c
+  jdhuff.c
+  jdinput.c
+  jdlhuff.c
+  jdlossls.c
+  jdlossy.c
+  jdmainct.c
+  Generating Code...
+  Compiling...
+  jdmarker.c
+  jdmaster.c
+  jdmerge.c
+  jdphuff.c
+  jdpostct.c
+  jdpred.c
+  jdsample.c
+  jdscale.c
+  jdshuff.c
+  jdtrans.c
+  jerror.c
+  jfdctflt.c
+  jfdctfst.c
+  jfdctint.c
+  jidctflt.c
+  jidctfst.c
+  jidctint.c
+  jidctred.c
+  jmemmgr.c
+  jmemnobs.c
+  Generating Code...
+  Compiling...
+  jquant1.c
+  jquant2.c
+  jutils.c
+  Generating Code...
+  ijg12.vcxproj -> C:\repos\I3Dfileformat\cpp\build\dcmtk\lib\Release\ijg12.lib
+  Building Custom Rule C:/repos/I3Dfileformat/third_party/dcmtk-3.7.0/dcmjpeg/libijg16/CMakeLists.txt
+  jcapimin.c
+  jcapistd.c
+  jcarith.c
+  jccoefct.c
+  jccolor.c
+  jcdctmgr.c
+  jcdiffct.c
+  jchuff.c
+  jcinit.c
+  jclhuff.c
+  jclossls.c
+  jclossy.c
+  jcmainct.c
+  jcmarker.c
+  jcmaster.c
+  jcodec.c
+  jcomapi.c
+  jcparam.c
+  jcphuff.c
+  jcpred.c
+  Generating Code...
+  Compiling...
+  jcprepct.c
+  jcsample.c
+  jcscale.c
+  jcshuff.c
+  jctrans.c
+  jdapimin.c
+  jdapistd.c
+  jdarith.c
+  jdatadst.c
+  jdatasrc.c
+  jdcoefct.c
+  jdcolor.c
+  jddctmgr.c
+  jddiffct.c
+  jdhuff.c
+  jdinput.c
+  jdlhuff.c
+  jdlossls.c
+  jdlossy.c
+  jdmainct.c
+  Generating Code...
+  Compiling...
+  jdmarker.c
+  jdmaster.c
+  jdmerge.c
+  jdphuff.c
+  jdpostct.c
+  jdpred.c
+  jdsample.c
+  jdscale.c
+  jdshuff.c
+  jdtrans.c
+  jerror.c
+  jfdctflt.c
+  jfdctfst.c
+  jfdctint.c
+  jidctflt.c
+  jidctfst.c
+  jidctint.c
+  jidctred.c
+  jmemmgr.c
+  jmemnobs.c
+  Generating Code...
+  Compiling...
+  jquant1.c
+  jquant2.c
+  jutils.c
+  Generating Code...
+  ijg16.vcxproj -> C:\repos\I3Dfileformat\cpp\build\dcmtk\lib\Release\ijg16.lib
+  Building Custom Rule C:/repos/I3Dfileformat/third_party/dcmtk-3.7.0/dcmjpeg/libijg8/CMakeLists.txt
+  jcapimin.c
+  jcapistd.c
+  jcarith.c
+  jccoefct.c
+  jccolor.c
+  jcdctmgr.c
+  jcdiffct.c
+  jchuff.c
+  jcinit.c
+  jclhuff.c
+  jclossls.c
+  jclossy.c
+  jcmainct.c
+  jcmarker.c
+  jcmaster.c
+  jcodec.c
+  jcomapi.c
+  jcparam.c
+  jcphuff.c
+  jcpred.c
+  Generating Code...
+  Compiling...
+  jcprepct.c
+  jcsample.c
+  jcscale.c
+  jcshuff.c
+  jctrans.c
+  jdapimin.c
+  jdapistd.c
+  jdarith.c
+  jdatadst.c
+  jdatasrc.c
+  jdcoefct.c
+  jdcolor.c
+  jddctmgr.c
+  jddiffct.c
+  jdhuff.c
+  jdinput.c
+  jdlhuff.c
+  jdlossls.c
+  jdlossy.c
+  jdmainct.c
+  Generating Code...
+  Compiling...
+  jdmarker.c
+  jdmaster.c
+  jdmerge.c
+  jdphuff.c
+  jdpostct.c
+  jdpred.c
+  jdsample.c
+  jdscale.c
+  jdshuff.c
+  jdtrans.c
+  jerror.c
+  jfdctflt.c
+  jfdctfst.c
+  jfdctint.c
+  jidctflt.c
+  jidctfst.c
+  jidctint.c
+  jidctred.c
+  jmemmgr.c
+  jmemnobs.c
+  Generating Code...
+  Compiling...
+  jquant1.c
+  jquant2.c
+  jutils.c
+  Generating Code...
+  ijg8.vcxproj -> C:\repos\I3Dfileformat\cpp\build\dcmtk\lib\Release\ijg8.lib
+  Building Custom Rule C:/repos/I3Dfileformat/third_party/dcmtk-3.7.0/dcmjpeg/libsrc/CMakeLists.txt
+  ddpiimpl.cc
+  dipijpeg.cc
+  djcodecd.cc
+  djcodece.cc
+  djcparam.cc
+  djdecbas.cc
+  djdecext.cc
+  djdeclol.cc
+  djdecode.cc
+  djdecpro.cc
+  djdecsps.cc
+  djdecsv1.cc
+  djdijg12.cc
+  djdijg8.cc
+  djdijg16.cc
+  djeijg12.cc
+  djeijg8.cc
+  djeijg16.cc
+  djencbas.cc
+  djencext.cc
+  Generating Code...
+  Compiling...
+  djenclol.cc
+  djencode.cc
+  djencpro.cc
+  djencsps.cc
+  djencsv1.cc
+  djrplol.cc
+  djrploss.cc
+  djutils.cc
+  Generating Code...
+  dcmjpeg.vcxproj -> C:\repos\I3Dfileformat\cpp\build\dcmtk\lib\Release\dcmjpeg.lib
+  Building Custom Rule C:/repos/I3Dfileformat/third_party/dcmtk-3.7.0/dcmjpls/libcharls/CMakeLists.txt
+  header.cc
+  intrface.cc
+  jpegls.cc
+  Generating Code...
+  dcmtkcharls.vcxproj -> C:\repos\I3Dfileformat\cpp\build\dcmtk\lib\Release\dcmtkcharls.lib
+  Building Custom Rule C:/repos/I3Dfileformat/third_party/dcmtk-3.7.0/dcmjpls/libsrc/CMakeLists.txt
+  djcparam.cc
+  djdecode.cc
+  djencode.cc
+  djrparam.cc
+  djcodecd.cc
+  djutils.cc
+  djcodece.cc
+  dipijpls.cc
+  Generating Code...
+  dcmjpls.vcxproj -> C:\repos\I3Dfileformat\cpp\build\dcmtk\lib\Release\dcmjpls.lib
+  Building Custom Rule C:/repos/I3Dfileformat/third_party/dcmtk-3.7.0/dcmdata/libdcxml/CMakeLists.txt
+  xml2dcm.cc
+  dcmxml.vcxproj -> C:\repos\I3Dfileformat\cpp\build\dcmtk\lib\Release\dcmxml.lib
+  Building Custom Rule C:/repos/I3Dfileformat/third_party/dcmtk-3.7.0/dcmdata/libi2d/CMakeLists.txt
+  i2d.cc
+  i2dplvlp.cc
+  i2djpgs.cc
+  i2dbmps.cc
+  i2dplsc.cc
+  i2dplnsc.cc
+  i2dplop.cc
+  i2doutpl.cc
+  Generating Code...
+  i2d.vcxproj -> C:\repos\I3Dfileformat\cpp\build\dcmtk\lib\Release\i2d.lib
+  Building Custom Rule C:/repos/I3Dfileformat/third_party/dcmtk-3.7.0/CMakeLists.txt
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/share/doc/dcmtk-3.7.0/config.txt
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/share/doc/dcmtk-3.7.0/dirstruc.txt
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/share/doc/dcmtk-3.7.0/envvars.txt
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/share/doc/dcmtk-3.7.0/macros.txt
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/share/doc/dcmtk-3.7.0/modules.txt
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/lib/ofstd.lib
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/diag
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/diag/arrybnds.def
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/diag/asincond.def
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/diag/clangprg.def
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/diag/cnvrsn.def
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/diag/constexp.def
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/diag/ignrattr.def
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/diag/memacces.def
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/diag/mmtag.def
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/diag/nsdfti.def
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/diag/overflow.def
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/diag/pessmove.def
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/diag/piof.def
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/diag/pop.def
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/diag/push.def
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/diag/restrict.def
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/diag/shadow.def
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/diag/signcmp.def
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/diag/slfassov.def
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/diag/stralias.def
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/diag/stringop.def
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/diag/unarymin.def
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/diag/unreachb.def
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/diag/unrefprm.def
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/diag/useafree.def
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/diag/vsconstexp.def
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/diag/vsdeclpd.def
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/diag/vsobjdes.def
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/diag/vsprfw.def
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/ofalgo.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/ofalign.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/ofassert.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/ofbmanip.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/ofcast.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/ofchrenc.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/ofcmdln.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/ofconapp.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/ofcond.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/ofconfig.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/ofconsol.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/ofcrc32.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/ofdate.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/ofdatime.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/ofdefine.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/ofdeprec.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/ofdiag.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/oferror.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/ofexbl.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/ofexit.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/ofexport.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/offile.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/offilsys.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/offname.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/ofglobal.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/ofgrp.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/ofipc.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/ofjsmn.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/oflimits.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/oflist.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/ofmap.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/ofmath.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/ofmem.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/ofoption.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/ofoset.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/ofpwd.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/ofrand.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/ofset.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/ofsetit.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/ofsha256.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/ofsockad.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/ofstack.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/ofstd.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/ofstdinc.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/ofstream.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/ofstrhlp.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/ofstring.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/ofstrutl.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/ofstub.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/oftempf.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/oftest.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/ofthread.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/oftime.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/oftimer.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/oftraits.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/oftuple.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/oftypes.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/ofuoset.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/ofutil.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/ofuuid.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/ofvector.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/ofvriant.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/ofwhere.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/ofxml.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/variadic
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/variadic/helpers.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/variadic/tuple.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/variadic/tuplefrd.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/variadic/tuplefwd.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/ofstd/variadic/variant.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/lib/oflog.lib
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/appender.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/asyncap.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/clfsap.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/clogger.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/config
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/config/defines.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/config/macosx.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/config/win32.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/config/windowsh.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/config.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/configrt.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/consap.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/fileap.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/fstreams.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/helpers
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/helpers/apndimpl.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/helpers/fileinfo.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/helpers/lloguser.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/helpers/lockfile.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/helpers/loglog.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/helpers/pointer.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/helpers/property.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/helpers/queue.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/helpers/sleep.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/helpers/snprintf.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/helpers/sockbuff.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/helpers/socket.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/helpers/strhelp.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/helpers/threadcf.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/helpers/timehelp.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/hierarchy.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/hierlock.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/internal
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/internal/cygwin32.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/internal/env.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/internal/internal.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/internal/socket.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/layout.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/log4judp.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/logger.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/loglevel.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/logmacro.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/mdc.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/ndc.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/ntelogap.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/nullap.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/oflog.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/socketap.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/spi
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/spi/apndatch.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/spi/factory.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/spi/filter.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/spi/logevent.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/spi/logfact.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/spi/logimpl.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/spi/objreg.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/spi/rootlog.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/streams.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/syslogap.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/tchar.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/thread
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/thread/impl
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/thread/impl/syncimpl.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/thread/impl/syncpmsm.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/thread/impl/syncpthr.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/thread/impl/syncwin.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/thread/impl/thredimp.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/thread/impl/tls.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/thread/syncprim.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/thread/syncpub.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/thread/threads.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/tracelog.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/tstring.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/version.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/winconap.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/oflog/windebap.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/etc/logger.cfg
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/etc/filelog.cfg
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/etc/consolog.cfg
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/lib/dcmdata.lib
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/lib/i2d.lib
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/lib/dcmxml.lib
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/cmdlnarg.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcbytstr.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcchrstr.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dccodec.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcdatset.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcdatutl.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcddirif.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcdefine.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcdeftag.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcdicdir.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcdicent.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcdict.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcdirrec.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcdocdec.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcelem.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcencdoc.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcerror.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcfcache.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcfilefo.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcfilter.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dchashdi.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcistrma.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcistrmb.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcistrmf.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcistrms.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcistrmz.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcitem.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcjson.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcjsonrd.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dclist.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcmatch.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcmetinf.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcmxml
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcmxml/dcxmldf.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcmxml/xml2dcm.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcobject.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcofsetl.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcostrma.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcostrmb.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcostrmf.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcostrms.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcostrmz.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcovlay.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcpath.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcpcache.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcpixel.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcpixseq.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcpxitem.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcrleccd.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcrlecce.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcrlecp.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcrledec.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcrledrg.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcrleenc.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcrleerg.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcrlerp.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcsequen.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcspchrs.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcstack.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcswap.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dctag.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dctagkey.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dctk.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dctypes.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcuid.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcvr.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcvrae.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcvras.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcvrat.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcvrcs.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcvrda.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcvrds.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcvrdt.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcvrfd.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcvrfl.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcvris.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcvrlo.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcvrlt.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcvrobow.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcvrod.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcvrof.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcvrol.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcvrov.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcvrpn.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcvrpobw.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcvrsh.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcvrsl.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcvrss.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcvrst.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcvrsv.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcvrtm.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcvruc.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcvrui.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcvrul.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcvrulup.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcvrur.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcvrus.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcvrut.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcvruv.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcwcache.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/dcxfer.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/libi2d
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/libi2d/i2d.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/libi2d/i2dbmps.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/libi2d/i2define.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/libi2d/i2dimgs.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/libi2d/i2djpgs.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/libi2d/i2doutpl.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/libi2d/i2dplnsc.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/libi2d/i2dplop.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/libi2d/i2dplsc.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/libi2d/i2dplvlp.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmdata/vrscan.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/share/doc/dcmtk-3.7.0/datadict.txt
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/share/dcmtk-3.7.0/dicom.dic
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/share/dcmtk-3.7.0/acrnema.dic
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/share/dcmtk-3.7.0/private.dic
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/share/dcmtk-3.7.0/diconde.dic
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/share/dcmtk-3.7.0/dcm2xml.dtd
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/share/dcmtk-3.7.0/dumppat.txt
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/share/dcmtk-3.7.0/SC.dump
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/share/dcmtk-3.7.0/VLP.dump
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/lib/dcmimgle.lib
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimgle
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimgle/dcmimage.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimgle/dibaslut.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimgle/diciefn.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimgle/dicielut.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimgle/dicrvfit.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimgle/didefine.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimgle/didislut.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimgle/didispfn.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimgle/didocu.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimgle/diflipt.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimgle/digsdfn.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimgle/digsdlut.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimgle/diimage.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimgle/diinpx.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimgle/diinpxt.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimgle/diluptab.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimgle/dimo1img.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimgle/dimo2img.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimgle/dimocpt.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimgle/dimoflt.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimgle/dimoimg.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimgle/dimoipxt.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimgle/dimomod.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimgle/dimoopx.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimgle/dimoopxt.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimgle/dimopx.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimgle/dimopxt.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimgle/dimorot.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimgle/dimosct.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimgle/diobjcou.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimgle/diovdat.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimgle/diovlay.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimgle/diovlimg.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimgle/diovpln.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimgle/dipixel.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimgle/diplugin.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimgle/dipxrept.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimgle/diregbas.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimgle/dirotat.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimgle/discalet.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimgle/displint.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimgle/ditranst.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimgle/diutils.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/share/dcmtk-3.7.0/camera.lut
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/share/dcmtk-3.7.0/monitor.lut
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/share/dcmtk-3.7.0/printer.lut
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/share/dcmtk-3.7.0/scanner.lut
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/lib/dcmimage.lib
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimage
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimage/dcmicmph.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimage/diargimg.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimage/diargpxt.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimage/dicdefin.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimage/dicmyimg.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimage/dicmypxt.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimage/dicocpt.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimage/dicoflt.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimage/dicoimg.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimage/dicomot.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimage/dicoopx.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimage/dicoopxt.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimage/dicopx.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimage/dicopxt.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimage/dicorot.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimage/dicosct.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimage/dihsvimg.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimage/dihsvpxt.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimage/dilogger.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimage/dipalimg.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimage/dipalpxt.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimage/dipipng.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimage/dipitiff.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimage/diqtcmap.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimage/diqtctab.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimage/diqtfs.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimage/diqthash.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimage/diqthitl.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimage/diqthitm.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimage/diqtid.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimage/diqtpbox.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimage/diqtpix.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimage/diqtstab.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimage/diqttype.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimage/diquant.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimage/diregist.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimage/dirgbimg.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimage/dirgbpxt.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimage/diybrimg.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimage/diybrpxt.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimage/diyf2img.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimage/diyf2pxt.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimage/diyp2img.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmimage/diyp2pxt.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/lib/dcmjpeg.lib
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/lib/ijg8.lib
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/lib/ijg12.lib
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/lib/ijg16.lib
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmjpeg
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmjpeg/ddpiimpl.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmjpeg/dipijpeg.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmjpeg/djcodecd.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmjpeg/djcodece.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmjpeg/djcparam.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmjpeg/djdecabs.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmjpeg/djdecbas.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmjpeg/djdecext.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmjpeg/djdeclol.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmjpeg/djdecode.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmjpeg/djdecpro.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmjpeg/djdecsps.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmjpeg/djdecsv1.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmjpeg/djdefine.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmjpeg/djdijg12.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmjpeg/djdijg16.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmjpeg/djdijg8.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmjpeg/djeijg12.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmjpeg/djeijg16.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmjpeg/djeijg8.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmjpeg/djencabs.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmjpeg/djencbas.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmjpeg/djencext.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmjpeg/djenclol.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmjpeg/djencode.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmjpeg/djencpro.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmjpeg/djencsps.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmjpeg/djencsv1.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmjpeg/djrplol.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmjpeg/djrploss.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmjpeg/djutils.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/lib/dcmjpls.lib
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/lib/dcmtkcharls.lib
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmjpls
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmjpls/dipijpls.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmjpls/djcodecd.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmjpls/djcodece.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmjpls/djcparam.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmjpls/djdecode.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmjpls/djencode.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmjpls/djlsutil.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmjpls/djrparam.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/dcmjpls/dldefine.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/include/dcmtk/config/osconfig.h
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/share/doc/dcmtk-3.7.0/ANNOUNCE
+-- Installing: C:/repos/I3Dfileformat/cpp/build/dcmtk-install/share/doc/dcmtk-3.7.0/COPYRIGHT
+CMake Error at build/dcmtk/cmake_install.cmake:85 (file):
+  file INSTALL cannot find
+  "C:/repos/I3Dfileformat/third_party/dcmtk-3.7.0/CREDITS": File exists.
+
+

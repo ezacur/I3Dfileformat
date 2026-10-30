@@ -1,0 +1,143 @@
+MI-PID 8956
+[Warning: Function plot has the same name as a MATLAB builtin. We suggest you rename the function to avoid a potential name conflict.] 
+[> In path (line 109)
+In addpath (line 86)] 
+[Warning: Function fread has the same name as a MATLAB builtin. We suggest you rename the function to avoid a potential name conflict.] 
+[> In path (line 109)
+In addpath (line 86)] 
+[Warning: Function fwrite has the same name as a MATLAB builtin. We suggest you rename the function to avoid a potential name conflict.] 
+[> In path (line 109)
+In addpath (line 86)] 
+[Warning: Function textscan has the same name as a MATLAB builtin. We suggest you rename the function to avoid a potential name conflict.] 
+[> In path (line 109)
+In addpath (line 86)] 
+[Warning: Function fieldnames has the same name as a MATLAB builtin. We suggest you rename the function to avoid a potential name conflict.] 
+[> In path (line 109)
+In addpath (line 86)] 
+[Warning: Function isfile has the same name as a MATLAB builtin. We suggest you rename the function to avoid a potential name conflict.] 
+[> In path (line 109)
+In addpath (line 86)] 
+[Warning: Function strrep has the same name as a MATLAB builtin. We suggest you rename the function to avoid a potential name conflict.] 
+[> In path (line 109)
+In addpath (line 86)] 
+
+(From now on) Dparser set to: @(fn)images.internal.builtins.dicomparse(fn.name,fn.bytes,ENDIAN,false,DICTIONARY,true,true)
+      0 of    8118    100 of    8118    200 of    8118    300 of    8118    400 of    8118    500 of    8118    600 of    8118    700 of    8118    800 of    8118    900 of    8118   1000 of    8118   1100 of    8118   1200 of    8118   1300 of    8118   1400 of    8118   1500 of    8118   1600 of    8118   1700 of    8118   1800 of    8118   1900 of    8118   2000 of    8118   2100 of    8118   2200 of    8118   2300 of    8118   2400 of    8118   2500 of    8118   2600 of    8118   2700 of    8118   2800 of    8118   2900 of    8118   3000 of    8118   3100 of    8118   3200 of    8118   3300 of    8118   3400 of    8118   3500 of    8118   3600 of    8118   3700 of    8118   3800 of    8118   3900 of    8118   4000 of    8118   4100 of    8118   4200 of    8118   4300 of    8118   4400 of    8118   4500 of    8118   4600 of    8118   4700 of    8118   4800 of    8118   4900 of    8118   5000 of    8118   5100 of    8118   5200 of    8118   5300 of    8118   5400 of    8118   5500 of    8118   5600 of    8118   5700 of    8118   5800 of    8118   5900 of    8118   6000 of    8118   6100 of    8118   6200 of    8118   6300 of    8118   6400 of    8118   6500 of    8118   6600 of    8118   6700 of    8118   6800 of    8118   6900 of    8118   7000 of    8118   7100 of    8118   7200 of    8118   7300 of    8118   7400 of    8118   7500 of    8118   7600 of    8118   7700 of    8118   7800 of    8118   7900 of    8118   8000 of    8118   8100 of    8118 8074 files remaining ... 8071 files remaining ... 8068 files remaining ... 8065 files remaining ... 8062 files remaining ... 8059 files remaining ... 8056 files remaining ... 8055 files remaining ... 8054 files remaining ... 8047 files remaining ... 8022 files remaining ... 7997 files remaining ... 7972 files remaining ... 7956 files remaining ... 7940 files remaining ... 7924 files remaining ... 7908 files remaining ... 7892 files remaining ... 7876 files remaining ... 7860 files remaining ... 7844 files remaining ... 7828 files remaining ... 7812 files remaining ... 7787 files remaining ... 7762 files remaining ... 7737 files remaining ... 7712 files remaining ... 7687 files remaining ... 7662 files remaining ... 7637 files remaining ... 7612 files remaining ... 7587 files remaining ... 7562 files remaining ... 7522 files remaining ... 7122 files remaining ... 6722 files remaining ... 6322 files remaining ... 5692 files remaining ... 5292 files remaining ... 4892 files remaining ... 4492 files remaining ... 4092 files remaining ... 3692 files remaining ... 3292 files remaining ... 2892 files remaining ... 2492 files remaining ... 2092 files remaining ... 1692 files remaining ... 1667 files remaining ... 1642 files remaining ... 1617 files remaining ... 1592 files remaining ... 1567 files remaining ... 1542 files remaining ... 1517 files remaining ... 1492 files remaining ... 1467 files remaining ... 1442 files remaining ... 1417 files remaining ... 1392 files remaining ... 1367 files remaining ... 1342 files remaining ... 1317 files remaining ... 1301 files remaining ... 1285 files remaining ... 1269 files remaining ... 1253 files remaining ... 1237 files remaining ... 1221 files remaining ... 1205 files remaining ... 1189 files remaining ... 1173 files remaining ... 1157 files remaining ... 1154 files remaining ... 1151 files remaining ... 1148 files remaining ... 1145 files remaining ... 1142 files remaining ... 1139 files remaining ... 1138 files remaining ... 1137 files remaining ... 1130 files remaining ... 1105 files remaining ... 1080 files remaining ... 1055 files remaining ... 1030 files remaining ... 1005 files remaining ... 980 files remaining ... 955 files remaining ... 930 files remaining ... 905 files remaining ... 880 files remaining ... 855 files remaining ... 830 files remaining ... 805 files remaining ... 780 files remaining ... 765 files remaining ... 750 files remaining ... 735 files remaining ... 720 files remaining ... 705 files remaining ... 690 files remaining ... 675 files remaining ... 660 files remaining ... 645 files remaining ... 630 files remaining ... 615 files remaining ... 600 files remaining ... 585 files remaining ... 570 files remaining ... 555 files remaining ... 540 files remaining ... 525 files remaining ... 510 files remaining ... 495 files remaining ... 480 files remaining ... 465 files remaining ... 450 files remaining ... 435 files remaining ... 420 files remaining ... 405 files remaining ... 390 files remaining ... 375 files remaining ... 360 files remaining ... 345 files remaining ... 330 files remaining ... 315 files remaining ... 300 files remaining ... 285 files remaining ... 270 files remaining ... 255 files remaining ... 240 files remaining ... 225 files remaining ... 210 files remaining ... 195 files remaining ... 180 files remaining ... 165 files remaining ... 150 files remaining ... 135 files remaining ... 120 files remaining ... 105 files remaining ... 90 files remaining ... 75 files remaining ... 60 files remaining ... 45 files remaining ... 30 files remaining ... 15 files remaining ...Reading header using dicominfo ( 1 of 147 )Reading header using dicominfo ( 2 of 147 )Reading header using dicominfo ( 3 of 147 )Reading header using dicominfo ( 4 of 147 )Reading header using dicominfo ( 5 of 147 )Reading header using dicominfo ( 6 of 147 )Reading header using dicominfo ( 7 of 147 )Reading header using dicominfo ( 8 of 147 )Reading header using dicominfo ( 9 of 147 )Reading header using dicominfo ( 10 of 147 )Reading header using dicominfo ( 11 of 147 )Reading header using dicominfo ( 12 of 147 )Reading header using dicominfo ( 13 of 147 )Reading header using dicominfo ( 14 of 147 )Reading header using dicominfo ( 15 of 147 )Reading header using dicominfo ( 16 of 147 )Reading header using dicominfo ( 17 of 147 )Reading header using dicominfo ( 18 of 147 )Reading header using dicominfo ( 19 of 147 )Reading header using dicominfo ( 20 of 147 )Reading header using dicominfo ( 21 of 147 )Reading header using dicominfo ( 22 of 147 )Reading header using dicominfo ( 23 of 147 )Reading header using dicominfo ( 24 of 147 )Reading header using dicominfo ( 25 of 147 )Reading header using dicominfo ( 26 of 147 )Reading header using dicominfo ( 27 of 147 )Reading header using dicominfo ( 28 of 147 )Reading header using dicominfo ( 29 of 147 )Reading header using dicominfo ( 30 of 147 )Reading header using dicominfo ( 31 of 147 )Reading header using dicominfo ( 32 of 147 )Reading header using dicominfo ( 33 of 147 )Reading header using dicominfo ( 34 of 147 )Reading header using dicominfo ( 35 of 147 )Reading header using dicominfo ( 36 of 147 )Reading header using dicominfo ( 37 of 147 )Reading header using dicominfo ( 38 of 147 )
+--------------------------------------------------------------------------------
+             Access violation detected at 2026-10-14 08:44:55 +0200
+--------------------------------------------------------------------------------
+
+Configuration:
+  Crash Decoding           : Disabled - No sandbox or build area path
+  Crash Mode               : continue (default)
+  Default Encoding         : UTF-8
+  Deployed                 : false
+  Graphics Driver          : Uninitialized hardware 
+  Graphics card 1          : NVIDIA ( 0x10de ) NVIDIA GeForce RTX 4070 SUPER Version 32.0.16.1062 (2026-6-11)
+  Java Version             : Java 1.8.0_202-b08 with Oracle Corporation Java HotSpot(TM) 64-Bit Server VM mixed mode
+  MATLAB Architecture      : win64
+  MATLAB Entitlement ID    : 11737764
+  MATLAB Root              : C:\Win\MATLAB2022a
+  MATLAB Version           : 9.12.0.2529717 (R2022a) Update 8
+  OpenGL                   : hardware
+  Operating System         : Microsoft Windows 11 Pro
+  Process ID               : 8956
+  Processor ID             : x86 Family 6 Model 183 Stepping 1, GenuineIntel
+  Session Key              : e1b20a2f-7ca6-4598-bddf-8fa41c51b18c
+  Window System            : Version 10.0 (Build 26200)
+
+Fault Count: 1
+
+
+Abnormal termination:
+Access violation
+
+Current Thread: 'MCR 0 interpreter thread' id 44764
+
+Register State (from fault):
+  RAX = 0000000000000000  RBX = 000000607cbf9620
+  RCX = 000000607cbf9260  RDX = 000000000000008d
+  RSP = 000000607cbf89d8  RBP = 0000000000000000
+  RSI = 000000607cbf95f0  RDI = 000000607cbf9630
+ 
+   R8 = 0000000000000002   R9 = 0000020d4a2b66b8
+  R10 = 0000000000000000  R11 = 0000020d481532d0
+  R12 = 000000607cbf9630  R13 = 0000020d49cc5610
+  R14 = 0000020d41fbd610  R15 = 000000607cbf9620
+ 
+  RIP = 00007ffba467dc83  EFL = 00010287
+ 
+   CS = 0033   FS = 0053   GS = 002b
+
+Stack Trace (from fault):
+[  0] 0x00007ffba467dc83                          bin\win64\pgo\libmwir.dll+00056451 MathWorks::ts::Type::IsA+00000003
+[  1] 0x00007ffba43dae3a                    bin\win64\pgo\libmwlxetypes.dll+00044602 MathWorks::lxe::GetTypeTuple+00000154
+[  2] 0x00007ffb9dfe9017             C:\Win\MATLAB2022a\bin\win64\m_lxe.dll+03510295 MathWorks::lxe::ErrorStack::Top+00656183
+[  3] 0x00007ffb9dfecd7a             C:\Win\MATLAB2022a\bin\win64\m_lxe.dll+03526010 MathWorks::lxe::ErrorStack::Top+00671898
+[  4] 0x00007ffb9dfef4f4             C:\Win\MATLAB2022a\bin\win64\m_lxe.dll+03536116 MathWorks::lxe::ErrorStack::Top+00682004
+[  5] 0x00007ffb9df40dc1             C:\Win\MATLAB2022a\bin\win64\m_lxe.dll+02821569 MathWorks::lxe::LXEConstants::IsY+00016561
+[  6] 0x00007ffb9df40fc5             C:\Win\MATLAB2022a\bin\win64\m_lxe.dll+02822085 MathWorks::lxe::LXEConstants::IsY+00017077
+[  7] 0x00007ffb9df41273             C:\Win\MATLAB2022a\bin\win64\m_lxe.dll+02822771 MathWorks::lxe::LXEConstants::IsY+00017763
+[  8] 0x00007ffb9df41714             C:\Win\MATLAB2022a\bin\win64\m_lxe.dll+02823956 MathWorks::lxe::LXEConstants::IsY+00018948
+[  9] 0x00007ffb9dfeff07             C:\Win\MATLAB2022a\bin\win64\m_lxe.dll+03538695 MathWorks::lxe::ErrorStack::Top+00684583
+[ 10] 0x00007ffb9df57cd1             C:\Win\MATLAB2022a\bin\win64\m_lxe.dll+02915537 MathWorks::lxe::ErrorStack::Top+00061425
+[ 11] 0x00007ffb9df5825f             C:\Win\MATLAB2022a\bin\win64\m_lxe.dll+02916959 MathWorks::lxe::ErrorStack::Top+00062847
+[ 12] 0x00007ffb9e00a365             C:\Win\MATLAB2022a\bin\win64\m_lxe.dll+03646309 MathWorks::lxe::SetEngineImplUnlinkFlagForAllCallsOnStack+00039909
+[ 13] 0x00007ffb9e00afd0             C:\Win\MATLAB2022a\bin\win64\m_lxe.dll+03649488 MathWorks::lxe::SetEngineImplUnlinkFlagForAllCallsOnStack+00043088
+[ 14] 0x00007ffb9e00ec00             C:\Win\MATLAB2022a\bin\win64\m_lxe.dll+03664896 MathWorks::lxe::SetEngineImplUnlinkFlagForAllCallsOnStack+00058496
+[ 15] 0x00007ffba55ef850 C:\Win\MATLAB2022a\bin\win64\libmwlxemainservices.dll+01177680 FeatureTestObservableWorkspace+00186352
+[ 16] 0x00007ffba555bc7e C:\Win\MATLAB2022a\bin\win64\libmwlxemainservices.dll+00572542 mwboost::archive::detail::pointer_oserializer<mwboost::archive::xml_oarchive,MathWorks::lxe::PreLineExecutionEvent>::save_object_ptr+00069966
+[ 17] 0x00007ffba555d5bf C:\Win\MATLAB2022a\bin\win64\libmwlxemainservices.dll+00579007 mwboost::archive::detail::pointer_oserializer<mwboost::archive::xml_oarchive,MathWorks::lxe::PreLineExecutionEvent>::save_object_ptr+00076431
+[ 18] 0x00007ffba55b8d16 C:\Win\MATLAB2022a\bin\win64\libmwlxemainservices.dll+00953622 mwboost::archive::detail::pointer_oserializer<mwboost::archive::xml_oarchive,MathWorks::lxe::PreLineExecutionEvent>::save_object_ptr+00451046
+[ 19] 0x00007ffba55bacc7 C:\Win\MATLAB2022a\bin\win64\libmwlxemainservices.dll+00961735 mwboost::archive::detail::pointer_oserializer<mwboost::archive::xml_oarchive,MathWorks::lxe::PreLineExecutionEvent>::save_object_ptr+00459159
+[ 20] 0x00007ffba55b9dec C:\Win\MATLAB2022a\bin\win64\libmwlxemainservices.dll+00957932 mwboost::archive::detail::pointer_oserializer<mwboost::archive::xml_oarchive,MathWorks::lxe::PreLineExecutionEvent>::save_object_ptr+00455356
+[ 21] 0x00007ffba59b6012                    bin\win64\pgo\m_interpreter.dll+00090130 inEvalCmdWithLocalReturnInDesiredWSAndPublishEvents+00000074
+[ 22] 0x00007ffba5f395c5               C:\Win\MATLAB2022a\bin\win64\iqm.dll+00759237 iqm::InternalEvalPlugin::inEvalCmdWithLocalReturn+00000101
+[ 23] 0x00007ffba5f38ef7               C:\Win\MATLAB2022a\bin\win64\iqm.dll+00757495 iqm::InternalEvalPlugin::execute+00000247
+[ 24] 0x00007ffba5d6184d               C:\Win\MATLAB2022a\bin\win64\mcr.dll+00399437 services::lmgr::exception::LicensingStartupException::~LicensingStartupException+00006509
+[ 25] 0x00007ffba5f19882               C:\Win\MATLAB2022a\bin\win64\iqm.dll+00628866 iqm::Iqm::setupIqmFcnPtrs+00094722
+[ 26] 0x00007ffba5ef1b06               C:\Win\MATLAB2022a\bin\win64\iqm.dll+00465670 iqm::Iqm::create+00036646
+[ 27] 0x00007ffba5e8e2b3               C:\Win\MATLAB2022a\bin\win64\iqm.dll+00058035 iqm::BaseIqmPlugin::processMFileError+00001539
+[ 28] 0x00007ffba81159db            C:\Win\MATLAB2022a\bin\win64\mlutil.dll+03103195 cmddistributor::IIPRunNowMessage::deliver+00000027
+[ 29] 0x00007ffba71614bc           C:\Win\MATLAB2022a\bin\win64\libmwms.dll+01643708 foundation::msg_svc::exchange::MessageQueue::deliver+00000460
+[ 30] 0x00007ffba7162ece           C:\Win\MATLAB2022a\bin\win64\libmwms.dll+01650382 foundation::msg_svc::exchange::MessageQueue::sendReply+00004046
+[ 31] 0x00007ffba714acc0           C:\Win\MATLAB2022a\bin\win64\libmwms.dll+01551552 foundation::msg_svc::exchange::CommunicationErrorEvent::getTransportID+00075760
+[ 32] 0x00007ffba71591f9           C:\Win\MATLAB2022a\bin\win64\libmwms.dll+01610233 foundation::msg_svc::exchange::CommunicationErrorEvent::getTransportID+00134441
+[ 33] 0x00007ffba71578b6           C:\Win\MATLAB2022a\bin\win64\libmwms.dll+01603766 foundation::msg_svc::exchange::CommunicationErrorEvent::getTransportID+00127974
+[ 34] 0x00007ffba7f81c4d            C:\Win\MATLAB2022a\bin\win64\mlutil.dll+01449037 cmddistributor::IIP::EventMgrBypass::operator=+00047389
+[ 35] 0x00007ffba7f561a2            C:\Win\MATLAB2022a\bin\win64\mlutil.dll+01270178 cmddistributor::DebugLoopEvent::serializeExplicit+00023138
+[ 36] 0x00007ffba7ac134c               C:\Win\MATLAB2022a\bin\win64\mvm.dll+00463692 mvm::MVM::setClientCapabilities+00011020
+[ 37] 0x00007ffba5d3e50a               C:\Win\MATLAB2022a\bin\win64\mcr.dll+00255242 mwboost::archive::codecvt_null<wchar_t>::do_out+00003370
+[ 38] 0x00007ffba5d3dd62               C:\Win\MATLAB2022a\bin\win64\mcr.dll+00253282 mwboost::archive::codecvt_null<wchar_t>::do_out+00001410
+[ 39] 0x00007ffba5d189a3               C:\Win\MATLAB2022a\bin\win64\mcr.dll+00100771 mcrFunctionSignature::set_signature+00079731
+[ 40] 0x00007ffba5d36230               C:\Win\MATLAB2022a\bin\win64\mcr.dll+00221744 mwboost::archive::codecvt_null<wchar_t>::`default constructor closure'+00017584
+[ 41] 0x00007ffba5f4519a               C:\Win\MATLAB2022a\bin\win64\iqm.dll+00807322 iqm::PackagedTaskPlugin::execute+00000074
+[ 42] 0x00007ffba5d619ad               C:\Win\MATLAB2022a\bin\win64\mcr.dll+00399789 services::lmgr::exception::LicensingStartupException::~LicensingStartupException+00006861
+[ 43] 0x00007ffba5f19882               C:\Win\MATLAB2022a\bin\win64\iqm.dll+00628866 iqm::Iqm::setupIqmFcnPtrs+00094722
+[ 44] 0x00007ffba5eeaa41               C:\Win\MATLAB2022a\bin\win64\iqm.dll+00436801 iqm::Iqm::create+00007777
+[ 45] 0x00007ffbcf9c2de5       C:\Win\MATLAB2022a\bin\win64\libmwbridge.dll+00077285 ioReadLine+00000501
+[ 46] 0x00007ffbcf9c2bb5       C:\Win\MATLAB2022a\bin\win64\libmwbridge.dll+00076725 ioReadLine+00000165
+[ 47] 0x00007ffbcf9d2970       C:\Win\MATLAB2022a\bin\win64\libmwbridge.dll+00141680 mnGetCommandLineBuffer+00000288
+[ 48] 0x00007ffbcf9d2e02       C:\Win\MATLAB2022a\bin\win64\libmwbridge.dll+00142850 mnParser+00000466
+[ 49] 0x00007ffba5d67226               C:\Win\MATLAB2022a\bin\win64\mcr.dll+00422438 mcr_set_enableReadingFromStdin+00013622
+[ 50] 0x00007ffba5d189a3               C:\Win\MATLAB2022a\bin\win64\mcr.dll+00100771 mcrFunctionSignature::set_signature+00079731
+[ 51] 0x00007ffba5d36230               C:\Win\MATLAB2022a\bin\win64\mcr.dll+00221744 mwboost::archive::codecvt_null<wchar_t>::`default constructor closure'+00017584
+[ 52] 0x00007ffba5f4519a               C:\Win\MATLAB2022a\bin\win64\iqm.dll+00807322 iqm::PackagedTaskPlugin::execute+00000074
+[ 53] 0x00007ffba5d619ad               C:\Win\MATLAB2022a\bin\win64\mcr.dll+00399789 services::lmgr::exception::LicensingStartupException::~LicensingStartupException+00006861
+[ 54] 0x00007ffba5f19882               C:\Win\MATLAB2022a\bin\win64\iqm.dll+00628866 iqm::Iqm::setupIqmFcnPtrs+00094722
+[ 55] 0x00007ffba5eebd86               C:\Win\MATLAB2022a\bin\win64\iqm.dll+00441734 iqm::Iqm::create+00012710
+[ 56] 0x00007ffba5eeb472               C:\Win\MATLAB2022a\bin\win64\iqm.dll+00439410 iqm::Iqm::create+00010386
+[ 57] 0x00007ffba5d5072c               C:\Win\MATLAB2022a\bin\win64\mcr.dll+00329516 mcrInstantiationError::operator=+00010380
+[ 58] 0x00007ffba5d51165               C:\Win\MATLAB2022a\bin\win64\mcr.dll+00332133 mcrInstantiationError::operator=+00012997
+[ 59] 0x00007ffba5d4e930               C:\Win\MATLAB2022a\bin\win64\mcr.dll+00321840 mcrInstantiationError::operator=+00002704
+[ 60] 0x00007ffbe38885da C:\Win\MATLAB2022a\bin\win64\mwboost_thread-vc142-mt-x64-1_75.dll+00034266 mwboost::thread::swap+00000074
+[ 61] 0x00007ffc0f52cd30                   C:\WINDOWS\System32\ucrtbase.dll+00183600 wcsrchr+00000336
+[ 62] 0x00007ffc108fcd87                   C:\WINDOWS\System32\KERNEL32.DLL+00183687 BaseThreadInitThunk+00000023
+[ 63] 0x00007ffc120ccaec                      C:\WINDOWS\SYSTEM32\ntdll.dll+00707308 RtlUserThreadStart+00000044
+
+** This crash report has been saved to disk as C:\Users\ERNEST~1\AppData\Local\Temp\matlab_crash_dump.8956-1 **
+
+
+
+MATLAB is exiting because of fatal error
+ERROR: MATLAB error Exit Status: 0xc0000005, Access violation

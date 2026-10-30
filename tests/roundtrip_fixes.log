@@ -1,0 +1,256 @@
+MI-PID 54212
+Building with 'Microsoft Visual C++ 2022'.
+MEX completed successfully.
+mmex: read_I3D_mx.cpp -> read_I3D_mx.mexw64
+[Warning: Function plot has the same name as a MATLAB builtin. We suggest you rename the function to avoid a potential name conflict.] 
+[> In path (line 109)
+In addpath (line 86)] 
+[Warning: Function fread has the same name as a MATLAB builtin. We suggest you rename the function to avoid a potential name conflict.] 
+[> In path (line 109)
+In addpath (line 86)] 
+[Warning: Function fwrite has the same name as a MATLAB builtin. We suggest you rename the function to avoid a potential name conflict.] 
+[> In path (line 109)
+In addpath (line 86)] 
+[Warning: Function textscan has the same name as a MATLAB builtin. We suggest you rename the function to avoid a potential name conflict.] 
+[> In path (line 109)
+In addpath (line 86)] 
+[Warning: Function fieldnames has the same name as a MATLAB builtin. We suggest you rename the function to avoid a potential name conflict.] 
+[> In path (line 109)
+In addpath (line 86)] 
+[Warning: Function isfile has the same name as a MATLAB builtin. We suggest you rename the function to avoid a potential name conflict.] 
+[> In path (line 109)
+In addpath (line 86)] 
+[Warning: Function strrep has the same name as a MATLAB builtin. We suggest you rename the function to avoid a potential name conflict.] 
+[> In path (line 109)
+In addpath (line 86)] 
+[Warning: 1 value output(s) requested and no default given; the default(s) will be []. Add '$DEFS$' and 1 default(s) -- a char default can only be given that way. (warned once per
+session)] 
+[> In I3D (line 99)
+In check_roundtrip (line 38)] 
+  ok   int16_rot        raw      mex: read
+  ok   int16_rot        zlib     mex: read
+  ok   int16_rot        volume   mex: read
+  ok   int16_rot        tblocks  mex: read
+  ok   int16_rot        chunked  mex: read
+  ok   int16_rot        crc      mex: read
+  ok   int16_rot        jpegls   mex: read
+  ok   int16_rot        hidden   mex: read
+  ok   int16_rot        corrupt  mex: read
+  ok   int16_rot        edited   mex: read
+  ok   int16_rot        plus     mex: read
+  ok   int16_rot        eof      mex: read
+  ok   int16_rot        perm     mex: read
+  ok   int16_rot        crcbad   mex: read_I3D:badCRC
+  ok   uint16_1slice    raw      mex: read
+  ok   uint16_1slice    zlib     mex: read
+  ok   uint16_1slice    volume   mex: read
+  ok   uint16_1slice    tblocks  mex: read
+  ok   uint16_1slice    chunked  mex: read
+  ok   uint16_1slice    crc      mex: read
+  ok   uint16_1slice    jpegls   mex: read
+  ok   uint16_1slice    hidden   mex: read
+  ok   single_rgb       raw      mex: read
+  ok   single_rgb       zlib     mex: read
+  ok   single_rgb       volume   mex: read
+  ok   single_rgb       tblocks  mex: read
+  ok   single_rgb       chunked  mex: read
+  ok   single_rgb       crc      mex: read
+  ok   single_rgb       hidden   mex: read
+  ok   double_tensor    raw      mex: read
+  ok   double_tensor    zlib     mex: read
+  ok   double_tensor    volume   mex: read
+  ok   double_tensor    tblocks  mex: read
+  ok   double_tensor    chunked  mex: read
+  ok   double_tensor    crc      mex: read
+  ok   double_tensor    hidden   mex: read
+  ok   logical          raw      mex: read
+  ok   logical          zlib     mex: read
+  ok   logical          volume   mex: read
+  ok   logical          tblocks  mex: read
+  ok   logical          chunked  mex: read
+  ok   logical          crc      mex: read
+  ok   logical          jpegls   mex: read
+  ok   logical          hidden   mex: read
+  ok   uint8_nonunif    raw      mex: read
+  ok   uint8_nonunif    zlib     mex: read
+  ok   uint8_nonunif    volume   mex: read
+  ok   uint8_nonunif    tblocks  mex: read
+  ok   uint8_nonunif    chunked  mex: read
+  ok   uint8_nonunif    crc      mex: read
+  ok   uint8_nonunif    jpegls   mex: read
+  ok   uint8_nonunif    hidden   mex: read
+  ok   int64_ext        raw      mex: read
+  ok   int64_ext        zlib     mex: read
+  ok   int64_ext        volume   mex: read
+  ok   int64_ext        tblocks  mex: read
+  ok   int64_ext        chunked  mex: read
+  ok   int64_ext        crc      mex: read
+  ok   int64_ext        hidden   mex: read
+  ok   uint64_max       raw      mex: read
+  ok   uint64_max       zlib     mex: read
+  ok   uint64_max       volume   mex: read
+  ok   uint64_max       tblocks  mex: read
+  ok   uint64_max       chunked  mex: read
+  ok   uint64_max       crc      mex: read
+  ok   uint64_max       hidden   mex: read
+  ok   translation      raw      mex: read
+  ok   translation      zlib     mex: read
+  ok   translation      volume   mex: read
+  ok   translation      tblocks  mex: read
+  ok   translation      chunked  mex: read
+  ok   translation      crc      mex: read
+  ok   translation      jpegls   mex: read
+  ok   translation      hidden   mex: read
+  ok   almost_uniform   raw      mex: read
+  ok   almost_uniform   zlib     mex: read
+  ok   almost_uniform   volume   mex: read
+  ok   almost_uniform   tblocks  mex: read
+  ok   almost_uniform   chunked  mex: read
+  ok   almost_uniform   crc      mex: read
+  ok   almost_uniform   jpegls   mex: read
+  ok   almost_uniform   hidden   mex: read
+  ok   uint8_rgb        raw      mex: read
+  ok   uint8_rgb        zlib     mex: read
+  ok   uint8_rgb        volume   mex: read
+  ok   uint8_rgb        tblocks  mex: read
+  ok   uint8_rgb        chunked  mex: read
+  ok   uint8_rgb        crc      mex: read
+  ok   uint8_rgb        jpegls   mex: read
+  ok   uint8_rgb        hidden   mex: read
+----- int16_rot_zlib
+I3D 0.1  # write_I3D 2026-10-13 16:09:20
+X[5] = 0.0 : 0.703125 : 2.8125
+Y[4] = 0.0 : 0.1 : 0.30000000000000004
+Z[3] = 0.0 8.0 16.000000000000004  # not uniform: steps 8.0 .. 8.000000000000004
+T[2] = 0.0 : 38.5 : 38.5
+transform = 0.8660254037844386   0.0   -0.5                  -180.1  # rot 30 deg about [0 -1 0] (orthonormal to 1.1e-16)
+            0.0                  1.0    0.0                   -95.3
+            0.5                  0.0    0.8660254037844386     41.0
+data          = <zlib int16 @0:130>  # 5 x 4 x 3 x 2, int16
+data(:,:,:,2) = <zlib int16 @131:261>
+aux.thumbnailK = <zlib uint8 {7 5 1 2} @262:342>
+---
+
+----- int16_rot_crc
+I3D 0.1  # write_I3D 2026-10-13 16:09:20
+X[5] = 0.0 : 0.703125 : 2.8125
+Y[4] = 0.0 : 0.1 : 0.30000000000000004
+Z[3] = 0.0 8.0 16.000000000000004  # not uniform: steps 8.0 .. 8.000000000000004
+T[2] = 0.0 : 38.5 : 38.5
+transform = 0.8660254037844386   0.0   -0.5                  -180.1  # rot 30 deg about [0 -1 0] (orthonormal to 1.1e-16)
+            0.0                  1.0    0.0                   -95.3
+            0.5                  0.0    0.8660254037844386     41.0
+data          = <zlib int16 @0:130 crc 08d42207>  # 5 x 4 x 3 x 2, int16
+data(:,:,:,2) = <zlib int16 @131:261 crc 8c892b60>
+aux.thumbnailK = <zlib uint8 {7 5 1 2} @262:342 crc e0e0000b>
+---
+
+----- int16_rot_jpegls
+I3D 0.1  # write_I3D 2026-10-13 16:09:20
+X[5] = 0.0 : 0.703125 : 2.8125
+Y[4] = 0.0 : 0.1 : 0.30000000000000004
+Z[3] = 0.0 8.0 16.000000000000004  # not uniform: steps 8.0 .. 8.000000000000004
+T[2] = 0.0 : 38.5 : 38.5
+transform = 0.8660254037844386   0.0   -0.5                  -180.1  # rot 30 deg about [0 -1 0] (orthonormal to 1.1e-16)
+            0.0                  1.0    0.0                   -95.3
+            0.5                  0.0    0.8660254037844386     41.0
+data(:,:,1)   = <jpegls int16 @0:80 crc 12a57f80>  # 5 x 4 x 3 x 2, int16
+data(:,:,2)   = <jpegls int16 @81:161 crc a1450257>
+data(:,:,3)   = <jpegls int16 @162:241 crc e95cc8e2>
+data(:,:,1,2) = <jpegls int16 @242:323 crc 31f422b4>
+data(:,:,2,2) = <jpegls int16 @324:404 crc 98ca3d3c>
+data(:,:,3,2) = <jpegls int16 @405:486 crc 0cc30777>
+aux.thumbnailK = <zlib uint8 {7 5 1 2} @487:567 crc e0e0000b>
+---
+
+  ok   almost_uniform   chunked  py: ok          cpp: ok
+  ok   almost_uniform   crc      py: ok          cpp: ok
+  ok   almost_uniform   hidden   py: ok          cpp: ok
+  ok   almost_uniform   jpegls   py: ok          cpp: ok
+  ok   almost_uniform   raw      py: ok          cpp: ok
+  ok   almost_uniform   tblocks  py: ok          cpp: ok
+  ok   almost_uniform   volume   py: ok          cpp: ok
+  ok   almost_uniform   zlib     py: ok          cpp: ok
+  ok   double_tensor    chunked  py: ok          cpp: ok
+  ok   double_tensor    crc      py: ok          cpp: ok
+  ok   double_tensor    hidden   py: ok          cpp: ok
+  ok   double_tensor    raw      py: ok          cpp: ok
+  ok   double_tensor    tblocks  py: ok          cpp: ok
+  ok   double_tensor    volume   py: ok          cpp: ok
+  ok   double_tensor    zlib     py: ok          cpp: ok
+  ok   int16_rot        chunked  py: ok          cpp: ok
+  ok   int16_rot        corrupt  py: ok          cpp: ok
+  ok   int16_rot        crc      py: ok          cpp: ok
+  ok   int16_rot        crcbad   py: ok(badCRC)  cpp: ok(badCRC)
+  ok   int16_rot        edited   py: ok          cpp: ok
+  ok   int16_rot        eof      py: ok          cpp: ok
+  ok   int16_rot        hidden   py: ok          cpp: ok
+  ok   int16_rot        jpegls   py: ok          cpp: ok
+  ok   int16_rot        perm     py: ok          cpp: ok
+  ok   int16_rot        plus     py: ok          cpp: ok
+  ok   int16_rot        raw      py: ok          cpp: ok
+  ok   int16_rot        tblocks  py: ok          cpp: ok
+  ok   int16_rot        volume   py: ok          cpp: ok
+  ok   int16_rot        zlib     py: ok          cpp: ok
+  ok   int64_ext        chunked  py: ok          cpp: ok
+  ok   int64_ext        crc      py: ok          cpp: ok
+  ok   int64_ext        hidden   py: ok          cpp: ok
+  ok   int64_ext        raw      py: ok          cpp: ok
+  ok   int64_ext        tblocks  py: ok          cpp: ok
+  ok   int64_ext        volume   py: ok          cpp: ok
+  ok   int64_ext        zlib     py: ok          cpp: ok
+  ok   logical          chunked  py: ok          cpp: ok
+  ok   logical          crc      py: ok          cpp: ok
+  ok   logical          hidden   py: ok          cpp: ok
+  ok   logical          jpegls   py: ok          cpp: ok
+  ok   logical          raw      py: ok          cpp: ok
+  ok   logical          tblocks  py: ok          cpp: ok
+  ok   logical          volume   py: ok          cpp: ok
+  ok   logical          zlib     py: ok          cpp: ok
+  ok   single_rgb       chunked  py: ok          cpp: ok
+  ok   single_rgb       crc      py: ok          cpp: ok
+  ok   single_rgb       hidden   py: ok          cpp: ok
+  ok   single_rgb       raw      py: ok          cpp: ok
+  ok   single_rgb       tblocks  py: ok          cpp: ok
+  ok   single_rgb       volume   py: ok          cpp: ok
+  ok   single_rgb       zlib     py: ok          cpp: ok
+  ok   translation      chunked  py: ok          cpp: ok
+  ok   translation      crc      py: ok          cpp: ok
+  ok   translation      hidden   py: ok          cpp: ok
+  ok   translation      jpegls   py: ok          cpp: ok
+  ok   translation      raw      py: ok          cpp: ok
+  ok   translation      tblocks  py: ok          cpp: ok
+  ok   translation      volume   py: ok          cpp: ok
+  ok   translation      zlib     py: ok          cpp: ok
+  ok   uint16_1slice    chunked  py: ok          cpp: ok
+  ok   uint16_1slice    crc      py: ok          cpp: ok
+  ok   uint16_1slice    hidden   py: ok          cpp: ok
+  ok   uint16_1slice    jpegls   py: ok          cpp: ok
+  ok   uint16_1slice    raw      py: ok          cpp: ok
+  ok   uint16_1slice    tblocks  py: ok          cpp: ok
+  ok   uint16_1slice    volume   py: ok          cpp: ok
+  ok   uint16_1slice    zlib     py: ok          cpp: ok
+  ok   uint64_max       chunked  py: ok          cpp: ok
+  ok   uint64_max       crc      py: ok          cpp: ok
+  ok   uint64_max       hidden   py: ok          cpp: ok
+  ok   uint64_max       raw      py: ok          cpp: ok
+  ok   uint64_max       tblocks  py: ok          cpp: ok
+  ok   uint64_max       volume   py: ok          cpp: ok
+  ok   uint64_max       zlib     py: ok          cpp: ok
+  ok   uint8_nonunif    chunked  py: ok          cpp: ok
+  ok   uint8_nonunif    crc      py: ok          cpp: ok
+  ok   uint8_nonunif    hidden   py: ok          cpp: ok
+  ok   uint8_nonunif    jpegls   py: ok          cpp: ok
+  ok   uint8_nonunif    raw      py: ok          cpp: ok
+  ok   uint8_nonunif    tblocks  py: ok          cpp: ok
+  ok   uint8_nonunif    volume   py: ok          cpp: ok
+  ok   uint8_nonunif    zlib     py: ok          cpp: ok
+  ok   uint8_rgb        chunked  py: ok          cpp: ok
+  ok   uint8_rgb        crc      py: ok          cpp: ok
+  ok   uint8_rgb        hidden   py: ok          cpp: ok
+  ok   uint8_rgb        jpegls   py: ok          cpp: ok
+  ok   uint8_rgb        raw      py: ok          cpp: ok
+  ok   uint8_rgb        tblocks  py: ok          cpp: ok
+  ok   uint8_rgb        volume   py: ok          cpp: ok
+  ok   uint8_rgb        zlib     py: ok          cpp: ok
+90 files, 0 failed

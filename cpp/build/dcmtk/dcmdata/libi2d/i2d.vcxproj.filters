@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmdata\libi2d\i2d.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmdata\libi2d\i2dplvlp.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmdata\libi2d\i2djpgs.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmdata\libi2d\i2dbmps.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmdata\libi2d\i2dplsc.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmdata\libi2d\i2dplnsc.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmdata\libi2d\i2dplop.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmdata\libi2d\i2doutpl.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmdata\libi2d\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{1367570D-A4A4-3818-B410-8522EDC73B91}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <RootNamespace>I3D</RootNamespace>
+    <!-- NO "I3D": Windows no distingue mayusculas, y I3D.dll (gestionada) pisaria a
+         i3d.dll (la nativa), y el P/Invoke cargaria la gestionada -->
+    <AssemblyName>I3D.Net</AssemblyName>
+    <!-- la DLL nativa es de 64 bits -->
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- la libreria nativa (cpp/build.bat), junto al ensamblado y a quien lo use -->
+    <None Include="..\..\cpp\build\i3d.dll" Link="i3d.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

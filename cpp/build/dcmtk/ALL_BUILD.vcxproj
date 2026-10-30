@@ -1,0 +1,237 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ResolveNugetPackages>false</ResolveNugetPackages>
+  </PropertyGroup>
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="MinSizeRel|x64">
+      <Configuration>MinSizeRel</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebInfo|x64">
+      <Configuration>RelWithDebInfo</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{92A6C53A-6BF0-303F-9308-AB8AFF16C0CE}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0.26100.0</WindowsTargetPlatformVersion>
+    <Platform>x64</Platform>
+    <ProjectName>ALL_BUILD</ProjectName>
+    <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+    <UseDebugLibraries>true</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+    <UseDebugLibraries>false</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+    <UseDebugLibraries>false</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+    <UseDebugLibraries>false</UseDebugLibraries>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Midl>
+      <AdditionalIncludeDirectories>C:\repos\I3Dfileformat\cpp\build\dcmtk\config\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\ofstd\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmdata\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmimgle\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmimage\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmjpeg\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmjpls\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Midl>
+      <AdditionalIncludeDirectories>C:\repos\I3Dfileformat\cpp\build\dcmtk\config\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\ofstd\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmdata\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmimgle\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmimage\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmjpeg\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmjpls\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
+    <Midl>
+      <AdditionalIncludeDirectories>C:\repos\I3Dfileformat\cpp\build\dcmtk\config\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\ofstd\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmdata\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmimgle\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmimage\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmjpeg\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmjpls\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
+    <Midl>
+      <AdditionalIncludeDirectories>C:\repos\I3Dfileformat\cpp\build\dcmtk\config\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\ofstd\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\oflog\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmdata\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmimgle\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmimage\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmjpeg\include;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmjpls\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\CMakeLists.txt">
+      <UseUtf8Encoding>Always</UseUtf8Encoding>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule C:/repos/I3Dfileformat/third_party/dcmtk-3.7.0/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+C:\Win\CMake\bin\cmake.exe -SC:/repos/I3Dfileformat/third_party/dcmtk-3.7.0 -BC:/repos/I3Dfileformat/cpp/build/dcmtk --check-stamp-file C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Win\CMake\share\cmake-4.0\Modules\BasicConfigVersion-SameMajorVersion.cmake.in;C:\Win\CMake\share\cmake-4.0\Modules\CMakeCInformation.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CMakeCXXInformation.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CMakeCommonLanguageInclude.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CMakeGenericSystem.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CMakeInitializeConfigs.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CMakeLanguageInformation.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CMakePackageConfigHelpers.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CMakeParseArguments.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CMakeRCInformation.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CMakeSystemSpecificInformation.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CMakeSystemSpecificInitialize.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CheckCXXSymbolExists.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CheckFunctionExists.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CheckIncludeFile.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CheckIncludeFileCXX.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CheckIncludeFiles.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CheckLibraryExists.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CheckSymbolExists.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CheckTypeSize.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Compiler\MSVC-C.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Compiler\MSVC-CXX.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Compiler\MSVC.cmake;C:\Win\CMake\share\cmake-4.0\Modules\GNUInstallDirs.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Internal\CMakeCLinkerInformation.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Internal\CMakeCXXLinkerInformation.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Internal\CMakeCommonLinkerInformation.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Linker\MSVC-C.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Linker\MSVC-CXX.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Linker\MSVC.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Platform\Linker\Windows-MSVC-C.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Platform\Linker\Windows-MSVC-CXX.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Platform\Linker\Windows-MSVC.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Platform\Windows-Initialize.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Platform\Windows-MSVC-C.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Platform\Windows-MSVC.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Platform\Windows.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Platform\WindowsPaths.cmake;C:\Win\CMake\share\cmake-4.0\Modules\WriteBasicConfigVersionFile.cmake;C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\4.0.3\CMakeCCompiler.cmake;C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\4.0.3\CMakeCXXCompiler.cmake;C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\4.0.3\CMakeRCCompiler.cmake;C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\4.0.3\CMakeSystem.cmake;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\CMake\3rdparty.cmake;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\CMake\CTest\dcmtkCTestRun.cmake.in;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\CMake\CheckCMakeCommandExists.cmake;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\CMake\CheckFunctionWithHeaderExists.cmake;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\CMake\DCMTKConfig.cmake.in;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\CMake\GenerateCMakeExports.cmake;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\CMake\GenerateDCMTKConfigure.cmake;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\CMake\dcmtk.pc.in;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\CMake\dcmtkAfterModules.cmake;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\CMake\dcmtkMacros.cmake;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\CMake\dcmtkPrepare.cmake;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\CMake\dcmtkTryCompile.cmake;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\CMake\dcmtkTryRun.cmake;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\CMake\osconfig.h.in;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule C:/repos/I3Dfileformat/third_party/dcmtk-3.7.0/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+C:\Win\CMake\bin\cmake.exe -SC:/repos/I3Dfileformat/third_party/dcmtk-3.7.0 -BC:/repos/I3Dfileformat/cpp/build/dcmtk --check-stamp-file C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Win\CMake\share\cmake-4.0\Modules\BasicConfigVersion-SameMajorVersion.cmake.in;C:\Win\CMake\share\cmake-4.0\Modules\CMakeCInformation.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CMakeCXXInformation.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CMakeCommonLanguageInclude.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CMakeGenericSystem.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CMakeInitializeConfigs.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CMakeLanguageInformation.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CMakePackageConfigHelpers.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CMakeParseArguments.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CMakeRCInformation.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CMakeSystemSpecificInformation.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CMakeSystemSpecificInitialize.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CheckCXXSymbolExists.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CheckFunctionExists.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CheckIncludeFile.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CheckIncludeFileCXX.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CheckIncludeFiles.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CheckLibraryExists.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CheckSymbolExists.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CheckTypeSize.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Compiler\MSVC-C.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Compiler\MSVC-CXX.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Compiler\MSVC.cmake;C:\Win\CMake\share\cmake-4.0\Modules\GNUInstallDirs.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Internal\CMakeCLinkerInformation.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Internal\CMakeCXXLinkerInformation.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Internal\CMakeCommonLinkerInformation.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Linker\MSVC-C.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Linker\MSVC-CXX.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Linker\MSVC.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Platform\Linker\Windows-MSVC-C.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Platform\Linker\Windows-MSVC-CXX.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Platform\Linker\Windows-MSVC.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Platform\Windows-Initialize.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Platform\Windows-MSVC-C.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Platform\Windows-MSVC.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Platform\Windows.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Platform\WindowsPaths.cmake;C:\Win\CMake\share\cmake-4.0\Modules\WriteBasicConfigVersionFile.cmake;C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\4.0.3\CMakeCCompiler.cmake;C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\4.0.3\CMakeCXXCompiler.cmake;C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\4.0.3\CMakeRCCompiler.cmake;C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\4.0.3\CMakeSystem.cmake;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\CMake\3rdparty.cmake;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\CMake\CTest\dcmtkCTestRun.cmake.in;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\CMake\CheckCMakeCommandExists.cmake;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\CMake\CheckFunctionWithHeaderExists.cmake;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\CMake\DCMTKConfig.cmake.in;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\CMake\GenerateCMakeExports.cmake;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\CMake\GenerateDCMTKConfigure.cmake;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\CMake\dcmtk.pc.in;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\CMake\dcmtkAfterModules.cmake;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\CMake\dcmtkMacros.cmake;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\CMake\dcmtkPrepare.cmake;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\CMake\dcmtkTryCompile.cmake;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\CMake\dcmtkTryRun.cmake;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\CMake\osconfig.h.in;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule C:/repos/I3Dfileformat/third_party/dcmtk-3.7.0/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+C:\Win\CMake\bin\cmake.exe -SC:/repos/I3Dfileformat/third_party/dcmtk-3.7.0 -BC:/repos/I3Dfileformat/cpp/build/dcmtk --check-stamp-file C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Win\CMake\share\cmake-4.0\Modules\BasicConfigVersion-SameMajorVersion.cmake.in;C:\Win\CMake\share\cmake-4.0\Modules\CMakeCInformation.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CMakeCXXInformation.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CMakeCommonLanguageInclude.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CMakeGenericSystem.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CMakeInitializeConfigs.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CMakeLanguageInformation.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CMakePackageConfigHelpers.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CMakeParseArguments.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CMakeRCInformation.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CMakeSystemSpecificInformation.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CMakeSystemSpecificInitialize.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CheckCXXSymbolExists.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CheckFunctionExists.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CheckIncludeFile.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CheckIncludeFileCXX.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CheckIncludeFiles.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CheckLibraryExists.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CheckSymbolExists.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CheckTypeSize.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Compiler\MSVC-C.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Compiler\MSVC-CXX.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Compiler\MSVC.cmake;C:\Win\CMake\share\cmake-4.0\Modules\GNUInstallDirs.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Internal\CMakeCLinkerInformation.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Internal\CMakeCXXLinkerInformation.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Internal\CMakeCommonLinkerInformation.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Linker\MSVC-C.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Linker\MSVC-CXX.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Linker\MSVC.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Platform\Linker\Windows-MSVC-C.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Platform\Linker\Windows-MSVC-CXX.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Platform\Linker\Windows-MSVC.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Platform\Windows-Initialize.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Platform\Windows-MSVC-C.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Platform\Windows-MSVC.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Platform\Windows.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Platform\WindowsPaths.cmake;C:\Win\CMake\share\cmake-4.0\Modules\WriteBasicConfigVersionFile.cmake;C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\4.0.3\CMakeCCompiler.cmake;C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\4.0.3\CMakeCXXCompiler.cmake;C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\4.0.3\CMakeRCCompiler.cmake;C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\4.0.3\CMakeSystem.cmake;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\CMake\3rdparty.cmake;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\CMake\CTest\dcmtkCTestRun.cmake.in;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\CMake\CheckCMakeCommandExists.cmake;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\CMake\CheckFunctionWithHeaderExists.cmake;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\CMake\DCMTKConfig.cmake.in;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\CMake\GenerateCMakeExports.cmake;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\CMake\GenerateDCMTKConfigure.cmake;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\CMake\dcmtk.pc.in;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\CMake\dcmtkAfterModules.cmake;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\CMake\dcmtkMacros.cmake;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\CMake\dcmtkPrepare.cmake;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\CMake\dcmtkTryCompile.cmake;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\CMake\dcmtkTryRun.cmake;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\CMake\osconfig.h.in;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule C:/repos/I3Dfileformat/third_party/dcmtk-3.7.0/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+C:\Win\CMake\bin\cmake.exe -SC:/repos/I3Dfileformat/third_party/dcmtk-3.7.0 -BC:/repos/I3Dfileformat/cpp/build/dcmtk --check-stamp-file C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Win\CMake\share\cmake-4.0\Modules\BasicConfigVersion-SameMajorVersion.cmake.in;C:\Win\CMake\share\cmake-4.0\Modules\CMakeCInformation.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CMakeCXXInformation.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CMakeCommonLanguageInclude.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CMakeGenericSystem.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CMakeInitializeConfigs.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CMakeLanguageInformation.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CMakePackageConfigHelpers.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CMakeParseArguments.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CMakeRCInformation.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CMakeSystemSpecificInformation.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CMakeSystemSpecificInitialize.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CheckCXXSymbolExists.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CheckFunctionExists.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CheckIncludeFile.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CheckIncludeFileCXX.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CheckIncludeFiles.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CheckLibraryExists.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CheckSymbolExists.cmake;C:\Win\CMake\share\cmake-4.0\Modules\CheckTypeSize.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Compiler\MSVC-C.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Compiler\MSVC-CXX.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Compiler\MSVC.cmake;C:\Win\CMake\share\cmake-4.0\Modules\GNUInstallDirs.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Internal\CMakeCLinkerInformation.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Internal\CMakeCXXLinkerInformation.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Internal\CMakeCommonLinkerInformation.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Linker\MSVC-C.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Linker\MSVC-CXX.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Linker\MSVC.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Platform\Linker\Windows-MSVC-C.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Platform\Linker\Windows-MSVC-CXX.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Platform\Linker\Windows-MSVC.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Platform\Windows-Initialize.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Platform\Windows-MSVC-C.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Platform\Windows-MSVC.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Platform\Windows.cmake;C:\Win\CMake\share\cmake-4.0\Modules\Platform\WindowsPaths.cmake;C:\Win\CMake\share\cmake-4.0\Modules\WriteBasicConfigVersionFile.cmake;C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\4.0.3\CMakeCCompiler.cmake;C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\4.0.3\CMakeCXXCompiler.cmake;C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\4.0.3\CMakeRCCompiler.cmake;C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\4.0.3\CMakeSystem.cmake;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\CMake\3rdparty.cmake;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\CMake\CTest\dcmtkCTestRun.cmake.in;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\CMake\CheckCMakeCommandExists.cmake;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\CMake\CheckFunctionWithHeaderExists.cmake;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\CMake\DCMTKConfig.cmake.in;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\CMake\GenerateCMakeExports.cmake;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\CMake\GenerateDCMTKConfigure.cmake;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\CMake\dcmtk.pc.in;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\CMake\dcmtkAfterModules.cmake;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\CMake\dcmtkMacros.cmake;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\CMake\dcmtkPrepare.cmake;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\CMake\dcmtkTryCompile.cmake;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\CMake\dcmtkTryRun.cmake;C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\CMake\osconfig.h.in;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="C:\repos\I3Dfileformat\cpp\build\dcmtk\ZERO_CHECK.vcxproj">
+      <Project>{6D2309F3-0FDA-3950-951A-26A8A78BA3E8}</Project>
+      <Name>ZERO_CHECK</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+    <ProjectReference Include="C:\repos\I3Dfileformat\cpp\build\dcmtk\dcmdata\libsrc\dcmdata.vcxproj">
+      <Project>{509D9B3B-3A68-3743-AD16-B139C1585810}</Project>
+      <Name>dcmdata</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\repos\I3Dfileformat\cpp\build\dcmtk\dcmimage\libsrc\dcmimage.vcxproj">
+      <Project>{BBC088B9-D8CA-34EA-BEF3-B1FF64D02B0C}</Project>
+      <Name>dcmimage</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\repos\I3Dfileformat\cpp\build\dcmtk\dcmimgle\libsrc\dcmimgle.vcxproj">
+      <Project>{567267D1-5278-37EC-A800-0976B07CFC1B}</Project>
+      <Name>dcmimgle</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\repos\I3Dfileformat\cpp\build\dcmtk\dcmjpeg\libsrc\dcmjpeg.vcxproj">
+      <Project>{BD41C2FE-9EAE-3240-8920-632D7E89EC08}</Project>
+      <Name>dcmjpeg</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\repos\I3Dfileformat\cpp\build\dcmtk\dcmjpls\libsrc\dcmjpls.vcxproj">
+      <Project>{A2960196-2BEE-364E-9D61-93337CA8A770}</Project>
+      <Name>dcmjpls</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\repos\I3Dfileformat\cpp\build\dcmtk\dcmjpls\libcharls\dcmtkcharls.vcxproj">
+      <Project>{E825456A-8F1F-34A3-9BED-73E986F7D3E6}</Project>
+      <Name>dcmtkcharls</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\repos\I3Dfileformat\cpp\build\dcmtk\dcmdata\libdcxml\dcmxml.vcxproj">
+      <Project>{B0436174-25D8-353F-865F-F84117D8EE38}</Project>
+      <Name>dcmxml</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\repos\I3Dfileformat\cpp\build\dcmtk\dcmdata\libi2d\i2d.vcxproj">
+      <Project>{2CEB4EBF-F624-3A61-BEF8-612CA71ADB51}</Project>
+      <Name>i2d</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\repos\I3Dfileformat\cpp\build\dcmtk\dcmjpeg\libijg12\ijg12.vcxproj">
+      <Project>{60EDE404-AD41-3C6F-9EC7-0833794044B1}</Project>
+      <Name>ijg12</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\repos\I3Dfileformat\cpp\build\dcmtk\dcmjpeg\libijg16\ijg16.vcxproj">
+      <Project>{765DE84B-D167-31E8-A5F0-EA95BBCD0BAE}</Project>
+      <Name>ijg16</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\repos\I3Dfileformat\cpp\build\dcmtk\dcmjpeg\libijg8\ijg8.vcxproj">
+      <Project>{7F84EE2F-7D32-36A4-91C2-DB749D56EC71}</Project>
+      <Name>ijg8</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\repos\I3Dfileformat\cpp\build\dcmtk\oflog\libsrc\oflog.vcxproj">
+      <Project>{B9B5AF25-9D5B-3D0A-9288-4EADD1161DBC}</Project>
+      <Name>oflog</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\repos\I3Dfileformat\cpp\build\dcmtk\ofstd\libsrc\ofstd.vcxproj">
+      <Project>{94553612-70AA-38EB-8FEB-F7F4B3F0BCAE}</Project>
+      <Name>ofstd</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

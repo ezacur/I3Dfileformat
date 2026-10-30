@@ -1,0 +1,14 @@
+prefix="C:/repos/I3Dfileformat/cpp/build/dcmtk-install"
+exec_prefix="${prefix}"
+libdir="C:/repos/I3Dfileformat/cpp/build/dcmtk-install/lib"
+includedir="${prefix}/include/"
+
+Name: DCMTK
+Description: DICOM Toolkit (DCMTK)
+URL: https://dcmtk.org
+Version: 3.7.0
+Requires: 
+Requires.private: 
+Cflags: -I"${includedir}"
+Libs: -L"${libdir}"  -lofstd -loflog -ldcmdata -li2d -ldcmxml -ldcmimgle -ldcmimage -ldcmjpeg -lijg8 -lijg12 -lijg16 -ldcmjpls -ldcmtkcharls
+Libs.private: -L"${libdir}" 

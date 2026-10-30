@@ -1,0 +1,1158 @@
+Determining if the _vsnprintf_s exist passed with the following output:
+Change Dir: 'C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp'
+
+Run Build Command(s): "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_042cf.vcxproj /p:Configuration=Release /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+MSBuild version 17.14.40+3e7442088 for .NET Framework
+Build started 10/13/2026 1:12:06 PM.
+
+Project "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\cmTC_042cf.vcxproj" on node 1 (default targets).
+PrepareForBuild:
+  Creating directory "cmTC_042cf.dir\Release\".
+  Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
+  Creating directory "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\".
+  Creating directory "cmTC_042cf.dir\Release\cmTC_042cf.tlog\".
+InitializeBuildStatus:
+  Creating "cmTC_042cf.dir\Release\cmTC_042cf.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+  Touching "cmTC_042cf.dir\Release\cmTC_042cf.tlog\unsuccessfulbuild".
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64\CL.exe /c /W1 /WX- /diagnostics:column /O2 /Ob2 /D _MBCS /D WIN32 /D _WINDOWS /D NDEBUG /D "CMAKE_INTDIR=\"Release\"" /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_042cf.dir\Release\\" /Fd"cmTC_042cf.dir\Release\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeTmp\CheckSymbolExists.cxx
+  Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35228 for x64
+  Copyright (C) Microsoft Corporation.  All rights reserved.
+  cl /c /W1 /WX- /diagnostics:column /O2 /Ob2 /D _MBCS /D WIN32 /D _WINDOWS /D NDEBUG /D "CMAKE_INTDIR=\"Release\"" /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_042cf.dir\Release\\" /Fd"cmTC_042cf.dir\Release\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeTmp\CheckSymbolExists.cxx
+  CheckSymbolExists.cxx
+C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeTmp\CheckSymbolExists.cxx(22,1): warning C4551: function call missing argument list [C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\cmTC_042cf.vcxproj]
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64\link.exe /ERRORREPORT:QUEUE /OUT:"C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\cmTC_042cf.exe" /INCREMENTAL:NO /NOLOGO iphlpapi.lib ws2_32.lib netapi32.lib wsock32.lib kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:"C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp/Release/cmTC_042cf.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp/Release/cmTC_042cf.lib" /MACHINE:X64  /machine:x64 /ignore:4099 cmTC_042cf.dir\Release\CheckSymbolExists.obj
+  cmTC_042cf.vcxproj -> C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\cmTC_042cf.exe
+FinalizeBuildStatus:
+  Deleting file "cmTC_042cf.dir\Release\cmTC_042cf.tlog\unsuccessfulbuild".
+  Touching "cmTC_042cf.dir\Release\cmTC_042cf.tlog\cmTC_042cf.lastbuildstate".
+Done Building Project "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\cmTC_042cf.vcxproj" (default targets).
+
+Build succeeded.
+
+"C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\cmTC_042cf.vcxproj" (default target) (1) ->
+(ClCompile target) -> 
+  C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeTmp\CheckSymbolExists.cxx(22,1): warning C4551: function call missing argument list [C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\cmTC_042cf.vcxproj]
+
+    1 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:00.63
+
+
+File C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeTmp/CheckSymbolExists.ccc:
+/* */
+#include <io.h>
+#include <math.h>
+#include <process.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <stddef.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/timeb.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#include <windows.h>
+#include <winsock.h>
+#include <fenv.h>
+
+int main()
+{
+_vsnprintf_s;return 0;
+}
+
+Determining if the vfprintf_s exist passed with the following output:
+Change Dir: 'C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp'
+
+Run Build Command(s): "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_71081.vcxproj /p:Configuration=Release /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+MSBuild version 17.14.40+3e7442088 for .NET Framework
+Build started 10/13/2026 1:12:07 PM.
+
+Project "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\cmTC_71081.vcxproj" on node 1 (default targets).
+PrepareForBuild:
+  Creating directory "cmTC_71081.dir\Release\".
+  Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
+  Creating directory "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\".
+  Creating directory "cmTC_71081.dir\Release\cmTC_71081.tlog\".
+InitializeBuildStatus:
+  Creating "cmTC_71081.dir\Release\cmTC_71081.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+  Touching "cmTC_71081.dir\Release\cmTC_71081.tlog\unsuccessfulbuild".
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64\CL.exe /c /W1 /WX- /diagnostics:column /O2 /Ob2 /D _MBCS /D WIN32 /D _WINDOWS /D NDEBUG /D "CMAKE_INTDIR=\"Release\"" /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_71081.dir\Release\\" /Fd"cmTC_71081.dir\Release\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeTmp\CheckSymbolExists.cxx
+  Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35228 for x64
+  Copyright (C) Microsoft Corporation.  All rights reserved.
+  cl /c /W1 /WX- /diagnostics:column /O2 /Ob2 /D _MBCS /D WIN32 /D _WINDOWS /D NDEBUG /D "CMAKE_INTDIR=\"Release\"" /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_71081.dir\Release\\" /Fd"cmTC_71081.dir\Release\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeTmp\CheckSymbolExists.cxx
+  CheckSymbolExists.cxx
+C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeTmp\CheckSymbolExists.cxx(22,1): warning C4551: function call missing argument list [C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\cmTC_71081.vcxproj]
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64\link.exe /ERRORREPORT:QUEUE /OUT:"C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\cmTC_71081.exe" /INCREMENTAL:NO /NOLOGO iphlpapi.lib ws2_32.lib netapi32.lib wsock32.lib kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:"C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp/Release/cmTC_71081.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp/Release/cmTC_71081.lib" /MACHINE:X64  /machine:x64 /ignore:4099 cmTC_71081.dir\Release\CheckSymbolExists.obj
+  cmTC_71081.vcxproj -> C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\cmTC_71081.exe
+FinalizeBuildStatus:
+  Deleting file "cmTC_71081.dir\Release\cmTC_71081.tlog\unsuccessfulbuild".
+  Touching "cmTC_71081.dir\Release\cmTC_71081.tlog\cmTC_71081.lastbuildstate".
+Done Building Project "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\cmTC_71081.vcxproj" (default targets).
+
+Build succeeded.
+
+"C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\cmTC_71081.vcxproj" (default target) (1) ->
+(ClCompile target) -> 
+  C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeTmp\CheckSymbolExists.cxx(22,1): warning C4551: function call missing argument list [C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\cmTC_71081.vcxproj]
+
+    1 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:00.67
+
+
+File C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeTmp/CheckSymbolExists.ccc:
+/* */
+#include <io.h>
+#include <math.h>
+#include <process.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <stddef.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/timeb.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#include <windows.h>
+#include <winsock.h>
+#include <fenv.h>
+
+int main()
+{
+vfprintf_s;return 0;
+}
+
+Determining if the vsprintf_s exist passed with the following output:
+Change Dir: 'C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp'
+
+Run Build Command(s): "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_c21eb.vcxproj /p:Configuration=Release /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+MSBuild version 17.14.40+3e7442088 for .NET Framework
+Build started 10/13/2026 1:12:08 PM.
+
+Project "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\cmTC_c21eb.vcxproj" on node 1 (default targets).
+PrepareForBuild:
+  Creating directory "cmTC_c21eb.dir\Release\".
+  Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
+  Creating directory "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\".
+  Creating directory "cmTC_c21eb.dir\Release\cmTC_c21eb.tlog\".
+InitializeBuildStatus:
+  Creating "cmTC_c21eb.dir\Release\cmTC_c21eb.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+  Touching "cmTC_c21eb.dir\Release\cmTC_c21eb.tlog\unsuccessfulbuild".
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64\CL.exe /c /W1 /WX- /diagnostics:column /O2 /Ob2 /D _MBCS /D WIN32 /D _WINDOWS /D NDEBUG /D "CMAKE_INTDIR=\"Release\"" /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_c21eb.dir\Release\\" /Fd"cmTC_c21eb.dir\Release\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeTmp\CheckSymbolExists.cxx
+  Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35228 for x64
+  Copyright (C) Microsoft Corporation.  All rights reserved.
+  cl /c /W1 /WX- /diagnostics:column /O2 /Ob2 /D _MBCS /D WIN32 /D _WINDOWS /D NDEBUG /D "CMAKE_INTDIR=\"Release\"" /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_c21eb.dir\Release\\" /Fd"cmTC_c21eb.dir\Release\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeTmp\CheckSymbolExists.cxx
+  CheckSymbolExists.cxx
+C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeTmp\CheckSymbolExists.cxx(22,1): warning C4551: function call missing argument list [C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\cmTC_c21eb.vcxproj]
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64\link.exe /ERRORREPORT:QUEUE /OUT:"C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\cmTC_c21eb.exe" /INCREMENTAL:NO /NOLOGO iphlpapi.lib ws2_32.lib netapi32.lib wsock32.lib kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:"C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp/Release/cmTC_c21eb.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp/Release/cmTC_c21eb.lib" /MACHINE:X64  /machine:x64 /ignore:4099 cmTC_c21eb.dir\Release\CheckSymbolExists.obj
+  cmTC_c21eb.vcxproj -> C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\cmTC_c21eb.exe
+FinalizeBuildStatus:
+  Deleting file "cmTC_c21eb.dir\Release\cmTC_c21eb.tlog\unsuccessfulbuild".
+  Touching "cmTC_c21eb.dir\Release\cmTC_c21eb.tlog\cmTC_c21eb.lastbuildstate".
+Done Building Project "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\cmTC_c21eb.vcxproj" (default targets).
+
+Build succeeded.
+
+"C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\cmTC_c21eb.vcxproj" (default target) (1) ->
+(ClCompile target) -> 
+  C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeTmp\CheckSymbolExists.cxx(22,1): warning C4551: function call missing argument list [C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\cmTC_c21eb.vcxproj]
+
+    1 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:00.61
+
+
+File C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeTmp/CheckSymbolExists.ccc:
+/* */
+#include <io.h>
+#include <math.h>
+#include <process.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <stddef.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/timeb.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#include <windows.h>
+#include <winsock.h>
+#include <fenv.h>
+
+int main()
+{
+vsprintf_s;return 0;
+}
+
+Determining if the std::vsnprintf exist passed with the following output:
+Change Dir: 'C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp'
+
+Run Build Command(s): "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_76fc9.vcxproj /p:Configuration=Release /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+MSBuild version 17.14.40+3e7442088 for .NET Framework
+Build started 10/13/2026 1:12:09 PM.
+
+Project "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\cmTC_76fc9.vcxproj" on node 1 (default targets).
+PrepareForBuild:
+  Creating directory "cmTC_76fc9.dir\Release\".
+  Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
+  Creating directory "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\".
+  Creating directory "cmTC_76fc9.dir\Release\cmTC_76fc9.tlog\".
+InitializeBuildStatus:
+  Creating "cmTC_76fc9.dir\Release\cmTC_76fc9.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+  Touching "cmTC_76fc9.dir\Release\cmTC_76fc9.tlog\unsuccessfulbuild".
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64\CL.exe /c /W1 /WX- /diagnostics:column /O2 /Ob2 /D _MBCS /D WIN32 /D _WINDOWS /D NDEBUG /D "CMAKE_INTDIR=\"Release\"" /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_76fc9.dir\Release\\" /Fd"cmTC_76fc9.dir\Release\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeTmp\CheckSymbolExists.cxx
+  Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35228 for x64
+  Copyright (C) Microsoft Corporation.  All rights reserved.
+  cl /c /W1 /WX- /diagnostics:column /O2 /Ob2 /D _MBCS /D WIN32 /D _WINDOWS /D NDEBUG /D "CMAKE_INTDIR=\"Release\"" /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_76fc9.dir\Release\\" /Fd"cmTC_76fc9.dir\Release\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeTmp\CheckSymbolExists.cxx
+  CheckSymbolExists.cxx
+C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeTmp\CheckSymbolExists.cxx(11,6): warning C4551: function call missing argument list [C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\cmTC_76fc9.vcxproj]
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64\link.exe /ERRORREPORT:QUEUE /OUT:"C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\cmTC_76fc9.exe" /INCREMENTAL:NO /NOLOGO iphlpapi.lib ws2_32.lib netapi32.lib wsock32.lib kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:"C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp/Release/cmTC_76fc9.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp/Release/cmTC_76fc9.lib" /MACHINE:X64  /machine:x64 /ignore:4099 cmTC_76fc9.dir\Release\CheckSymbolExists.obj
+  cmTC_76fc9.vcxproj -> C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\cmTC_76fc9.exe
+FinalizeBuildStatus:
+  Deleting file "cmTC_76fc9.dir\Release\cmTC_76fc9.tlog\unsuccessfulbuild".
+  Touching "cmTC_76fc9.dir\Release\cmTC_76fc9.tlog\cmTC_76fc9.lastbuildstate".
+Done Building Project "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\cmTC_76fc9.vcxproj" (default targets).
+
+Build succeeded.
+
+"C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\cmTC_76fc9.vcxproj" (default target) (1) ->
+(ClCompile target) -> 
+  C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeTmp\CheckSymbolExists.cxx(11,6): warning C4551: function call missing argument list [C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\cmTC_76fc9.vcxproj]
+
+    1 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:00.59
+
+
+File C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeTmp/CheckSymbolExists.ccc:
+/* */
+#include <cmath>
+#include <cstdio>
+#include <cstdarg>
+#include <cstddef>
+#include <iostream>
+#include <cstdint>
+
+int main()
+{
+std::vsnprintf;return 0;
+}
+
+Determining if the _stricmp exist passed with the following output:
+Change Dir: 'C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp'
+
+Run Build Command(s): "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_0728e.vcxproj /p:Configuration=Release /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+MSBuild version 17.14.40+3e7442088 for .NET Framework
+Build started 10/13/2026 1:12:10 PM.
+
+Project "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\cmTC_0728e.vcxproj" on node 1 (default targets).
+PrepareForBuild:
+  Creating directory "cmTC_0728e.dir\Release\".
+  Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
+  Creating directory "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\".
+  Creating directory "cmTC_0728e.dir\Release\cmTC_0728e.tlog\".
+InitializeBuildStatus:
+  Creating "cmTC_0728e.dir\Release\cmTC_0728e.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+  Touching "cmTC_0728e.dir\Release\cmTC_0728e.tlog\unsuccessfulbuild".
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64\CL.exe /c /W1 /WX- /diagnostics:column /O2 /Ob2 /D _MBCS /D WIN32 /D _WINDOWS /D NDEBUG /D "CMAKE_INTDIR=\"Release\"" /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_0728e.dir\Release\\" /Fd"cmTC_0728e.dir\Release\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeTmp\CheckSymbolExists.cxx
+  Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35228 for x64
+  Copyright (C) Microsoft Corporation.  All rights reserved.
+  cl /c /W1 /WX- /diagnostics:column /O2 /Ob2 /D _MBCS /D WIN32 /D _WINDOWS /D NDEBUG /D "CMAKE_INTDIR=\"Release\"" /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_0728e.dir\Release\\" /Fd"cmTC_0728e.dir\Release\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeTmp\CheckSymbolExists.cxx
+  CheckSymbolExists.cxx
+C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeTmp\CheckSymbolExists.cxx(22,1): warning C4551: function call missing argument list [C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\cmTC_0728e.vcxproj]
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64\link.exe /ERRORREPORT:QUEUE /OUT:"C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\cmTC_0728e.exe" /INCREMENTAL:NO /NOLOGO iphlpapi.lib ws2_32.lib netapi32.lib wsock32.lib kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:"C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp/Release/cmTC_0728e.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp/Release/cmTC_0728e.lib" /MACHINE:X64  /machine:x64 /ignore:4099 cmTC_0728e.dir\Release\CheckSymbolExists.obj
+  cmTC_0728e.vcxproj -> C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\cmTC_0728e.exe
+FinalizeBuildStatus:
+  Deleting file "cmTC_0728e.dir\Release\cmTC_0728e.tlog\unsuccessfulbuild".
+  Touching "cmTC_0728e.dir\Release\cmTC_0728e.tlog\cmTC_0728e.lastbuildstate".
+Done Building Project "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\cmTC_0728e.vcxproj" (default targets).
+
+Build succeeded.
+
+"C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\cmTC_0728e.vcxproj" (default target) (1) ->
+(ClCompile target) -> 
+  C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeTmp\CheckSymbolExists.cxx(22,1): warning C4551: function call missing argument list [C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\cmTC_0728e.vcxproj]
+
+    1 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:00.63
+
+
+File C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeTmp/CheckSymbolExists.ccc:
+/* */
+#include <io.h>
+#include <math.h>
+#include <process.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <stddef.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/timeb.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#include <windows.h>
+#include <winsock.h>
+#include <fenv.h>
+
+int main()
+{
+_stricmp;return 0;
+}
+
+Determining if the InterlockedIncrement((long*)0) exist passed with the following output:
+Change Dir: 'C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp'
+
+Run Build Command(s): "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_a7b82.vcxproj /p:Configuration=Release /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+MSBuild version 17.14.40+3e7442088 for .NET Framework
+Build started 10/13/2026 1:12:16 PM.
+
+Project "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\cmTC_a7b82.vcxproj" on node 1 (default targets).
+PrepareForBuild:
+  Creating directory "cmTC_a7b82.dir\Release\".
+  Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
+  Creating directory "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\".
+  Creating directory "cmTC_a7b82.dir\Release\cmTC_a7b82.tlog\".
+InitializeBuildStatus:
+  Creating "cmTC_a7b82.dir\Release\cmTC_a7b82.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+  Touching "cmTC_a7b82.dir\Release\cmTC_a7b82.tlog\unsuccessfulbuild".
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64\CL.exe /c /W1 /WX- /diagnostics:column /O2 /Ob2 /D _MBCS /D WIN32 /D _WINDOWS /D NDEBUG /D "CMAKE_INTDIR=\"Release\"" /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_a7b82.dir\Release\\" /Fd"cmTC_a7b82.dir\Release\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeTmp\CheckSymbolExists.cxx
+  Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35228 for x64
+  Copyright (C) Microsoft Corporation.  All rights reserved.
+  cl /c /W1 /WX- /diagnostics:column /O2 /Ob2 /D _MBCS /D WIN32 /D _WINDOWS /D NDEBUG /D "CMAKE_INTDIR=\"Release\"" /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_a7b82.dir\Release\\" /Fd"cmTC_a7b82.dir\Release\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeTmp\CheckSymbolExists.cxx
+  CheckSymbolExists.cxx
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64\link.exe /ERRORREPORT:QUEUE /OUT:"C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\cmTC_a7b82.exe" /INCREMENTAL:NO /NOLOGO iphlpapi.lib ws2_32.lib netapi32.lib wsock32.lib kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:"C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp/Release/cmTC_a7b82.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp/Release/cmTC_a7b82.lib" /MACHINE:X64  /machine:x64 /ignore:4099 cmTC_a7b82.dir\Release\CheckSymbolExists.obj
+  cmTC_a7b82.vcxproj -> C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\cmTC_a7b82.exe
+FinalizeBuildStatus:
+  Deleting file "cmTC_a7b82.dir\Release\cmTC_a7b82.tlog\unsuccessfulbuild".
+  Touching "cmTC_a7b82.dir\Release\cmTC_a7b82.tlog\cmTC_a7b82.lastbuildstate".
+Done Building Project "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\cmTC_a7b82.vcxproj" (default targets).
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:00.59
+
+
+File C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeTmp/CheckSymbolExists.ccc:
+/* */
+#include <io.h>
+#include <math.h>
+#include <process.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <stddef.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/timeb.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#include <windows.h>
+#include <winsock.h>
+#include <fenv.h>
+
+int main()
+{
+InterlockedIncrement((long*)0);return 0;
+}
+
+Determining if the InterlockedDecrement((long*)0) exist passed with the following output:
+Change Dir: 'C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp'
+
+Run Build Command(s): "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_df365.vcxproj /p:Configuration=Release /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+MSBuild version 17.14.40+3e7442088 for .NET Framework
+Build started 10/13/2026 1:12:17 PM.
+
+Project "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\cmTC_df365.vcxproj" on node 1 (default targets).
+PrepareForBuild:
+  Creating directory "cmTC_df365.dir\Release\".
+  Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
+  Creating directory "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\".
+  Creating directory "cmTC_df365.dir\Release\cmTC_df365.tlog\".
+InitializeBuildStatus:
+  Creating "cmTC_df365.dir\Release\cmTC_df365.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+  Touching "cmTC_df365.dir\Release\cmTC_df365.tlog\unsuccessfulbuild".
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64\CL.exe /c /W1 /WX- /diagnostics:column /O2 /Ob2 /D _MBCS /D WIN32 /D _WINDOWS /D NDEBUG /D "CMAKE_INTDIR=\"Release\"" /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_df365.dir\Release\\" /Fd"cmTC_df365.dir\Release\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeTmp\CheckSymbolExists.cxx
+  Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35228 for x64
+  Copyright (C) Microsoft Corporation.  All rights reserved.
+  cl /c /W1 /WX- /diagnostics:column /O2 /Ob2 /D _MBCS /D WIN32 /D _WINDOWS /D NDEBUG /D "CMAKE_INTDIR=\"Release\"" /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_df365.dir\Release\\" /Fd"cmTC_df365.dir\Release\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeTmp\CheckSymbolExists.cxx
+  CheckSymbolExists.cxx
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64\link.exe /ERRORREPORT:QUEUE /OUT:"C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\cmTC_df365.exe" /INCREMENTAL:NO /NOLOGO iphlpapi.lib ws2_32.lib netapi32.lib wsock32.lib kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:"C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp/Release/cmTC_df365.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp/Release/cmTC_df365.lib" /MACHINE:X64  /machine:x64 /ignore:4099 cmTC_df365.dir\Release\CheckSymbolExists.obj
+  cmTC_df365.vcxproj -> C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\cmTC_df365.exe
+FinalizeBuildStatus:
+  Deleting file "cmTC_df365.dir\Release\cmTC_df365.tlog\unsuccessfulbuild".
+  Touching "cmTC_df365.dir\Release\cmTC_df365.tlog\cmTC_df365.lastbuildstate".
+Done Building Project "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\cmTC_df365.vcxproj" (default targets).
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:00.61
+
+
+File C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeTmp/CheckSymbolExists.ccc:
+/* */
+#include <io.h>
+#include <math.h>
+#include <process.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <stddef.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/timeb.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#include <windows.h>
+#include <winsock.h>
+#include <fenv.h>
+
+int main()
+{
+InterlockedDecrement((long*)0);return 0;
+}
+
+Determining if the TryAcquireSRWLockShared((PSRWLOCK)0) exist passed with the following output:
+Change Dir: 'C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp'
+
+Run Build Command(s): "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_a5677.vcxproj /p:Configuration=Release /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+MSBuild version 17.14.40+3e7442088 for .NET Framework
+Build started 10/13/2026 1:12:21 PM.
+
+Project "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\cmTC_a5677.vcxproj" on node 1 (default targets).
+PrepareForBuild:
+  Creating directory "cmTC_a5677.dir\Release\".
+  Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
+  Creating directory "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\".
+  Creating directory "cmTC_a5677.dir\Release\cmTC_a5677.tlog\".
+InitializeBuildStatus:
+  Creating "cmTC_a5677.dir\Release\cmTC_a5677.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+  Touching "cmTC_a5677.dir\Release\cmTC_a5677.tlog\unsuccessfulbuild".
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64\CL.exe /c /W1 /WX- /diagnostics:column /O2 /Ob2 /D _MBCS /D WIN32 /D _WINDOWS /D NDEBUG /D "CMAKE_INTDIR=\"Release\"" /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_a5677.dir\Release\\" /Fd"cmTC_a5677.dir\Release\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeTmp\CheckSymbolExists.cxx
+  Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35228 for x64
+  Copyright (C) Microsoft Corporation.  All rights reserved.
+  cl /c /W1 /WX- /diagnostics:column /O2 /Ob2 /D _MBCS /D WIN32 /D _WINDOWS /D NDEBUG /D "CMAKE_INTDIR=\"Release\"" /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_a5677.dir\Release\\" /Fd"cmTC_a5677.dir\Release\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeTmp\CheckSymbolExists.cxx
+  CheckSymbolExists.cxx
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64\link.exe /ERRORREPORT:QUEUE /OUT:"C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\cmTC_a5677.exe" /INCREMENTAL:NO /NOLOGO iphlpapi.lib ws2_32.lib netapi32.lib wsock32.lib kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:"C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp/Release/cmTC_a5677.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp/Release/cmTC_a5677.lib" /MACHINE:X64  /machine:x64 /ignore:4099 cmTC_a5677.dir\Release\CheckSymbolExists.obj
+  cmTC_a5677.vcxproj -> C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\cmTC_a5677.exe
+FinalizeBuildStatus:
+  Deleting file "cmTC_a5677.dir\Release\cmTC_a5677.tlog\unsuccessfulbuild".
+  Touching "cmTC_a5677.dir\Release\cmTC_a5677.tlog\cmTC_a5677.lastbuildstate".
+Done Building Project "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\cmTC_a5677.vcxproj" (default targets).
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:00.73
+
+
+File C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeTmp/CheckSymbolExists.ccc:
+/* */
+#include <io.h>
+#include <math.h>
+#include <process.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <stddef.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/timeb.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#include <windows.h>
+#include <winsock.h>
+#include <fenv.h>
+
+int main()
+{
+TryAcquireSRWLockShared((PSRWLOCK)0);return 0;
+}
+
+Determining if the long long definition exist passed with the following output:
+Change Dir: 'C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp'
+
+Run Build Command(s): "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_fae63.vcxproj /p:Configuration=Release /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+MSBuild version 17.14.40+3e7442088 for .NET Framework
+Build started 10/13/2026 1:12:22 PM.
+
+Project "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\cmTC_fae63.vcxproj" on node 1 (default targets).
+PrepareForBuild:
+  Creating directory "cmTC_fae63.dir\Release\".
+  Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
+  Creating directory "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\".
+  Creating directory "cmTC_fae63.dir\Release\cmTC_fae63.tlog\".
+InitializeBuildStatus:
+  Creating "cmTC_fae63.dir\Release\cmTC_fae63.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+  Touching "cmTC_fae63.dir\Release\cmTC_fae63.tlog\unsuccessfulbuild".
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64\CL.exe /c /W1 /WX- /diagnostics:column /O2 /Ob2 /D _MBCS /D WIN32 /D _WINDOWS /D NDEBUG /D "CMAKE_INTDIR=\"Release\"" /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_fae63.dir\Release\\" /Fd"cmTC_fae63.dir\Release\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeTmp\CheckSymbolExists.cxx
+  Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35228 for x64
+  Copyright (C) Microsoft Corporation.  All rights reserved.
+  cl /c /W1 /WX- /diagnostics:column /O2 /Ob2 /D _MBCS /D WIN32 /D _WINDOWS /D NDEBUG /D "CMAKE_INTDIR=\"Release\"" /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_fae63.dir\Release\\" /Fd"cmTC_fae63.dir\Release\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeTmp\CheckSymbolExists.cxx
+  CheckSymbolExists.cxx
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64\link.exe /ERRORREPORT:QUEUE /OUT:"C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\cmTC_fae63.exe" /INCREMENTAL:NO /NOLOGO iphlpapi.lib ws2_32.lib netapi32.lib wsock32.lib kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:"C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp/Release/cmTC_fae63.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp/Release/cmTC_fae63.lib" /MACHINE:X64  /machine:x64 /ignore:4099 cmTC_fae63.dir\Release\CheckSymbolExists.obj
+  cmTC_fae63.vcxproj -> C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\cmTC_fae63.exe
+FinalizeBuildStatus:
+  Deleting file "cmTC_fae63.dir\Release\cmTC_fae63.tlog\unsuccessfulbuild".
+  Touching "cmTC_fae63.dir\Release\cmTC_fae63.tlog\cmTC_fae63.lastbuildstate".
+Done Building Project "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\cmTC_fae63.vcxproj" (default targets).
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:00.60
+
+
+File C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeTmp/CheckSymbolExists.ccc:
+/* */
+#include <io.h>
+#include <math.h>
+#include <process.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <stddef.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/timeb.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#include <windows.h>
+#include <winsock.h>
+#include <fenv.h>
+
+int main()
+{
+long long definition;return 0;
+}
+
+Determining if the unsigned long long definition exist passed with the following output:
+Change Dir: 'C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp'
+
+Run Build Command(s): "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_6fed3.vcxproj /p:Configuration=Release /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+MSBuild version 17.14.40+3e7442088 for .NET Framework
+Build started 10/13/2026 1:12:23 PM.
+
+Project "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\cmTC_6fed3.vcxproj" on node 1 (default targets).
+PrepareForBuild:
+  Creating directory "cmTC_6fed3.dir\Release\".
+  Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
+  Creating directory "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\".
+  Creating directory "cmTC_6fed3.dir\Release\cmTC_6fed3.tlog\".
+InitializeBuildStatus:
+  Creating "cmTC_6fed3.dir\Release\cmTC_6fed3.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+  Touching "cmTC_6fed3.dir\Release\cmTC_6fed3.tlog\unsuccessfulbuild".
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64\CL.exe /c /W1 /WX- /diagnostics:column /O2 /Ob2 /D _MBCS /D WIN32 /D _WINDOWS /D NDEBUG /D "CMAKE_INTDIR=\"Release\"" /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_6fed3.dir\Release\\" /Fd"cmTC_6fed3.dir\Release\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeTmp\CheckSymbolExists.cxx
+  Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35228 for x64
+  Copyright (C) Microsoft Corporation.  All rights reserved.
+  cl /c /W1 /WX- /diagnostics:column /O2 /Ob2 /D _MBCS /D WIN32 /D _WINDOWS /D NDEBUG /D "CMAKE_INTDIR=\"Release\"" /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_6fed3.dir\Release\\" /Fd"cmTC_6fed3.dir\Release\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeTmp\CheckSymbolExists.cxx
+  CheckSymbolExists.cxx
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64\link.exe /ERRORREPORT:QUEUE /OUT:"C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\cmTC_6fed3.exe" /INCREMENTAL:NO /NOLOGO iphlpapi.lib ws2_32.lib netapi32.lib wsock32.lib kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:"C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp/Release/cmTC_6fed3.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp/Release/cmTC_6fed3.lib" /MACHINE:X64  /machine:x64 /ignore:4099 cmTC_6fed3.dir\Release\CheckSymbolExists.obj
+  cmTC_6fed3.vcxproj -> C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\cmTC_6fed3.exe
+FinalizeBuildStatus:
+  Deleting file "cmTC_6fed3.dir\Release\cmTC_6fed3.tlog\unsuccessfulbuild".
+  Touching "cmTC_6fed3.dir\Release\cmTC_6fed3.tlog\cmTC_6fed3.lastbuildstate".
+Done Building Project "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\cmTC_6fed3.vcxproj" (default targets).
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:00.58
+
+
+File C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeTmp/CheckSymbolExists.ccc:
+/* */
+#include <io.h>
+#include <math.h>
+#include <process.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <stddef.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/timeb.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#include <windows.h>
+#include <winsock.h>
+#include <fenv.h>
+
+int main()
+{
+unsigned long long definition;return 0;
+}
+
+Determining if the int64_t definition exist passed with the following output:
+Change Dir: 'C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp'
+
+Run Build Command(s): "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_8af1b.vcxproj /p:Configuration=Release /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+MSBuild version 17.14.40+3e7442088 for .NET Framework
+Build started 10/13/2026 1:12:23 PM.
+
+Project "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\cmTC_8af1b.vcxproj" on node 1 (default targets).
+PrepareForBuild:
+  Creating directory "cmTC_8af1b.dir\Release\".
+  Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
+  Creating directory "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\".
+  Creating directory "cmTC_8af1b.dir\Release\cmTC_8af1b.tlog\".
+InitializeBuildStatus:
+  Creating "cmTC_8af1b.dir\Release\cmTC_8af1b.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+  Touching "cmTC_8af1b.dir\Release\cmTC_8af1b.tlog\unsuccessfulbuild".
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64\CL.exe /c /W1 /WX- /diagnostics:column /O2 /Ob2 /D _MBCS /D WIN32 /D _WINDOWS /D NDEBUG /D "CMAKE_INTDIR=\"Release\"" /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_8af1b.dir\Release\\" /Fd"cmTC_8af1b.dir\Release\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeTmp\CheckSymbolExists.cxx
+  Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35228 for x64
+  Copyright (C) Microsoft Corporation.  All rights reserved.
+  cl /c /W1 /WX- /diagnostics:column /O2 /Ob2 /D _MBCS /D WIN32 /D _WINDOWS /D NDEBUG /D "CMAKE_INTDIR=\"Release\"" /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_8af1b.dir\Release\\" /Fd"cmTC_8af1b.dir\Release\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeTmp\CheckSymbolExists.cxx
+  CheckSymbolExists.cxx
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64\link.exe /ERRORREPORT:QUEUE /OUT:"C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\cmTC_8af1b.exe" /INCREMENTAL:NO /NOLOGO iphlpapi.lib ws2_32.lib netapi32.lib wsock32.lib kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:"C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp/Release/cmTC_8af1b.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp/Release/cmTC_8af1b.lib" /MACHINE:X64  /machine:x64 /ignore:4099 cmTC_8af1b.dir\Release\CheckSymbolExists.obj
+  cmTC_8af1b.vcxproj -> C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\cmTC_8af1b.exe
+FinalizeBuildStatus:
+  Deleting file "cmTC_8af1b.dir\Release\cmTC_8af1b.tlog\unsuccessfulbuild".
+  Touching "cmTC_8af1b.dir\Release\cmTC_8af1b.tlog\cmTC_8af1b.lastbuildstate".
+Done Building Project "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\cmTC_8af1b.vcxproj" (default targets).
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:00.62
+
+
+File C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeTmp/CheckSymbolExists.ccc:
+/* */
+#include <io.h>
+#include <math.h>
+#include <process.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <stddef.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/timeb.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#include <windows.h>
+#include <winsock.h>
+#include <fenv.h>
+
+int main()
+{
+int64_t definition;return 0;
+}
+
+Determining if the uint64_t definition exist passed with the following output:
+Change Dir: 'C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp'
+
+Run Build Command(s): "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_daaea.vcxproj /p:Configuration=Release /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+MSBuild version 17.14.40+3e7442088 for .NET Framework
+Build started 10/13/2026 1:12:24 PM.
+
+Project "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\cmTC_daaea.vcxproj" on node 1 (default targets).
+PrepareForBuild:
+  Creating directory "cmTC_daaea.dir\Release\".
+  Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
+  Creating directory "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\".
+  Creating directory "cmTC_daaea.dir\Release\cmTC_daaea.tlog\".
+InitializeBuildStatus:
+  Creating "cmTC_daaea.dir\Release\cmTC_daaea.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+  Touching "cmTC_daaea.dir\Release\cmTC_daaea.tlog\unsuccessfulbuild".
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64\CL.exe /c /W1 /WX- /diagnostics:column /O2 /Ob2 /D _MBCS /D WIN32 /D _WINDOWS /D NDEBUG /D "CMAKE_INTDIR=\"Release\"" /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_daaea.dir\Release\\" /Fd"cmTC_daaea.dir\Release\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeTmp\CheckSymbolExists.cxx
+  Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35228 for x64
+  Copyright (C) Microsoft Corporation.  All rights reserved.
+  cl /c /W1 /WX- /diagnostics:column /O2 /Ob2 /D _MBCS /D WIN32 /D _WINDOWS /D NDEBUG /D "CMAKE_INTDIR=\"Release\"" /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_daaea.dir\Release\\" /Fd"cmTC_daaea.dir\Release\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeTmp\CheckSymbolExists.cxx
+  CheckSymbolExists.cxx
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64\link.exe /ERRORREPORT:QUEUE /OUT:"C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\cmTC_daaea.exe" /INCREMENTAL:NO /NOLOGO iphlpapi.lib ws2_32.lib netapi32.lib wsock32.lib kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:"C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp/Release/cmTC_daaea.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp/Release/cmTC_daaea.lib" /MACHINE:X64  /machine:x64 /ignore:4099 cmTC_daaea.dir\Release\CheckSymbolExists.obj
+  cmTC_daaea.vcxproj -> C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\cmTC_daaea.exe
+FinalizeBuildStatus:
+  Deleting file "cmTC_daaea.dir\Release\cmTC_daaea.tlog\unsuccessfulbuild".
+  Touching "cmTC_daaea.dir\Release\cmTC_daaea.tlog\cmTC_daaea.lastbuildstate".
+Done Building Project "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\cmTC_daaea.vcxproj" (default targets).
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:00.60
+
+
+File C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeTmp/CheckSymbolExists.ccc:
+/* */
+#include <io.h>
+#include <math.h>
+#include <process.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <stddef.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/timeb.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#include <windows.h>
+#include <winsock.h>
+#include <fenv.h>
+
+int main()
+{
+uint64_t definition;return 0;
+}
+
+Determining if the char16_t definition exist passed with the following output:
+Change Dir: 'C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp'
+
+Run Build Command(s): "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_341f7.vcxproj /p:Configuration=Release /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+MSBuild version 17.14.40+3e7442088 for .NET Framework
+Build started 10/13/2026 1:12:25 PM.
+
+Project "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\cmTC_341f7.vcxproj" on node 1 (default targets).
+PrepareForBuild:
+  Creating directory "cmTC_341f7.dir\Release\".
+  Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
+  Creating directory "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\".
+  Creating directory "cmTC_341f7.dir\Release\cmTC_341f7.tlog\".
+InitializeBuildStatus:
+  Creating "cmTC_341f7.dir\Release\cmTC_341f7.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+  Touching "cmTC_341f7.dir\Release\cmTC_341f7.tlog\unsuccessfulbuild".
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64\CL.exe /c /W1 /WX- /diagnostics:column /O2 /Ob2 /D _MBCS /D WIN32 /D _WINDOWS /D NDEBUG /D "CMAKE_INTDIR=\"Release\"" /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_341f7.dir\Release\\" /Fd"cmTC_341f7.dir\Release\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeTmp\CheckSymbolExists.cxx
+  Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35228 for x64
+  Copyright (C) Microsoft Corporation.  All rights reserved.
+  cl /c /W1 /WX- /diagnostics:column /O2 /Ob2 /D _MBCS /D WIN32 /D _WINDOWS /D NDEBUG /D "CMAKE_INTDIR=\"Release\"" /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_341f7.dir\Release\\" /Fd"cmTC_341f7.dir\Release\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeTmp\CheckSymbolExists.cxx
+  CheckSymbolExists.cxx
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64\link.exe /ERRORREPORT:QUEUE /OUT:"C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\cmTC_341f7.exe" /INCREMENTAL:NO /NOLOGO iphlpapi.lib ws2_32.lib netapi32.lib wsock32.lib kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:"C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp/Release/cmTC_341f7.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp/Release/cmTC_341f7.lib" /MACHINE:X64  /machine:x64 /ignore:4099 cmTC_341f7.dir\Release\CheckSymbolExists.obj
+  cmTC_341f7.vcxproj -> C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\cmTC_341f7.exe
+FinalizeBuildStatus:
+  Deleting file "cmTC_341f7.dir\Release\cmTC_341f7.tlog\unsuccessfulbuild".
+  Touching "cmTC_341f7.dir\Release\cmTC_341f7.tlog\cmTC_341f7.lastbuildstate".
+Done Building Project "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\cmTC_341f7.vcxproj" (default targets).
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:00.63
+
+
+File C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeTmp/CheckSymbolExists.ccc:
+/* */
+#include <io.h>
+#include <math.h>
+#include <process.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <stddef.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/timeb.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#include <windows.h>
+#include <winsock.h>
+#include <fenv.h>
+
+int main()
+{
+char16_t definition;return 0;
+}
+
+char is signed passed with the following output:
+Change Dir: 'C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp'
+
+Run Build Command(s): "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_50db1.vcxproj /p:Configuration=Release /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+MSBuild version 17.14.40+3e7442088 for .NET Framework
+Build started 10/13/2026 1:12:28 PM.
+
+Project "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\cmTC_50db1.vcxproj" on node 1 (default targets).
+PrepareForBuild:
+  Creating directory "cmTC_50db1.dir\Release\".
+  Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
+  Creating directory "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\".
+  Creating directory "cmTC_50db1.dir\Release\cmTC_50db1.tlog\".
+InitializeBuildStatus:
+  Creating "cmTC_50db1.dir\Release\cmTC_50db1.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+  Touching "cmTC_50db1.dir\Release\cmTC_50db1.tlog\unsuccessfulbuild".
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64\CL.exe /c /W1 /WX- /diagnostics:column /O2 /Ob2 /D _MBCS /D WIN32 /D _WINDOWS /D NDEBUG /D "CMAKE_INTDIR=\"Release\"" /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_50db1.dir\Release\\" /Fd"cmTC_50db1.dir\Release\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\src.cxx
+  Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35228 for x64
+  Copyright (C) Microsoft Corporation.  All rights reserved.
+  cl /c /W1 /WX- /diagnostics:column /O2 /Ob2 /D _MBCS /D WIN32 /D _WINDOWS /D NDEBUG /D "CMAKE_INTDIR=\"Release\"" /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_50db1.dir\Release\\" /Fd"cmTC_50db1.dir\Release\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\src.cxx
+  src.cxx
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64\link.exe /ERRORREPORT:QUEUE /OUT:"C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\cmTC_50db1.exe" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:"C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp/Release/cmTC_50db1.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp/Release/cmTC_50db1.lib" /MACHINE:X64  /machine:x64 /ignore:4099 cmTC_50db1.dir\Release\src.obj
+  cmTC_50db1.vcxproj -> C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\cmTC_50db1.exe
+FinalizeBuildStatus:
+  Deleting file "cmTC_50db1.dir\Release\cmTC_50db1.tlog\unsuccessfulbuild".
+  Touching "cmTC_50db1.dir\Release\cmTC_50db1.tlog\cmTC_50db1.lastbuildstate".
+Done Building Project "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\cmTC_50db1.vcxproj" (default targets).
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:00.34
+
+
+ENAMETOOLONG is defined passed with the following output:
+Change Dir: 'C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp'
+
+Run Build Command(s): "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_0fc32.vcxproj /p:Configuration=Release /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+MSBuild version 17.14.40+3e7442088 for .NET Framework
+Build started 10/13/2026 1:12:29 PM.
+
+Project "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\cmTC_0fc32.vcxproj" on node 1 (default targets).
+PrepareForBuild:
+  Creating directory "cmTC_0fc32.dir\Release\".
+  Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
+  Creating directory "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\".
+  Creating directory "cmTC_0fc32.dir\Release\cmTC_0fc32.tlog\".
+InitializeBuildStatus:
+  Creating "cmTC_0fc32.dir\Release\cmTC_0fc32.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+  Touching "cmTC_0fc32.dir\Release\cmTC_0fc32.tlog\unsuccessfulbuild".
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64\CL.exe /c /W1 /WX- /diagnostics:column /O2 /Ob2 /D _MBCS /D WIN32 /D _WINDOWS /D NDEBUG /D "CMAKE_INTDIR=\"Release\"" /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_0fc32.dir\Release\\" /Fd"cmTC_0fc32.dir\Release\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\src.cxx
+  Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35228 for x64
+  Copyright (C) Microsoft Corporation.  All rights reserved.
+  cl /c /W1 /WX- /diagnostics:column /O2 /Ob2 /D _MBCS /D WIN32 /D _WINDOWS /D NDEBUG /D "CMAKE_INTDIR=\"Release\"" /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_0fc32.dir\Release\\" /Fd"cmTC_0fc32.dir\Release\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\src.cxx
+  src.cxx
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64\link.exe /ERRORREPORT:QUEUE /OUT:"C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\cmTC_0fc32.exe" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:"C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp/Release/cmTC_0fc32.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp/Release/cmTC_0fc32.lib" /MACHINE:X64  /machine:x64 /ignore:4099 cmTC_0fc32.dir\Release\src.obj
+  cmTC_0fc32.vcxproj -> C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\cmTC_0fc32.exe
+FinalizeBuildStatus:
+  Deleting file "cmTC_0fc32.dir\Release\cmTC_0fc32.tlog\unsuccessfulbuild".
+  Touching "cmTC_0fc32.dir\Release\cmTC_0fc32.tlog\cmTC_0fc32.lastbuildstate".
+Done Building Project "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\cmTC_0fc32.vcxproj" (default targets).
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:00.36
+
+
+__alignof is supported passed with the following output:
+Change Dir: 'C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp'
+
+Run Build Command(s): "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_3c7d4.vcxproj /p:Configuration=Release /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+MSBuild version 17.14.40+3e7442088 for .NET Framework
+Build started 10/13/2026 1:12:34 PM.
+
+Project "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\cmTC_3c7d4.vcxproj" on node 1 (default targets).
+PrepareForBuild:
+  Creating directory "cmTC_3c7d4.dir\Release\".
+  Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
+  Creating directory "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\".
+  Creating directory "cmTC_3c7d4.dir\Release\cmTC_3c7d4.tlog\".
+InitializeBuildStatus:
+  Creating "cmTC_3c7d4.dir\Release\cmTC_3c7d4.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+  Touching "cmTC_3c7d4.dir\Release\cmTC_3c7d4.tlog\unsuccessfulbuild".
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64\CL.exe /c /W1 /WX- /diagnostics:column /O2 /Ob2 /D _MBCS /D WIN32 /D _WINDOWS /D NDEBUG /D "CMAKE_INTDIR=\"Release\"" /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_3c7d4.dir\Release\\" /Fd"cmTC_3c7d4.dir\Release\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\src.cxx
+  Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35228 for x64
+  Copyright (C) Microsoft Corporation.  All rights reserved.
+  cl /c /W1 /WX- /diagnostics:column /O2 /Ob2 /D _MBCS /D WIN32 /D _WINDOWS /D NDEBUG /D "CMAKE_INTDIR=\"Release\"" /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_3c7d4.dir\Release\\" /Fd"cmTC_3c7d4.dir\Release\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\src.cxx
+  src.cxx
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64\link.exe /ERRORREPORT:QUEUE /OUT:"C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\cmTC_3c7d4.exe" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:"C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp/Release/cmTC_3c7d4.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp/Release/cmTC_3c7d4.lib" /MACHINE:X64  /machine:x64 /ignore:4099 cmTC_3c7d4.dir\Release\src.obj
+  cmTC_3c7d4.vcxproj -> C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\cmTC_3c7d4.exe
+FinalizeBuildStatus:
+  Deleting file "cmTC_3c7d4.dir\Release\cmTC_3c7d4.tlog\unsuccessfulbuild".
+  Touching "cmTC_3c7d4.dir\Release\cmTC_3c7d4.tlog\cmTC_3c7d4.lastbuildstate".
+Done Building Project "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\cmTC_3c7d4.vcxproj" (default targets).
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:00.36
+
+
+__declspec(align) is supported passed with the following output:
+Change Dir: 'C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp'
+
+Run Build Command(s): "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_4c1a6.vcxproj /p:Configuration=Release /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+MSBuild version 17.14.40+3e7442088 for .NET Framework
+Build started 10/13/2026 1:12:36 PM.
+
+Project "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\cmTC_4c1a6.vcxproj" on node 1 (default targets).
+PrepareForBuild:
+  Creating directory "cmTC_4c1a6.dir\Release\".
+  Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
+  Creating directory "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\".
+  Creating directory "cmTC_4c1a6.dir\Release\cmTC_4c1a6.tlog\".
+InitializeBuildStatus:
+  Creating "cmTC_4c1a6.dir\Release\cmTC_4c1a6.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+  Touching "cmTC_4c1a6.dir\Release\cmTC_4c1a6.tlog\unsuccessfulbuild".
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64\CL.exe /c /W1 /WX- /diagnostics:column /O2 /Ob2 /D _MBCS /D WIN32 /D _WINDOWS /D NDEBUG /D "CMAKE_INTDIR=\"Release\"" /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_4c1a6.dir\Release\\" /Fd"cmTC_4c1a6.dir\Release\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\src.cxx
+  Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35228 for x64
+  Copyright (C) Microsoft Corporation.  All rights reserved.
+  cl /c /W1 /WX- /diagnostics:column /O2 /Ob2 /D _MBCS /D WIN32 /D _WINDOWS /D NDEBUG /D "CMAKE_INTDIR=\"Release\"" /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_4c1a6.dir\Release\\" /Fd"cmTC_4c1a6.dir\Release\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\src.cxx
+  src.cxx
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64\link.exe /ERRORREPORT:QUEUE /OUT:"C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\cmTC_4c1a6.exe" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:"C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp/Release/cmTC_4c1a6.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp/Release/cmTC_4c1a6.lib" /MACHINE:X64  /machine:x64 /ignore:4099 cmTC_4c1a6.dir\Release\src.obj
+  cmTC_4c1a6.vcxproj -> C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\cmTC_4c1a6.exe
+FinalizeBuildStatus:
+  Deleting file "cmTC_4c1a6.dir\Release\cmTC_4c1a6.tlog\unsuccessfulbuild".
+  Touching "cmTC_4c1a6.dir\Release\cmTC_4c1a6.tlog\cmTC_4c1a6.lastbuildstate".
+Done Building Project "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\cmTC_4c1a6.vcxproj" (default targets).
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:00.37
+
+
+the compiler supports static_assert passed with the following output:
+Change Dir: 'C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp'
+
+Run Build Command(s): "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_952f5.vcxproj /p:Configuration=Release /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+MSBuild version 17.14.40+3e7442088 for .NET Framework
+Build started 10/13/2026 1:12:37 PM.
+
+Project "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\cmTC_952f5.vcxproj" on node 1 (default targets).
+PrepareForBuild:
+  Creating directory "cmTC_952f5.dir\Release\".
+  Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
+  Creating directory "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\".
+  Creating directory "cmTC_952f5.dir\Release\cmTC_952f5.tlog\".
+InitializeBuildStatus:
+  Creating "cmTC_952f5.dir\Release\cmTC_952f5.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+  Touching "cmTC_952f5.dir\Release\cmTC_952f5.tlog\unsuccessfulbuild".
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64\CL.exe /c /W1 /WX- /diagnostics:column /O2 /Ob2 /D _MBCS /D WIN32 /D _WINDOWS /D NDEBUG /D "CMAKE_INTDIR=\"Release\"" /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_952f5.dir\Release\\" /Fd"cmTC_952f5.dir\Release\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\src.cxx
+  Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35228 for x64
+  Copyright (C) Microsoft Corporation.  All rights reserved.
+  cl /c /W1 /WX- /diagnostics:column /O2 /Ob2 /D _MBCS /D WIN32 /D _WINDOWS /D NDEBUG /D "CMAKE_INTDIR=\"Release\"" /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_952f5.dir\Release\\" /Fd"cmTC_952f5.dir\Release\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\src.cxx
+  src.cxx
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64\link.exe /ERRORREPORT:QUEUE /OUT:"C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\cmTC_952f5.exe" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:"C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp/Release/cmTC_952f5.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp/Release/cmTC_952f5.lib" /MACHINE:X64  /machine:x64 /ignore:4099 cmTC_952f5.dir\Release\src.obj
+  cmTC_952f5.vcxproj -> C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\cmTC_952f5.exe
+FinalizeBuildStatus:
+  Deleting file "cmTC_952f5.dir\Release\cmTC_952f5.tlog\unsuccessfulbuild".
+  Touching "cmTC_952f5.dir\Release\cmTC_952f5.tlog\cmTC_952f5.lastbuildstate".
+Done Building Project "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\cmTC_952f5.vcxproj" (default targets).
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:00.38
+
+
+the compiler supports [[deprecated]] passed with the following output:
+Change Dir: 'C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp'
+
+Run Build Command(s): "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_3b1bd.vcxproj /p:Configuration=Release /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+MSBuild version 17.14.40+3e7442088 for .NET Framework
+Build started 10/13/2026 1:12:37 PM.
+
+Project "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\cmTC_3b1bd.vcxproj" on node 1 (default targets).
+PrepareForBuild:
+  Creating directory "cmTC_3b1bd.dir\Release\".
+  Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
+  Creating directory "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\".
+  Creating directory "cmTC_3b1bd.dir\Release\cmTC_3b1bd.tlog\".
+InitializeBuildStatus:
+  Creating "cmTC_3b1bd.dir\Release\cmTC_3b1bd.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+  Touching "cmTC_3b1bd.dir\Release\cmTC_3b1bd.tlog\unsuccessfulbuild".
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64\CL.exe /c /W1 /WX- /diagnostics:column /O2 /Ob2 /D _MBCS /D WIN32 /D _WINDOWS /D NDEBUG /D "CMAKE_INTDIR=\"Release\"" /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_3b1bd.dir\Release\\" /Fd"cmTC_3b1bd.dir\Release\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\src.cxx
+  Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35228 for x64
+  Copyright (C) Microsoft Corporation.  All rights reserved.
+  cl /c /W1 /WX- /diagnostics:column /O2 /Ob2 /D _MBCS /D WIN32 /D _WINDOWS /D NDEBUG /D "CMAKE_INTDIR=\"Release\"" /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_3b1bd.dir\Release\\" /Fd"cmTC_3b1bd.dir\Release\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\src.cxx
+  src.cxx
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64\link.exe /ERRORREPORT:QUEUE /OUT:"C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\cmTC_3b1bd.exe" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:"C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp/Release/cmTC_3b1bd.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp/Release/cmTC_3b1bd.lib" /MACHINE:X64  /machine:x64 /ignore:4099 cmTC_3b1bd.dir\Release\src.obj
+  cmTC_3b1bd.vcxproj -> C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\cmTC_3b1bd.exe
+FinalizeBuildStatus:
+  Deleting file "cmTC_3b1bd.dir\Release\cmTC_3b1bd.tlog\unsuccessfulbuild".
+  Touching "cmTC_3b1bd.dir\Release\cmTC_3b1bd.tlog\cmTC_3b1bd.lastbuildstate".
+Done Building Project "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\cmTC_3b1bd.vcxproj" (default targets).
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:00.35
+
+
+the compiler supports [[deprecated("message")]] passed with the following output:
+Change Dir: 'C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp'
+
+Run Build Command(s): "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_fae33.vcxproj /p:Configuration=Release /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+MSBuild version 17.14.40+3e7442088 for .NET Framework
+Build started 10/13/2026 1:12:38 PM.
+
+Project "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\cmTC_fae33.vcxproj" on node 1 (default targets).
+PrepareForBuild:
+  Creating directory "cmTC_fae33.dir\Release\".
+  Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
+  Creating directory "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\".
+  Creating directory "cmTC_fae33.dir\Release\cmTC_fae33.tlog\".
+InitializeBuildStatus:
+  Creating "cmTC_fae33.dir\Release\cmTC_fae33.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+  Touching "cmTC_fae33.dir\Release\cmTC_fae33.tlog\unsuccessfulbuild".
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64\CL.exe /c /W1 /WX- /diagnostics:column /O2 /Ob2 /D _MBCS /D WIN32 /D _WINDOWS /D NDEBUG /D "CMAKE_INTDIR=\"Release\"" /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_fae33.dir\Release\\" /Fd"cmTC_fae33.dir\Release\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\src.cxx
+  Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35228 for x64
+  Copyright (C) Microsoft Corporation.  All rights reserved.
+  cl /c /W1 /WX- /diagnostics:column /O2 /Ob2 /D _MBCS /D WIN32 /D _WINDOWS /D NDEBUG /D "CMAKE_INTDIR=\"Release\"" /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_fae33.dir\Release\\" /Fd"cmTC_fae33.dir\Release\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\src.cxx
+  src.cxx
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64\link.exe /ERRORREPORT:QUEUE /OUT:"C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\cmTC_fae33.exe" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:"C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp/Release/cmTC_fae33.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp/Release/cmTC_fae33.lib" /MACHINE:X64  /machine:x64 /ignore:4099 cmTC_fae33.dir\Release\src.obj
+  cmTC_fae33.vcxproj -> C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\cmTC_fae33.exe
+FinalizeBuildStatus:
+  Deleting file "cmTC_fae33.dir\Release\cmTC_fae33.tlog\unsuccessfulbuild".
+  Touching "cmTC_fae33.dir\Release\cmTC_fae33.tlog\cmTC_fae33.lastbuildstate".
+Done Building Project "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\cmTC_fae33.vcxproj" (default targets).
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:00.38
+
+
+the compiler supports __declspec(deprecated) passed with the following output:
+Change Dir: 'C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp'
+
+Run Build Command(s): "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_971e2.vcxproj /p:Configuration=Release /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+MSBuild version 17.14.40+3e7442088 for .NET Framework
+Build started 10/13/2026 1:12:39 PM.
+
+Project "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\cmTC_971e2.vcxproj" on node 1 (default targets).
+PrepareForBuild:
+  Creating directory "cmTC_971e2.dir\Release\".
+  Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
+  Creating directory "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\".
+  Creating directory "cmTC_971e2.dir\Release\cmTC_971e2.tlog\".
+InitializeBuildStatus:
+  Creating "cmTC_971e2.dir\Release\cmTC_971e2.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+  Touching "cmTC_971e2.dir\Release\cmTC_971e2.tlog\unsuccessfulbuild".
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64\CL.exe /c /W1 /WX- /diagnostics:column /O2 /Ob2 /D _MBCS /D WIN32 /D _WINDOWS /D NDEBUG /D "CMAKE_INTDIR=\"Release\"" /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_971e2.dir\Release\\" /Fd"cmTC_971e2.dir\Release\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\src.cxx
+  Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35228 for x64
+  Copyright (C) Microsoft Corporation.  All rights reserved.
+  cl /c /W1 /WX- /diagnostics:column /O2 /Ob2 /D _MBCS /D WIN32 /D _WINDOWS /D NDEBUG /D "CMAKE_INTDIR=\"Release\"" /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_971e2.dir\Release\\" /Fd"cmTC_971e2.dir\Release\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\src.cxx
+  src.cxx
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64\link.exe /ERRORREPORT:QUEUE /OUT:"C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\cmTC_971e2.exe" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:"C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp/Release/cmTC_971e2.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp/Release/cmTC_971e2.lib" /MACHINE:X64  /machine:x64 /ignore:4099 cmTC_971e2.dir\Release\src.obj
+  cmTC_971e2.vcxproj -> C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\cmTC_971e2.exe
+FinalizeBuildStatus:
+  Deleting file "cmTC_971e2.dir\Release\cmTC_971e2.tlog\unsuccessfulbuild".
+  Touching "cmTC_971e2.dir\Release\cmTC_971e2.tlog\cmTC_971e2.lastbuildstate".
+Done Building Project "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\cmTC_971e2.vcxproj" (default targets).
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:00.33
+
+
+the compiler supports __declspec(deprecated("message")) passed with the following output:
+Change Dir: 'C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp'
+
+Run Build Command(s): "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_b599f.vcxproj /p:Configuration=Release /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+MSBuild version 17.14.40+3e7442088 for .NET Framework
+Build started 10/13/2026 1:12:40 PM.
+
+Project "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\cmTC_b599f.vcxproj" on node 1 (default targets).
+PrepareForBuild:
+  Creating directory "cmTC_b599f.dir\Release\".
+  Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
+  Creating directory "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\".
+  Creating directory "cmTC_b599f.dir\Release\cmTC_b599f.tlog\".
+InitializeBuildStatus:
+  Creating "cmTC_b599f.dir\Release\cmTC_b599f.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+  Touching "cmTC_b599f.dir\Release\cmTC_b599f.tlog\unsuccessfulbuild".
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64\CL.exe /c /W1 /WX- /diagnostics:column /O2 /Ob2 /D _MBCS /D WIN32 /D _WINDOWS /D NDEBUG /D "CMAKE_INTDIR=\"Release\"" /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_b599f.dir\Release\\" /Fd"cmTC_b599f.dir\Release\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\src.cxx
+  Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35228 for x64
+  Copyright (C) Microsoft Corporation.  All rights reserved.
+  cl /c /W1 /WX- /diagnostics:column /O2 /Ob2 /D _MBCS /D WIN32 /D _WINDOWS /D NDEBUG /D "CMAKE_INTDIR=\"Release\"" /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_b599f.dir\Release\\" /Fd"cmTC_b599f.dir\Release\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\src.cxx
+  src.cxx
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64\link.exe /ERRORREPORT:QUEUE /OUT:"C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\cmTC_b599f.exe" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:"C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp/Release/cmTC_b599f.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/repos/I3Dfileformat/cpp/build/dcmtk/CMakeFiles/CMakeTmp/Release/cmTC_b599f.lib" /MACHINE:X64  /machine:x64 /ignore:4099 cmTC_b599f.dir\Release\src.obj
+  cmTC_b599f.vcxproj -> C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\Release\cmTC_b599f.exe
+FinalizeBuildStatus:
+  Deleting file "cmTC_b599f.dir\Release\cmTC_b599f.tlog\unsuccessfulbuild".
+  Touching "cmTC_b599f.dir\Release\cmTC_b599f.tlog\cmTC_b599f.lastbuildstate".
+Done Building Project "C:\repos\I3Dfileformat\cpp\build\dcmtk\CMakeFiles\CMakeTmp\cmTC_b599f.vcxproj" (default targets).
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:00.36
+
+

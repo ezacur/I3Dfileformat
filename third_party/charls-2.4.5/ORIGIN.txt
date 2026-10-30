@@ -1,0 +1,17 @@
+CharLS 2.4.5 -- JPEG-LS (ISO/IEC 14495-1) codec. Copied VERBATIM, do not edit.
+
+source : https://github.com/team-charls/charls, tag 2.4.5
+         (annotated tag 09117bee41903bf1e41a66980a98cceb77f23a03)
+commit : 14b654dff1efed4d04e278ff3e99f0a486cf20cc  (2026-10-12T22:15:17+02:00)
+         cloned 2026-10-13 with  git clone --depth 1 --branch 2.4.5
+         GitHub publishes no checksum for source archives: the commit hash is
+         the provenance.
+copied : src/*.cpp src/*.h, include/charls/*.h, LICENSE.md, README.md,
+         CHANGELOG.md. Left out: build systems, tests, samples, benchmark,
+         fuzztest, doc, src/design.
+licence: BSD 3-Clause (LICENSE.md): keep the copyright notice with the source
+         and in the documentation of binary distributions.
+
+Used by cpp/ (decoding <jpegls> blocks) and by matlab/i3d_jpegls_mx.cpp
+(encoding them for write_I3D). Compiled as a static library: define
+CHARLS_STATIC.

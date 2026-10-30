@@ -1,0 +1,12 @@
+zlib 1.3.2 -- copied VERBATIM, do not edit (code of others, as it came).
+
+source : https://zlib.net/zlib-1.3.2.tar.gz
+sha256 : bb329a0a2cd0274d05519d61c667c062e06990d72e125ee2dfa8de64f0119d16
+         (verified 2026-10-13 against the hash published on https://zlib.net/)
+copied : the library sources of the tarball root (*.c, *.h), LICENSE, README,
+         ChangeLog. Left out: build systems, contrib/, examples/, test/, doc/,
+         and the platform directories.
+licence: zlib licence (LICENSE): permissive, no attribution in binaries required.
+
+Used by cpp/ (the .i3d reader) to inflate <zlib> blocks and to compute the
+optional per-block CRC-32.

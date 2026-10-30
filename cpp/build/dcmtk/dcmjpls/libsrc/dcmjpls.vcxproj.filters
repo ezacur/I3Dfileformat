@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmjpls\libsrc\djcparam.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmjpls\libsrc\djdecode.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmjpls\libsrc\djencode.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmjpls\libsrc\djrparam.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmjpls\libsrc\djcodecd.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmjpls\libsrc\djutils.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmjpls\libsrc\djcodece.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmjpls\libsrc\dipijpls.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\repos\I3Dfileformat\third_party\dcmtk-3.7.0\dcmjpls\libsrc\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{1367570D-A4A4-3818-B410-8522EDC73B91}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

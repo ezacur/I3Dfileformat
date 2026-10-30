@@ -1,0 +1,17 @@
+# El Python de las pruebas (y del banco), solo de conda-forge: Miniforge, sin Anaconda.
+#
+#   mamba env create -f tests/environment.yml        # o: conda env create -f ...
+#   mamba env update -f tests/environment.yml        # si cambia esta lista
+#
+# Los .m lo encuentran con tests/i3d_python.m; los .py se lanzan con el
+# python.exe de este entorno (o con I3D_PYTHON).
+name: i3d
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - numpy
+  - scipy          # check_roundtrip.py lee ref.mat
+  - imagecodecs    # JPEG-LS (CharLS) y PNG del lector de referencia
+  - pydicom>=3     # <dicom> en el lector de referencia y check_dicom_fixtures
+  - brotli-python  # solo bench/bench_codecs.py (en conda-forge 'brotli' es la libreria C)

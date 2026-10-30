@@ -1,0 +1,10 @@
+# datos de pacientes y lo exportado de ellos: solo los scripts del ejemplo
+exampleDICOMS/*
+!exampleDICOMS/*.m
+
+# lo que generan las pruebas
+tests/out_*/
+
+# autoguardado de MATLAB, cache de Python
+*.asv
+__pycache__/
