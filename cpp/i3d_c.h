@@ -53,9 +53,16 @@ I3D_API const char *i3d_last_error_id( const i3d_file *f );
 /* rejillas 'X' 'Y' 'Z' 'T' y la transformacion 4x4 POR FILAS */
 I3D_API int i3d_grid( i3d_file *f , char axis , const double **values , size_t *n );
 /* lo mismo, copiando en un buffer de quien llama (para las FFI sin punteros a
- * punteros, como calllib de MATLAB): su longitud, -1 si el eje no es XYZT */
-I3D_API int64_t i3d_grid_length( i3d_file *f , char axis );
-I3D_API int     i3d_grid_copy( i3d_file *f , char axis , double *out , int64_t n );
+ * punteros, como calllib de MATLAB), una por eje como i3d_set_Xgrid:
+ * la longitud (-1 si f es NULL) y la copia en out[n] (n debe ser la longitud) */
+I3D_API int64_t i3d_Xgrid_length( i3d_file *f );
+I3D_API int64_t i3d_Ygrid_length( i3d_file *f );
+I3D_API int64_t i3d_Zgrid_length( i3d_file *f );
+I3D_API int64_t i3d_Tgrid_length( i3d_file *f );
+I3D_API int     i3d_Xgrid_copy( i3d_file *f , double *out , int64_t n );
+I3D_API int     i3d_Ygrid_copy( i3d_file *f , double *out , int64_t n );
+I3D_API int     i3d_Zgrid_copy( i3d_file *f , double *out , int64_t n );
+I3D_API int     i3d_Tgrid_copy( i3d_file *f , double *out , int64_t n );
 I3D_API int i3d_transform( i3d_file *f , double out16[16] );
 
 /* data: forma (i j k t c...), tipo ("int16", ...), bytes, y la lectura */
@@ -68,21 +75,34 @@ I3D_API int         i3d_read_data( i3d_file *f , void *out , size_t nbytes );
 I3D_API size_t      i3d_first_frame_bytes( i3d_file *f );
 I3D_API int         i3d_read_first_frame( i3d_file *f , void *out , size_t nbytes );
 
-/* rescale, window (has_window = 0 si no hay clave window) */
-I3D_API int i3d_rescale( i3d_file *f , double *slope , double *intercept );
-I3D_API int i3d_window( i3d_file *f , int *has_window , double *center , double *width );
-
 /* bloques <missing>: cuantos, y la caja del m-esimo (0-based, hi exclusivo) */
 I3D_API int i3d_missing_count( i3d_file *f );
 I3D_API int i3d_missing_box( i3d_file *f , int m , int *ndims , int64_t lo[16] , int64_t hi[16] );
 
-/* aux.NAME (thumbnails, ...): cuantos, el nombre del a-esimo (sin 'aux.'), su
- * forma y tipo, y los bytes tal cual (orden columna, como los guardo MATLAB) */
-I3D_API int         i3d_aux_count( i3d_file *f );
-I3D_API const char *i3d_aux_name( i3d_file *f , int a );
-I3D_API int         i3d_aux_shape( i3d_file *f , const char *name , int *ndims , int64_t dims[16] , const char **type );   /* type puede ser NULL */
-I3D_API const char *i3d_aux_type( i3d_file *f , const char *name );                 /* "" si no existe */
-I3D_API int         i3d_aux_read( i3d_file *f , const char *name , void *out , size_t nbytes );
+/* el thumbnail (SPEC 7), uint8: su forma ({filas cols}, {filas cols 1 frames}
+ * gris o {filas cols 3 frames} RGB; ndims 0 si el fichero no tiene) y sus bytes
+ * (orden columna, como los guardo MATLAB) */
+I3D_API int         i3d_thumbnail_shape( i3d_file *f , int *ndims , int64_t dims[16] );
+I3D_API int         i3d_thumbnail_read( i3d_file *f , void *out , size_t nbytes );
+
+/* los info.* (SPEC 7), interpretados, en el orden del fichero (visibles y
+ * ocultos); i de 0 a i3d_info_count-1:
+ *   key     la clave sin 'info.': "SeriesDescription", "planes.Filename" ("" si no existe)
+ *   type    "numbers"  una lista de numeros: i3d_info_numbers
+ *           "text"     una lista de textos: i3d_info_text( f , i , j ), j = 0..length-1,
+ *                      sin los escapes \" y \\, con las $VARIABLES$ sustituidas (las
+ *                      del fichero, o las de i3d_open_vars), como en las rutas
+ *           "other"    ni lo uno ni lo otro: i3d_info_text( f , i , 0 ), el valor crudo
+ *           "error"    un texto que cita una variable que no existe o un $ sin
+ *                      pareja (un $ literal es $$): el porque en i3d_last_error
+ *           ""         i no existe
+ *   length  cuantos numeros o textos (1 en "other"; -1 si i no existe) */
+I3D_API int         i3d_info_count( i3d_file *f );
+I3D_API const char *i3d_info_key( i3d_file *f , int i );
+I3D_API const char *i3d_info_type( i3d_file *f , int i );
+I3D_API int64_t     i3d_info_length( i3d_file *f , int i );
+I3D_API int         i3d_info_numbers( i3d_file *f , int i , double *out , int64_t n );   /* n = length */
+I3D_API const char *i3d_info_text( i3d_file *f , int i , int64_t j );                  /* "" si no hay */
 
 /* todas las entradas de la cabecera, crudas: clave, subindices y valor */
 I3D_API int         i3d_entry_count( i3d_file *f );
@@ -118,15 +138,13 @@ I3D_API i3d_file   *i3d_open_window( const char *path , int64_t offset , int64_t
  * El encoding, el reparto en bloques, los crc, la parte <hidden> y la
  * disposicion no se eligen: los decide i3d_write (SPEC 9). Todo texto, UTF-8 y
  * sin caracteres de control. Las opciones (i3d_set_option, todas como texto):
- *   Comment        el comentario de la primera linea (default "i3d <fecha>")
  *   Blocks         auto (default) | volume | t
  *   MaxBlockBytes  el mayor bloque, sin comprimir (default 2^31-9)
  *   Hidden         1: la cabecera comprimida y ofuscada (I3Db, SPEC 1.1)
  *   Lazy           1: un bloque por plano y $DICOMDIR$ aunque ningun plano sea una
  *                  referencia (con alguna i3d_set_plane_ref ya lo es)
  *   Verify         1 (default): cada referencia de i3d_set_plane_ref se LEE y tiene
- *                  que dar exactamente su plano de data; si no, se materializa
- *   DicomDir       el valor de $DICOMDIR$ (default: la raiz comun de los .dcm) */
+ *                  que dar exactamente su plano de data; si no, se materializa */
 typedef struct i3d_writer i3d_writer;
 I3D_API i3d_writer *i3d_new( void );
 I3D_API void        i3d_free( i3d_writer *w );
@@ -140,40 +158,48 @@ I3D_API int i3d_set_Ygrid( i3d_writer *w , const double *values , int64_t n );
 I3D_API int i3d_set_Zgrid( i3d_writer *w , const double *values , int64_t n );
 I3D_API int i3d_set_Tgrid( i3d_writer *w , const double *values , int64_t n );
 I3D_API int i3d_set_transform( i3d_writer *w , const double rows16[16] );    /* 4x4 POR FILAS */
-I3D_API int i3d_set_rescale( i3d_writer *w , double slope , double intercept , const char *comment );
-I3D_API int i3d_set_window( i3d_writer *w , double center , double width , const char *comment );
 /* info.KEY (sin el 'info.'), con un comentario al final de la linea (NULL ninguno).
  * visible: 1 (true), a la vista, en el texto legible
  * de la cabecera; 0 (false), en la parte oculta (el bloque <hidden>, comprimido y
  * ofuscado: el lector la devuelve igual, un editor no la ve). Lo que hace falta
- * para leer data (rejillas, transform, ..., aux) va siempre a la vista, y
- * $DICOMDIR$ siempre a la parte oculta */
+ * para leer data (rejillas, transform, ..., thumbnail) va siempre a la vista, y
+ * las variables ($DICOMDIR$...) siempre a la parte oculta */
 I3D_API int i3d_add_info_text( i3d_writer *w , const char *key , const char *value , int visible , const char *comment );
 I3D_API int i3d_add_info_numbers( i3d_writer *w , const char *key , const double *values , int64_t n , int visible , const char *comment );
-/* una lista con UN VALOR POR FILA y un comentario por fila. comments NULL y
+/* una lista con UN VALOR POR FILA y un comentario por fila ("" ninguno: la fila
+ * sale sin '#'; todos "" para una lista sin comentarios). comments NULL y
  * n = nk*nt: una fila por PLANO (k la mas rapida) y el comentario lo pone el
- * escritor (el bloque de data de ese plano). integer: los valores como enteros */
+ * escritor (el bloque de data de ese plano). numbers: si TODOS son enteros
+ * (|v| <= 2^53) se escriben como enteros ('5'), si no como doubles ('5.5'). Seis
+ * argumentos como mucho: calllib sin thunk no admite mas (cpp\matlab_proto.m) */
 I3D_API int i3d_add_info_rows_text( i3d_writer *w , const char *key , int64_t n , const char **values , const char **comments , int visible );
-I3D_API int i3d_add_info_rows_numbers( i3d_writer *w , const char *key , int64_t n , const double *values , int integer , const char **comments , int visible );
+I3D_API int i3d_add_info_rows_numbers( i3d_writer *w , const char *key , int64_t n , const double *values , const char **comments , int visible );
 /* un comentario EN EL SITIO donde se pide (la cabecera sale en el orden canonico,
  * no en el de las llamadas):
  *   "texto"     una linea '# texto' ENCIMA de lo SIGUIENTE que se de (rejilla,
- *               transform, data, rescale, window, aux, info.*); si no se da nada
+ *               transform, data, thumbnail, info.*); si no se da nada
  *               mas, al final de la cabecera
  *   "\btexto"   con un BACKSPACE delante (sprintf('\b...') en MATLAB): '  # texto'
  *               al FINAL de la linea de lo ULTIMO que se dio (de una entrada de
- *               varias lineas, la primera)
- * El de la primera linea es la opcion Comment */
+ *               varias lineas, la primera). Si no se dio nada todavia, al final
+ *               de la PRIMERA linea: 'I3D  # texto' (sin ninguno, 'I3D' sola) */
 I3D_API int i3d_add_comment( i3d_writer *w , const char *text );
-/* aux.NAME: un thumbnail uint8 gris {filas cols} o {filas cols 1 frames}, como UNA
- * imagen PNG (los frames uno al lado de otro). Otra cosa no se escribe: queda un
- * comentario "skipped" (type, el nombre de la clase: "double", ...) */
-I3D_API int i3d_add_aux( i3d_writer *w , const char *name , const void *data , const char *type , int ndims , const int64_t *dims );
+/* thumbnail: uint8 gris {filas cols} o {filas cols 1 frames}, o RGB {filas cols
+ * 3 frames} (canal en la dim 3), como UNA imagen PNG gris o RGB de 8 bits (los
+ * frames uno al lado de otro). type, el nombre de la clase ("uint8"):
+ * otra cosa es un error. Uno solo: darlo otra vez lo reemplaza */
+I3D_API int i3d_set_thumbnail( i3d_writer *w , const void *data , const char *type , int ndims , const int64_t *dims );
 /* 'Lazy': el plano (k,t), 1-based, es una referencia a un .dcm sin perdida de
  * un componente (ruta absoluta). path "" o NULL: el plano no tiene fichero --
  * <missing> si data es entera y el plano es de ceros; si no, se materializa */
 I3D_API int i3d_set_plane_ref( i3d_writer *w , int64_t k , int64_t t , const char *path );
 I3D_API int i3d_set_option( i3d_writer *w , const char *name , const char *value );
+/* una variable $NAME$ = "value" (SPEC 2): name sin los $ ("DICOMDIR"), de letras,
+ * digitos y _. Va a la parte oculta. La citan las rutas de los <dicom> y, como
+ * texto, los info.* (info.planes.Filename = "$DICOMDIR$/x.dcm"; el lector solo la
+ * sustituye en las rutas). Darla otra vez la reemplaza. Con Lazy, DICOMDIR es la
+ * raiz de las referencias (sin darla: la raiz comun de los .dcm) */
+I3D_API int i3d_set_variable( i3d_writer *w , const char *name , const char *value );
 I3D_API int i3d_write( i3d_writer *w , const char *path );          /* todo o nada */
 
 /* la cabecera de src en claro y su binario byte a byte, a dst: hidden 1, oculta

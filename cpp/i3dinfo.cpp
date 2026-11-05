@@ -40,11 +40,7 @@ int main( int argc , char **argv ){
   std::printf( "data  %s  [" , i3d_data_type( f ) );
   for( int d = 0 ; d < nd ; d++ ) std::printf( d ? " %lld" : "%lld" , (long long)dims[d] );
   std::printf( "]  %zu bytes\n" , i3d_data_bytes( f ) );
-  double s , ic;  i3d_rescale( f , &s , &ic );
-  int hw;  double c , w;  i3d_window( f , &hw , &c , &w );
-  std::printf( "rescale %.17g %.17g   window %s" , s , ic , hw ? "" : "none" );
-  if( hw ) std::printf( "%.17g %.17g" , c , w );
-  std::printf( "\nmissing blocks: %d    entries: %d\n" , i3d_missing_count( f ) , i3d_entry_count( f ) );
+  std::printf( "missing blocks: %d    entries: %d\n" , i3d_missing_count( f ) , i3d_entry_count( f ) );
 
   if( argc > 2 && !std::strcmp( argv[2] , "--sum" ) ){
     std::vector<unsigned char> buf( i3d_data_bytes( f ) );

@@ -20,14 +20,14 @@ RAW = P.tobytes(order='F')                                       # 24 bytes
 G1 = ['X = 0.0 : 1.0 : 3.0', 'Y = 0.0 : 1.0 : 2.0', 'Z = 0.0', 'T = 0.0']
 G2 = ['X = 0.0 : 1.0 : 3.0', 'Y = 0.0 : 1.0 : 2.0', 'Z = 0.0 1.0', 'T = 0.0']
 
-def text(lines, magic='I3D 0.1', end=True):
+def text(lines, magic='I3D', end=True):
     return ('\n'.join([magic] + lines) + ('\n---\n' if end else '\n')).encode('utf-8')   # SPEC 1
 
 def hidden(lines, binary, trim=0, extra=b'', old=False):
     # SPEC 1.1: "I3Db" | L | NOT(flujo al reves) XOR k ; _unhide es su propia
     # inversa. old: el esquema de antes del 2026-10-24 (sin invertir, el
     # multiplicador de Knuth), que ya no se lee
-    z = zlib.compress(('\n'.join(['I3D 0.1'] + lines) + '\n').encode('ascii'), 9)
+    z = zlib.compress(('\n'.join(['I3D'] + lines) + '\n').encode('ascii'), 9)
     z = z[:len(z) - trim] + extra
     h = _unhide(z, SEED_I3DB, 2654435761) if old else _unhide(z[::-1])
     return b'I3Db' + struct.pack('<Q', len(z)) + h + binary
@@ -90,7 +90,7 @@ CASES = [
   ('bad magic',           text(G1 + ['data = <raw uint16 @0:23>'], magic='I3D 0.2') + RAW,        ('err', 'badMagic', 'bad magic')),
   ('no terminator',       text(G1 + ['data = <raw uint16 @0:23>'], end=False),                    ('err', 'badHeader', 'no terminator')),
   ('repeated key',        text(G1 + ['X = 0.0 : 1.0 : 3.0', 'data = <raw uint16 @0:23>']) + RAW,  ('err', 'badHeader', 'repeated key')),
-  ('( ) outside data',    text(G1 + ['aux.x(1:2) = <raw uint8 {2} @24:25>', 'data = <raw uint16 @0:23>']) + RAW + b'\0\0', ('err', 'badHeader', 'only data takes')),
+  ('( ) outside data',    text(G1 + ['thumbnail(1:2) = <raw uint8 {2 1} @24:25>', 'data = <raw uint16 @0:23>']) + RAW + b'\0\0', ('err', 'badHeader', 'only data takes')),
   ('fill out of range',   text(G2 + ['fill = 70000', 'data(:,:,1) = <raw uint16 @0:23>', 'data(:,:,2) = <missing>']) + RAW, ('err', 'badHeader', 'does not fit')),
   ('hidden: stream cut',  hidden(G1 + ['data = <raw uint16 @0:23>'], RAW, trim=1),               ('err', 'badHeader', 'does not inflate')),
   ('hidden: extra byte',  hidden(G1 + ['data = <raw uint16 @0:23>'], RAW, extra=b'\x00'),        ('err', 'badHeader', 'after its zlib stream')),
@@ -104,11 +104,11 @@ CASES = [
   ('unknown option',      text(G1 + ['data = <raw uint16 @0:23 future 1>']) + RAW,                ('err', 'badDescriptor', 'unknown descriptor token')),
   # 'order' ya no existe (2026-10-13): un bloque es siempre i j k t c
   ('order option',        text(G1 + ['data = <raw uint16 @0:23 order j i k t c>']) + RAW,         ('err', 'badDescriptor', 'unknown descriptor token')),
-  # ni el rescale por bloque: uno para todo el stack (2026-10-13)
+  # ni rescale (2026-11-03: el formato no tiene rescale ni window)
   ('rescale option',      text(G1 + ['data = <raw uint16 @0:23 rescale 2.0 -1000.0>']) + RAW,     ('err', 'badDescriptor', 'unknown descriptor token')),
   # la cabecera es UTF-8 (2026-10-13): con tildes vale; en Latin-1 no
   ('ok UTF-8 header',     text(G1 + ['info.PatientName = "Muñoz^José"', 'data = <raw uint16 @0:23>']) + RAW, ('ok', P4)),
-  ('Latin-1 header',      text(G1 + ['data = <raw uint16 @0:23>']).replace(b'I3D 0.1\n', b'I3D 0.1\ninfo.PatientName = "Mu\xf1oz"\n') + RAW, ('err', 'badHeader', 'not valid UTF-8')),
+  ('Latin-1 header',      text(G1 + ['data = <raw uint16 @0:23>']).replace(b'I3D\n', b'I3D\ninfo.PatientName = "Mu\xf1oz"\n') + RAW, ('err', 'badHeader', 'not valid UTF-8')),
   ('raw wrong length',    text(G1 + ['data = <raw uint16 @0:21>']) + RAW,                         ('err', 'badBlock', 'raw length mismatch')),
   ('truncated',           text(G1 + ['data = <raw uint16 @0:23>']) + RAW[:20],                   ('err', 'truncated', 'ends inside the block')),
   # NADA se reserva por lo que diga el fichero sin compararlo antes con lo que
@@ -124,22 +124,28 @@ CASES = [
   ('( ) on info.*',       text(G1 + ['info.x(1) = 1.0', 'data = <raw uint16 @0:23>']) + RAW,     ('err', 'badHeader', 'only data takes')),
   # --- donde los dos lectores DIVERGIAN (sonda del 2026-10-23): uno aceptaba, el
   # otro no. Ahora los dos dicen lo mismo, y lo que dice la SPEC
-  ('magic after a space', text(G1 + ['data = <raw uint16 @0:23>'], magic=' I3D 0.1') + RAW,       ('err', 'badMagic', 'bad magic')),
+  ('magic after a space', text(G1 + ['data = <raw uint16 @0:23>'], magic=' I3D') + RAW,           ('err', 'badMagic', 'bad magic')),
+  # sin version (2026-11-03): 'I3D 0.1' o 'I3D 2' es badMagic, 'I3D  # ...' vale
+  ('magic with version',  text(G1 + ['data = <raw uint16 @0:23>'], magic='I3D 0.1') + RAW,        ('err', 'badMagic', 'bad magic')),
+  ('magic I3D#x',         text(G1 + ['data = <raw uint16 @0:23>'], magic='I3D#x') + RAW,          ('err', 'badMagic', 'bad magic')),
+  ('ok magic + comment',  text(G1 + ['data = <raw uint16 @0:23>'], magic='I3D  # c') + RAW,       ('ok', P4)),
   ('subscript 1:-1',      text(G1 + ['data(:,:,:,1:-1) = <raw uint16 @0:23>']) + RAW,             ('err', 'badSubscript', 'positive integer')),
   ('data() empty',        text(G1 + ['data() = <raw uint16 @0:23>']) + RAW,                       ('err', 'badSubscript', 'empty subscript')),
   ('data(..,) stray ,',   text(G1 + ['data(:,:,1,) = <raw uint16 @0:23>']) + RAW,                 ('err', 'badSubscript', 'empty subscript')),
   ('frames 0:0',          text(G1 + ['data = <dicom uint16 "x.dcm" frames 0:0>']),                ('err', 'badDescriptor', '1 <= a <= b')),
   ('frames on raw',       text(G1 + ['data = <raw uint16 @0:23 frames 1:1>']) + RAW,              ('err', 'badDescriptor', 'for <dicom> only')),
-  ('<png> as data',       text(G1 + ['data = <png uint8 {4 3} @0:9>']) + b'\0' * 10,              ('err', 'badDescriptor', 'aux only')),
+  ('<png> as data',       text(G1 + ['data = <png uint8 {4 3} @0:9>']) + b'\0' * 10,              ('err', 'badDescriptor', 'thumbnail only')),
   ('UTF-8 surrogate',     text(G1 + ['data = <raw uint16 @0:23>']).replace(b'---', b'info.s = "\xed\xa0\x80"\n---') + RAW, ('err', 'badHeader', 'not valid UTF-8')),
   ('UTF-8 overlong',      text(G1 + ['data = <raw uint16 @0:23>']).replace(b'---', b'info.s = "\xe0\x80\xaf"\n---') + RAW, ('err', 'badHeader', 'not valid UTF-8')),
   ('grid X = nan',        text(['X = nan', 'Y = 0.0 : 1.0 : 2.0', 'Z = 0.0', 'T = 0.0', 'data = <raw uint16 @0:5>']) + RAW[:6], ('err', 'badGrid', 'not finite')),
   ('257 copies of a block', text(G1 + ['data = <raw uint16 @0:23>'] * 257) + RAW,                 ('err', 'coverage', 'overlap')),
   ('info.* repeated',     text(G1 + ['info.A = 1.0', 'info.A = 2.0', 'data = <raw uint16 @0:23>']) + RAW, ('err', 'badHeader', 'repeated key')),
   ('two types',           text(G1 + ['data = <raw uint16 int16 @0:23>']) + RAW,                   ('err', 'badDescriptor', 'two types')),
-  ('rescale not numbers', text(G1 + ['rescale = "abc"', 'data = <raw uint16 @0:23>']) + RAW,      ('err', 'badNumber', 'bad number')),
-  ('rescale 3 numbers',   text(G1 + ['rescale = 1.0 2.0 3.0', 'data = <raw uint16 @0:23>']) + RAW, ('err', 'badHeader', 'rescale = SLOPE')),
-  ('aux raw wrong length', text(G1 + ['data = <raw uint16 @0:23>', 'aux.a = <raw uint8 {2} @0:9>']) + RAW, ('err', 'badBlock', '<raw> has', 'a')),
+  # rescale y window ya no existen (2026-11-03): son claves desconocidas, se ignoran
+  ('ok rescale ignored',  text(G1 + ['rescale = "abc"', 'window = 1.0 2.0 3.0', 'data = <raw uint16 @0:23>']) + RAW, ('ok', P4)),
+  ('thumbnail raw wrong length', text(G1 + ['data = <raw uint16 @0:23>', 'thumbnail = <raw uint8 {2 1} @0:9>']) + RAW, ('err', 'badBlock', '<raw> has', 'thumbnail')),
+  ('thumbnail not uint8',  text(G1 + ['data = <raw uint16 @0:23>', 'thumbnail = <raw uint16 {2 1} @0:3>']) + RAW, ('err', 'badDescriptor', 'uint8', 'thumbnail')),
+  ('ok aux. is unknown',   text(G1 + ['data = <raw uint16 @0:23>', 'aux.thumbnail = <raw uint8 {2 1} @0:1>']) + RAW, ('ok', P4)),
   # --- la PARTE OCULTA de la cabecera (SPEC 1.2, 2026-10-23): 'header = <hidden @a:b>'
   ('ok <hidden> part',    text(G2v + [hline()]) + RAW + HP,                                       ('ok', P4)),
   ('ok <hidden> first',   hidden_first(),                                                         ('ok', P4)),
@@ -177,8 +183,8 @@ def run(path, want):
     for who in ('cpp', 'py'):
         try:
             a = i3d_ctypes.I3DFile(path).data() if who == 'cpp' else read_i3d(path)['data']
-            # un caso de aux: la DLL lo lee solo si se le pide (Python, siempre)
-            if who == 'cpp' and len(want) > 3: i3d_ctypes.I3DFile(path).aux(want[3])
+            # un caso del thumbnail: la DLL lo lee solo si se le pide (Python, siempre)
+            if who == 'cpp' and len(want) > 3: i3d_ctypes.I3DFile(path).thumbnail()
             got = ('ok', a)
         except i3d_ctypes.I3DCError as e: got = ('err', e.ident, str(e))
         except Exception as e:            got = ('err', '', f'{type(e).__name__}: {e}')

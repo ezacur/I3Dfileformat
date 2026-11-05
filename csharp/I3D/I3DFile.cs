@@ -78,23 +78,13 @@ internal static class Native
     [DllImport( Lib , CallingConvention = CallingConvention.Cdecl )]
     public static extern unsafe int i3d_read_first_frame( I3DHandle f , void* out_ , nuint nbytes );
     [DllImport( Lib , CallingConvention = CallingConvention.Cdecl )]
-    public static extern int i3d_rescale( I3DHandle f , out double slope , out double intercept );
-    [DllImport( Lib , CallingConvention = CallingConvention.Cdecl )]
-    public static extern int i3d_window( I3DHandle f , out int hasWindow , out double center , out double width );
-    [DllImport( Lib , CallingConvention = CallingConvention.Cdecl )]
     public static extern int i3d_missing_count( I3DHandle f );
     [DllImport( Lib , CallingConvention = CallingConvention.Cdecl )]
     public static extern int i3d_missing_box( I3DHandle f , int m , out int ndims , [Out] long[] lo16 , [Out] long[] hi16 );
     [DllImport( Lib , CallingConvention = CallingConvention.Cdecl )]
-    public static extern int i3d_aux_count( I3DHandle f );
+    public static extern int i3d_thumbnail_shape( I3DHandle f , out int ndims , [Out] long[] dims16 );
     [DllImport( Lib , CallingConvention = CallingConvention.Cdecl )]
-    public static extern IntPtr i3d_aux_name( I3DHandle f , int a );
-    [DllImport( Lib , CallingConvention = CallingConvention.Cdecl )]
-    public static extern int i3d_aux_shape( I3DHandle f , [MarshalAs( UnmanagedType.LPUTF8Str )] string name ,
-                                            out int ndims , [Out] long[] dims16 , out IntPtr type );
-    [DllImport( Lib , CallingConvention = CallingConvention.Cdecl )]
-    public static extern unsafe int i3d_aux_read( I3DHandle f , [MarshalAs( UnmanagedType.LPUTF8Str )] string name ,
-                                                  void* out_ , nuint nbytes );
+    public static extern unsafe int i3d_thumbnail_read( I3DHandle f , void* out_ , nuint nbytes );
     [DllImport( Lib , CallingConvention = CallingConvention.Cdecl )]
     public static extern int i3d_entry_count( I3DHandle f );
     [DllImport( Lib , CallingConvention = CallingConvention.Cdecl )]
@@ -103,10 +93,22 @@ internal static class Native
     public static extern IntPtr i3d_header( I3DHandle f );
     [DllImport( Lib , CallingConvention = CallingConvention.Cdecl )]
     public static extern int i3d_is_hidden( I3DHandle f );
+    [DllImport( Lib , CallingConvention = CallingConvention.Cdecl )]
+    public static extern int i3d_info_count( I3DHandle f );
+    [DllImport( Lib , CallingConvention = CallingConvention.Cdecl )]
+    public static extern IntPtr i3d_info_key( I3DHandle f , int i );
+    [DllImport( Lib , CallingConvention = CallingConvention.Cdecl )]
+    public static extern IntPtr i3d_info_type( I3DHandle f , int i );
+    [DllImport( Lib , CallingConvention = CallingConvention.Cdecl )]
+    public static extern long i3d_info_length( I3DHandle f , int i );
+    [DllImport( Lib , CallingConvention = CallingConvention.Cdecl )]
+    public static extern int i3d_info_numbers( I3DHandle f , int i , [Out] double[] out_ , long n );
+    [DllImport( Lib , CallingConvention = CallingConvention.Cdecl )]
+    public static extern IntPtr i3d_info_text( I3DHandle f , int i , long j );
 }
 
 /// <summary>Un fichero .i3d abierto. Abrirlo solo lee y valida la cabecera; el
-/// binario se lee al pedir data, el primer instante o un aux.</summary>
+/// binario se lee al pedir data, el primer instante o el thumbnail.</summary>
 public sealed class I3DFile : IDisposable
 {
     /// <summary>Lo maximo que admite la API C por forma (i3d_c.h: dims[16]).</summary>
@@ -278,22 +280,7 @@ public sealed class I3DFile : IDisposable
     /// <summary>El primer instante en un buffer de quien llama, sin copia.</summary>
     public void ReadFirstFrame<T>( Span<T> out_ ) where T : unmanaged => ReadSpan( out_ , FirstFrameBytes , true );
 
-    // ------------------------------------------------------------ rescale, window, missing
-    public (double Slope, double Intercept) Rescale
-    {
-        get { Check( Native.i3d_rescale( h , out var s , out var i ) ); return (s, i); }
-    }
-
-    /// <summary>(center, width), o null si no hay clave window.</summary>
-    public (double Center, double Width)? Window
-    {
-        get
-        {
-            Check( Native.i3d_window( h , out int has , out var c , out var w ) );
-            return has != 0 ? (c, w) : null;
-        }
-    }
-
+    // ------------------------------------------------------------ missing
     /// <summary>Los bloques &lt;missing&gt;, como cajas 0-based con Hi exclusivo.</summary>
     public I3DBox[] Missing
     {
@@ -315,42 +302,25 @@ public sealed class I3DFile : IDisposable
         }
     }
 
-    // ------------------------------------------------------------ aux
-    /// <summary>Los nombres de los aux.NAME (sin 'aux.').</summary>
-    public string[] AuxNames
+    // ------------------------------------------------------------ thumbnail
+    /// <summary>El thumbnail (SPEC 7): uint8 en orden columna y su {shape}: gris
+    /// {filas cols} o {filas cols 1 frames}, o RGB {filas cols 3 frames}; null si el fichero no tiene.</summary>
+    public (byte[] Data, long[] Shape)? ReadThumbnail()
     {
-        get
-        {
-            int n = Native.i3d_aux_count( h );
-            var r = new string[Math.Max( 0 , n )];
-            for( int a = 0 ; a < r.Length ; a++ ) r[a] = Str( Native.i3d_aux_name( h , a ) );
-            return r;
-        }
-    }
-
-    /// <summary>Un aux (thumbnail, ...): array 1-D tipado en orden columna y su
-    /// {shape}; null si no existe (como I.aux('thumbnailK') -> null).</summary>
-    public (Array Data, long[] Shape)? ReadAux( string name )
-    {
-        ArgumentNullException.ThrowIfNull( name );
-        if( Array.IndexOf( AuxNames , name ) < 0 ) return null;
         var d = new long[MaxDims];
-        Check( Native.i3d_aux_shape( h , name , out int nd , d , out var tp ) );
+        Check( Native.i3d_thumbnail_shape( h , out int nd , d ) );
+        if( nd == 0 ) return null;
         var shape = d[..nd];
-        var t = ClrType( Str( tp ) );
-        var a = NewArray( t , Count( shape ) );
-        long nbytes = Count( shape ) * Marshal.SizeOf( t );
+        var a = new byte[Count( shape )];
         unsafe
         {
-            var g = GCHandle.Alloc( a , GCHandleType.Pinned );
-            try { Check( Native.i3d_aux_read( h , name , (void*)g.AddrOfPinnedObject() , (nuint)nbytes ) ); }
-            finally { g.Free(); }
+            fixed( byte* p = a ) Check( Native.i3d_thumbnail_read( h , p , (nuint)a.Length ) );
         }
         return (a, shape);
     }
 
     // ------------------------------------------------------------ cabecera
-    /// <summary>Todas las entradas de la cabecera, crudas (info.*, aux.*, claves desconocidas...).</summary>
+    /// <summary>Todas las entradas de la cabecera, crudas (info.*, claves desconocidas...).</summary>
     public I3DEntry[] Entries
     {
         get
@@ -364,6 +334,49 @@ public sealed class I3DFile : IDisposable
             }
             return r;
         }
+    }
+
+    /// <summary>Los info.* interpretados por la DLL (SPEC 7), por su nombre sin
+    /// 'info.': <c>double[]</c> (numeros), <c>string[]</c> (textos, sin escapes y con
+    /// las $VARIABLES$ sustituidas) o <c>string</c> (otra cosa: el valor crudo). Los
+    /// que no se pueden leer (un $ suelto, una variable que no existe) no estan:
+    /// van a <see cref="InfoErrors"/>.</summary>
+    public IReadOnlyDictionary<string, object> Info => Infos().info;
+
+    /// <summary>Los info.* que no se pueden leer: nombre -> motivo.</summary>
+    public IReadOnlyDictionary<string, string> InfoErrors => Infos().errors;
+
+    (Dictionary<string, object> info, Dictionary<string, string> errors) Infos()
+    {
+        var info = new Dictionary<string, object>();
+        var errors = new Dictionary<string, string>();
+        int n = Native.i3d_info_count( h );
+        for( int i = 0 ; i < n ; i++ )
+        {
+            string key = Str( Native.i3d_info_key( h , i ) );
+            string type = Str( Native.i3d_info_type( h , i ) );
+            long len = Native.i3d_info_length( h , i );
+            switch( type )
+            {
+                case "numbers":
+                    var x = new double[len];
+                    Check( Native.i3d_info_numbers( h , i , x , len ) );
+                    info[key] = x;
+                    break;
+                case "text":
+                    var s = new string[len];
+                    for( long j = 0 ; j < len ; j++ ) s[j] = Str( Native.i3d_info_text( h , i , j ) );
+                    info[key] = s;
+                    break;
+                case "other":
+                    info[key] = Str( Native.i3d_info_text( h , i , 0 ) );
+                    break;
+                default:
+                    errors[key] = Str( Native.i3d_last_error( h ) );
+                    break;
+            }
+        }
+        return (info, errors);
     }
 
     /// <summary>La cabecera en claro (UTF-8 decodificado), tambien la de un I3Db.</summary>

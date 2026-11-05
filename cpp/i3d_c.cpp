@@ -11,7 +11,6 @@
 struct i3d_file {
   std::unique_ptr<i3d::File> F;
   std::string err , err_id;
-  std::vector<std::string> aux;               // los nombres que devuelve i3d_aux_name
 };
 
 struct i3d_writer {
@@ -69,9 +68,6 @@ static i3d_file *open_( const char *path , int64_t base , int64_t size , int n ,
     } else {
       f->F.reset( new i3d::File( path , V ) );
     }
-    // los nombres de los aux, UNA vez: los punteros de i3d_aux_name tienen que
-    // vivir mientras el handle (i3d_c.h), y recalcularlos los invalidaria
-    f->aux = f->F->aux_names();
     return f;
   } catch( const i3d::Error &e ){ g_err = e.what(); g_err_id = e.id; }
     catch( const std::exception &e ){ g_err = e.what(); g_err_id = "internal"; }
@@ -88,18 +84,27 @@ int i3d_grid( i3d_file *f , char axis , const double **values , size_t *n ){
   GUARD( f , { auto &g = f->F->grid( axis ); *values = g.data(); *n = g.size(); } );
 }
 
-int64_t i3d_grid_length( i3d_file *f , char axis ){
+static int64_t grid_length_( i3d_file *f , char axis ){
   if( !f ) return -1;
   try { return (int64_t)f->F->grid( axis ).size(); } catch( ... ){ return -1; }
 }
 
-int i3d_grid_copy( i3d_file *f , char axis , double *out , int64_t n ){
+static int grid_copy_( i3d_file *f , char axis , double *out , int64_t n ){
   GUARD( f , {
     auto &g = f->F->grid( axis );
-    if( !out || n != (int64_t)g.size() ) throw i3d::Error( "badBuffer" , "the grid has " + std::to_string( g.size() ) + " values, the buffer " + std::to_string( n ) );
+    if( !out || n != (int64_t)g.size() ) throw i3d::Error( "badBuffer" , std::string( 1 , axis ) + " has " + std::to_string( g.size() ) + " values, the buffer " + std::to_string( n ) );
     std::copy( g.begin() , g.end() , out );
   } );
 }
+
+int64_t i3d_Xgrid_length( i3d_file *f ){ return grid_length_( f , 'X' ); }
+int64_t i3d_Ygrid_length( i3d_file *f ){ return grid_length_( f , 'Y' ); }
+int64_t i3d_Zgrid_length( i3d_file *f ){ return grid_length_( f , 'Z' ); }
+int64_t i3d_Tgrid_length( i3d_file *f ){ return grid_length_( f , 'T' ); }
+int i3d_Xgrid_copy( i3d_file *f , double *out , int64_t n ){ return grid_copy_( f , 'X' , out , n ); }
+int i3d_Ygrid_copy( i3d_file *f , double *out , int64_t n ){ return grid_copy_( f , 'Y' , out , n ); }
+int i3d_Zgrid_copy( i3d_file *f , double *out , int64_t n ){ return grid_copy_( f , 'Z' , out , n ); }
+int i3d_Tgrid_copy( i3d_file *f , double *out , int64_t n ){ return grid_copy_( f , 'T' , out , n ); }
 
 int i3d_transform( i3d_file *f , double out16[16] ){
   GUARD( f , { auto &A = f->F->transform(); for( int k = 0 ; k < 16 ; k++ ) out16[k] = A[k]; } );
@@ -126,14 +131,6 @@ int i3d_read_first_frame( i3d_file *f , void *out , size_t nbytes ){
   GUARD( f , { f->F->read_first_frame( out , nbytes ); } );
 }
 
-int i3d_rescale( i3d_file *f , double *slope , double *intercept ){
-  GUARD( f , { *slope = f->F->slope(); *intercept = f->F->intercept(); } );
-}
-
-int i3d_window( i3d_file *f , int *has_window , double *center , double *width ){
-  GUARD( f , { *has_window = f->F->has_window() ? 1 : 0; *center = f->F->window_center(); *width = f->F->window_width(); } );
-}
-
 int i3d_missing_count( i3d_file *f ){ return f ? (int)f->F->missing().size() : -1; }
 
 int i3d_missing_box( i3d_file *f , int m , int *ndims , int64_t lo[16] , int64_t hi[16] ){
@@ -146,33 +143,59 @@ int i3d_missing_box( i3d_file *f , int m , int *ndims , int64_t lo[16] , int64_t
   } );
 }
 
-int i3d_aux_count( i3d_file *f ){ return f ? (int)f->aux.size() : -1; }
-
-const char *i3d_aux_name( i3d_file *f , int a ){
-  if( !f ) return "";
-  return ( a >= 0 && a < (int)f->aux.size() ) ? f->aux[(size_t)a].c_str() : "";
-}
-
-int i3d_aux_shape( i3d_file *f , const char *name , int *ndims , int64_t dims[16] , const char **type ){
+int i3d_thumbnail_shape( i3d_file *f , int *ndims , int64_t dims[16] ){
   GUARD( f , {
-    auto d = f->F->aux_descriptor( name );
+    *ndims = 0;
+    if( !f->F->has_thumbnail() ) return 0;
+    auto d = f->F->thumbnail_descriptor();
     if( d.shape.size() > 16 ) throw i3d::Error( "badDescriptor" , "more than 16 dimensions" );
     *ndims = (int)d.shape.size();  for( size_t q = 0 ; q < d.shape.size() ; q++ ) dims[q] = d.shape[q];
-    if( type ) *type = i3d::type_name( d.type );
   } );
 }
 
-const char *i3d_aux_type( i3d_file *f , const char *name ){
-  if( !f || !name ) return "";
-  try { return i3d::type_name( f->F->aux_descriptor( name ).type ); } catch( ... ){ return ""; }
-}
-
-int i3d_aux_read( i3d_file *f , const char *name , void *out , size_t nbytes ){
+int i3d_thumbnail_read( i3d_file *f , void *out , size_t nbytes ){
   GUARD( f , {
-    auto b = f->F->read_aux( name );
-    if( b.size() != nbytes ) throw i3d::Error( "badBuffer" , "aux." + std::string( name ) + " has " + std::to_string( b.size() ) + " bytes, the buffer " + std::to_string( nbytes ) );
+    auto b = f->F->read_thumbnail();
+    if( b.size() != nbytes ) throw i3d::Error( "badBuffer" , "the thumbnail has " + std::to_string( b.size() ) + " bytes, the buffer " + std::to_string( nbytes ) );
     std::memcpy( out , b.data() , nbytes );
   } );
+}
+
+// ---- los info.* (SPEC 7)
+static const i3d::Info *info_( i3d_file *f , int i ){
+  if( !f ) return nullptr;
+  auto &I = f->F->infos();
+  return ( i >= 0 && i < (int)I.size() ) ? &I[(size_t)i] : nullptr;
+}
+int i3d_info_count( i3d_file *f ){ return f ? (int)f->F->infos().size() : -1; }
+const char *i3d_info_key( i3d_file *f , int i ){ auto p = info_( f , i ); return p ? p->name.c_str() : ""; }
+const char *i3d_info_type( i3d_file *f , int i ){
+  auto p = info_( f , i );
+  if( !p ) return "";
+  switch( p->kind ){
+    case 'n': return "numbers";
+    case 't': return "text";
+    case 'e': f->err = p->err;  f->err_id = p->err_id;  return "error";
+    default : return "other";
+  }
+}
+int64_t i3d_info_length( i3d_file *f , int i ){
+  auto p = info_( f , i );
+  if( !p ) return -1;
+  return p->kind == 'n' ? (int64_t)p->numbers.size() : p->kind == 'e' ? 0 : (int64_t)p->text.size();
+}
+int i3d_info_numbers( i3d_file *f , int i , double *out , int64_t n ){
+  GUARD( f , {
+    auto p = info_( f , i );
+    if( !p ) throw i3d::Error( "badIndex" , "no info " + std::to_string( i ) );
+    if( p->kind != 'n' ) throw i3d::Error( "badType" , "info." + p->name + " is not numbers" );
+    if( !out || n != (int64_t)p->numbers.size() ) throw i3d::Error( "badBuffer" , "info." + p->name + " has " + std::to_string( p->numbers.size() ) + " numbers, the buffer " + std::to_string( n ) );
+    std::copy( p->numbers.begin() , p->numbers.end() , out );
+  } );
+}
+const char *i3d_info_text( i3d_file *f , int i , int64_t j ){
+  auto p = info_( f , i );
+  return ( p && j >= 0 && j < (int64_t)p->text.size() ) ? p->text[(size_t)j].c_str() : "";
 }
 
 int i3d_entry_count( i3d_file *f ){ return f ? (int)f->F->entries().size() : -1; }
@@ -239,12 +262,6 @@ int i3d_set_Ygrid( i3d_writer *w , const double *values , int64_t n ){ return se
 int i3d_set_Zgrid( i3d_writer *w , const double *values , int64_t n ){ return set_grid_( w , 'Z' , values , n ); }
 int i3d_set_Tgrid( i3d_writer *w , const double *values , int64_t n ){ return set_grid_( w , 'T' , values , n ); }
 int i3d_set_transform( i3d_writer *w , const double rows16[16] ){ GUARD( w , { w->W.set_transform( rows16 ); } ); }
-int i3d_set_rescale( i3d_writer *w , double slope , double intercept , const char *comment ){
-  GUARD( w , { w->W.set_rescale( slope , intercept , s_( comment ) ); } );
-}
-int i3d_set_window( i3d_writer *w , double center , double width , const char *comment ){
-  GUARD( w , { w->W.set_window( center , width , s_( comment ) ); } );
-}
 int i3d_add_info_text( i3d_writer *w , const char *key , const char *value , int visible , const char *comment ){
   GUARD( w , { if( !value ) throw i3d::Error( "badInput" , "NULL value" );  w->W.add_info_text( s_( key ) , value , visible , s_( comment ) ); } );
 }
@@ -258,19 +275,20 @@ int i3d_add_info_rows_text( i3d_writer *w , const char *key , int64_t n , const 
     else w->W.add_info_rows_text( s_( key ) , v , nullptr , visible );
   } );
 }
-int i3d_add_info_rows_numbers( i3d_writer *w , const char *key , int64_t n , const double *values , int integer , const char **comments , int visible ){
+int i3d_add_info_rows_numbers( i3d_writer *w , const char *key , int64_t n , const double *values , const char **comments , int visible ){
   GUARD( w , {
     if( n < 0 ) throw i3d::Error( "badInput" , "n < 0" );
-    if( comments ){ auto c = strs_( n , comments , "comments" );  w->W.add_info_rows_numbers( s_( key ) , values , (size_t)n , integer != 0 , &c , visible ); }
-    else w->W.add_info_rows_numbers( s_( key ) , values , (size_t)n , integer != 0 , nullptr , visible );
+    if( comments ){ auto c = strs_( n , comments , "comments" );  w->W.add_info_rows_numbers( s_( key ) , values , (size_t)n , &c , visible ); }
+    else w->W.add_info_rows_numbers( s_( key ) , values , (size_t)n , nullptr , visible );
   } );
 }
 int i3d_add_comment( i3d_writer *w , const char *text ){ GUARD( w , { w->W.add_comment( s_( text ) ); } ); }
-int i3d_add_aux( i3d_writer *w , const char *name , const void *data , const char *type , int ndims , const int64_t *dims ){
-  GUARD( w , { w->W.add_aux( s_( name ) , data , i3d::type_from_name( s_( type ) ) , s_( type ) , dims_( ndims , dims ) ); } );
+int i3d_set_thumbnail( i3d_writer *w , const void *data , const char *type , int ndims , const int64_t *dims ){
+  GUARD( w , { w->W.set_thumbnail( data , i3d::type_from_name( s_( type ) ) , s_( type ) , dims_( ndims , dims ) ); } );
 }
 int i3d_set_plane_ref( i3d_writer *w , int64_t k , int64_t t , const char *path ){ GUARD( w , { w->W.set_plane_ref( k , t , s_( path ) ); } ); }
 int i3d_set_option( i3d_writer *w , const char *name , const char *value ){ GUARD( w , { w->W.set_option( s_( name ) , s_( value ) ); } ); }
+int i3d_set_variable( i3d_writer *w , const char *name , const char *value ){ GUARD( w , { w->W.set_variable( s_( name ) , s_( value ) ); } ); }
 int i3d_write( i3d_writer *w , const char *path ){
   GUARD( w , { if( !path ) throw i3d::Error( "badInput" , "NULL path" );  w->W.write( path ); } );
 }

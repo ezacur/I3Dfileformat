@@ -1,13 +1,13 @@
 // Pruebas del wrapper C#: cada .i3d de referencia, leido por la DLL a traves de
 // I3DFile, contra lo que leyo el lector de REFERENCIA en Python
 // (tests/read_i3d.py), BIT A BIT: data, primer instante, rejillas, transform,
-// aux e info. Mas los errores con su Id.
+// thumbnail e info. Mas los errores con su Id.
 //
 //   dotnet run --project I3D.Tests -- <dir de referencias> <dir de especiales>
 //
-// Las referencias las genera un script de Python (make_refs.py) que, para cada
+// Las referencias las genera tests/make_cs_refs.py (con read_i3d.py) que, para cada
 // fichero, escribe <tag>.json (tipo, forma, rejillas y transform en hex, info,
-// aux) y <tag>.data.bin / <tag>.first.bin / <tag>.aux.NAME.bin en orden columna.
+// thumbnail) y <tag>.data.bin / <tag>.first.bin / <tag>.thumbnail.bin en orden columna.
 // Sale con 1 si algo falla.
 using System.Runtime.InteropServices;
 using System.Text.Json;
@@ -42,6 +42,18 @@ static class Program
         "int32" => "int32", "uint32" => "uint32", "int64" => "int64", "uint64" => "uint64",
         "float32" => "single", "float64" => "double", _ => numpyName,
     };
+
+    // un info.* de I3DFile.Info contra el de read_i3d.py: lista de numeros ->
+    // double[] (bit a bit); un texto o una lista -> string[]; 'other' -> string
+    static bool SameInfo( object got , JsonElement want )
+    {
+        if( want.ValueKind == JsonValueKind.Array && want.EnumerateArray().All( e => e.ValueKind == JsonValueKind.Number ) )
+            return got is double[] d && Doubles( d ).SequenceEqual( Doubles( want.EnumerateArray().Select( e => e.GetDouble() ).ToArray() ) );
+        if( want.ValueKind == JsonValueKind.Array )
+            return got is string[] s && s.SequenceEqual( want.EnumerateArray().Select( e => e.GetString()! ) );
+        // un solo texto (read_i3d da str) o el valor crudo ('other')
+        return ( got is string[] one && one.Length == 1 && one[0] == want.GetString() ) || ( got is string raw && raw == want.GetString() );
+    }
 
     static int Main( string[] args )
     {
@@ -81,19 +93,28 @@ static class Program
                 Ok( s1[3] == 1 && Bytes( first ).SequenceEqual( File.ReadAllBytes( Path.Combine( refDir , tag + ".first.bin" ) ) ) , $"{tag}: first frame" );
                 // las sobrecargas sin copia, por el tipo de data
                 Ok( SpanMatches( f , data , first ) , $"{tag}: Span<T> overloads" );
-                // aux
-                foreach( var a in r.GetProperty( "aux" ).EnumerateObject() )
+                // thumbnail: el de la referencia, o null si no hay
+                var got = f.ReadThumbnail();
+                if( r.TryGetProperty( "thumbnail" , out var th ) && th.ValueKind == JsonValueKind.Object )
                 {
-                    var got = f.ReadAux( a.Name );
-                    Ok( got is not null && Bytes( got.Value.Data ).SequenceEqual( File.ReadAllBytes( Path.Combine( refDir , $"{tag}.aux.{a.Name}.bin" ) ) ) , $"{tag}: aux.{a.Name}" );
-                    var ashape = a.Value.GetProperty( "shape" ).EnumerateArray().Select( e => e.GetInt64() ).ToArray();
-                    Ok( got is not null && got.Value.Shape.SequenceEqual( ashape ) , $"{tag}: aux.{a.Name} shape" );
+                    Ok( got is not null && got.Value.Data.SequenceEqual( File.ReadAllBytes( Path.Combine( refDir , $"{tag}.thumbnail.bin" ) ) ) , $"{tag}: thumbnail" );
+                    var tshape = th.GetProperty( "shape" ).EnumerateArray().Select( e => e.GetInt64() ).ToArray();
+                    Ok( got is not null && got.Value.Shape.SequenceEqual( tshape ) , $"{tag}: thumbnail shape" );
                 }
-                Ok( f.ReadAux( "noSuchAux" ) is null , $"{tag}: missing aux is null" );
+                else Ok( got is null , $"{tag}: no thumbnail is null" );
                 // info.*: los valores crudos, UTF-8 incluido
                 var entries = f.Entries.Where( e => e.Key.StartsWith( "info." ) ).ToDictionary( e => e.Key , e => e.Value );
                 foreach( var i in r.GetProperty( "info" ).EnumerateObject() )
                     Ok( entries.TryGetValue( i.Name , out var v ) && v == i.Value.GetString() , $"{tag}: {i.Name}" );
+                // info.* interpretados (SPEC 7): numeros bit a bit, textos con las
+                // $VARIABLES$ sustituidas, y los ilegibles en InfoErrors
+                var info = f.Info;
+                var parsed = r.GetProperty( "infoParsed" );
+                Ok( info.Count == parsed.EnumerateObject().Count() , $"{tag}: Info has {info.Count} entries" );
+                foreach( var i in parsed.EnumerateObject() )
+                    Ok( info.TryGetValue( i.Name , out var v ) && SameInfo( v , i.Value ) , $"{tag}: Info[{i.Name}]" );
+                var errs = r.GetProperty( "infoErrors" ).EnumerateArray().Select( e => e.GetString()! ).OrderBy( x => x );
+                Ok( f.InfoErrors.Keys.OrderBy( x => x ).SequenceEqual( errs ) , $"{tag}: InfoErrors" );
             }
             catch( I3DException e )
             {
@@ -114,16 +135,15 @@ static class Program
         using( var f = I3DFile.Open( Path.Combine( specialDir , "hidden.i3d" ) ) )
         {
             Ok( f.IsHidden , "hidden: IsHidden" );
-            Ok( f.Header.StartsWith( "I3D 0.1" ) , "hidden: header in clear" );
+            Ok( f.Header.StartsWith( "I3D" ) , "hidden: header in clear" );
         }
         using( var f = I3DFile.Open( Path.Combine( specialDir , "png.i3d" ) ) )
         {
-            Ok( f.AuxNames.SequenceEqual( new[] { "thumbnailK" } ) , "png: AuxNames" );
-            var a = f.ReadAux( "thumbnailK" );
-            Ok( a is not null && a.Value.Data is byte[] && a.Value.Shape.SequenceEqual( new long[] { 5 , 4 , 1 , 2 } ) , "png: type/shape" );
+            var a = f.ReadThumbnail();
+            Ok( a is not null && a.Value.Shape.SequenceEqual( new long[] { 5 , 4 , 1 , 2 } ) , "png: shape" );
             // el thumbnail que hizo make_refs.py: arange(40)*3 en orden columna
             var exp = Enumerable.Range( 0 , 40 ).Select( v => (byte)( v * 3 ) ).ToArray();
-            Ok( a is not null && ( (byte[])a.Value.Data ).SequenceEqual( exp ) , "png: values" );
+            Ok( a is not null && a.Value.Data.SequenceEqual( exp ) , "png: values" );
         }
         // variables: sin sobrescribir, la ruta del fichero no existe
         try

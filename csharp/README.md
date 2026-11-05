@@ -29,14 +29,16 @@ var ( first , s1 ) = f.ReadFirstFrame();        // sólo data(:,:,:,1,c...); s1[
 var buf = new short[f.DataBytes / sizeof( short )];
 f.ReadData<short>( buf );
 
-var ( slope , intercept ) = f.Rescale;
-var win = f.Window;                             // (Center, Width)? -- null si no hay window
 I3DBox[] huecos = f.Missing;                    // cajas 0-based, Hi exclusivo
 
-foreach( var nombre in f.AuxNames ) { var aux = f.ReadAux( nombre ); }
-var nada = f.ReadAux( "noExiste" );            // null, no excepción
+var th = f.ReadThumbnail();                    // (byte[] Data, long[] Shape)?, null si no hay
 
-foreach( var e in f.Entries ) Console.WriteLine( $"{e.Key}({e.Subs}) = {e.Value}" );
+// los info.* interpretados por la DLL: double[] (números), string[] (textos, con
+// $DICOMDIR$... ya sustituida) o string (otra cosa, crudo); los ilegibles, en InfoErrors
+double[] ps = (double[])f.Info["PixelSpacing"];
+string[] rutas = (string[])f.Info["planes.Filename"];
+
+foreach( var e in f.Entries ) Console.WriteLine( $"{e.Key}({e.Subs}) = {e.Value}" );   // crudas
 string cabecera = f.Header;                     // en claro, también la de un I3Db
 bool oculta = f.IsHidden;
 ```
@@ -63,7 +65,7 @@ propios de este envoltorio:
   de llamar a la DLL, así que nunca se escribe fuera del buffer.
 - `badData`: la DLL dice que una caja `missing` tiene más de 16 dimensiones.
 
-Las cadenas (rutas, cabecera, entradas, nombres de aux) son UTF-8 en los dos
+Las cadenas (rutas, cabecera, entradas) son UTF-8 en los dos
 sentidos, así que `"Muñoz^José"` llega intacto.
 
 ## Compilar
@@ -89,25 +91,28 @@ sigue siendo `I3D`.
 ## Pruebas
 
 ```
-dotnet run --project I3D.Tests -c Release --no-build -- <dir de referencias> <dir de especiales>
+matlab -batch "cd tests; check_roundtrip('C:\tmp\rt')"          % la bateria, en C:\tmp\rt
+python tests\make_cs_refs.py C:\tmp\rt C:\tmp\csref C:\tmp\csspecial
+dotnet run --project I3D.Tests -c Release --no-build -- C:\tmp\csref C:\tmp\csspecial
 ```
 
-Las referencias las escribe un script de Python que lee cada `.i3d` con el lector
-de **referencia** (`tests/read_i3d.py`) y vuelca:
+`tests/make_cs_refs.py` (en el entorno `i3d` de `tests/environment.yml`) lee cada
+`.i3d` de la batería con el lector de **referencia** (`tests/read_i3d.py`) y vuelca:
 
-- `<tag>.json`: tipo, forma, rejillas y transform en hexadecimal, info, aux y variables;
+- `<tag>.json`: tipo, forma, rejillas y transform en hexadecimal, info (crudo e
+  interpretado), thumbnail y variables;
 - `<tag>.data.bin` y `<tag>.first.bin`: data y primer instante, en orden columna;
-- `<tag>.aux.NOMBRE.bin`: cada aux.
+- `<tag>.thumbnail.bin`: el thumbnail.
 
-El script también fabrica los ficheros especiales: info UTF-8, I3Db oculto, aux
+También fabrica los ficheros especiales: info UTF-8, I3Db oculto, thumbnail
 PNG, una ruta `$DICOMDIR$` rota (para probar la sobrescritura) y dos inválidos.
 
-Lo que se compara, para cada `.i3d` de `tests/out_piechnik_canon` y los
-especiales:
+Lo que se compara, para cada `.i3d` de la batería y los especiales:
 
 - **bit a bit:** tipo, forma, X/Y/Z/T, transform, data, primer instante, las
-  dos sobrecargas `Span<T>`, cada aux (bytes y forma) y cada `info.*`;
-- además: que un aux inexistente dé `null`, el UTF-8, `IsHidden`, la PNG
+  dos sobrecargas `Span<T>`, el thumbnail (bytes y forma), cada `info.*` crudo,
+  y `Info` / `InfoErrors` contra lo que interpreta el lector de referencia;
+- además: que un fichero sin thumbnail dé `null`, el UTF-8, `IsHidden`, la PNG
   decodificada, la variable sobrescrita (y que sin sobrescribir falle con
   `cannotOpen`), `coverage`, `badBlock`, un fichero inexistente y `badBuffer`.
 

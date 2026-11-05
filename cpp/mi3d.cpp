@@ -16,7 +16,7 @@
 namespace i3d {
 namespace mi3d {
 
-static std::filesystem::path u8p( const std::string &s ){ return std::filesystem::u8path( s ); }
+static std::filesystem::path u8p( const std::string &s ){ return detail::fs_path( s ); }
 static std::string i2s( int64_t v ){ return std::to_string( v ); }
 
 // lo que el escritor necesita de un miembro
@@ -134,7 +134,7 @@ static std::string tagsp_( const std::string &t ){ return t.empty() ? "" : t + "
 // R < 0: la justa, con la reserva minima. Vacia si no cabe en R
 static std::string text_( const std::vector<M> &L , int N , const std::string &comment , const std::vector<std::string> &V ,
                           int64_t ha , int64_t hb , int64_t R ){
-  std::vector<std::string> lines = { "MI3D 0.1  # " + comment };
+  std::vector<std::string> lines = { comment.empty() ? std::string( "MI3D" ) : "MI3D  # " + comment };
   std::vector<std::string> D;  size_t w = 0;
   for( const M &m : L ){ D.push_back( "i3d(" + i2s( m.n ) + ") = <i3d @" + i2s( m.at ) + ":" + i2s( m.at + m.src.len - 1 ) + ">" );  w = std::max( w , D.back().size() ); }
   for( size_t i = 0 ; i < L.size() ; i++ ) lines.push_back( D[i] + std::string( w - D[i].size() , ' ' ) + "  # " + tagsp_( L[i].tag ) + "[ " + L[i].dims + " ]" );
@@ -183,8 +183,8 @@ static void write_full_( const std::string &f , std::vector<M> L , int N , int64
 
 static std::string folder_( const std::string &f ){
   std::error_code ec;
-  std::filesystem::path p = std::filesystem::weakly_canonical( u8p( f ) , ec );
-  if( ec ) p = std::filesystem::absolute( u8p( f ) , ec );
+  std::filesystem::path p = std::filesystem::weakly_canonical( std::filesystem::u8path( f ) , ec );   // sin \?\: se compara
+  if( ec ) p = std::filesystem::absolute( std::filesystem::u8path( f ) , ec );
   std::string s = p.parent_path().u8string();
   std::transform( s.begin() , s.end() , s.begin() , []( unsigned char c ){ return (char)tolower( c ); } );
   return s;

@@ -18,7 +18,10 @@ function check_dicom( listfile )
 
   here = fileparts( mfilename('fullpath') );
   addpath( fullfile( here , '..' , 'matlab' ) );
-  [ dn , CLEAN ] = sanddir( '#_????' );  %#ok<ASGLU>
+  if ~libisloaded( 'i3d' )                                      % i3d.dll de matlab\
+    old = cd( fullfile( here , '..' , 'matlab' ) );  loadlibrary( 'i3d.dll' , @i3d_proto , 'alias' , 'i3d' );  cd( old );
+  end
+  dn = tempname;  mkdir( dn );  CLEAN = onCleanup( @() rmdir( dn , 's' ) );  %#ok<NASGU>
   L = strsplit( strtrim( fileread( listfile ) ) , newline );
   root = 'D:/DICOMS';
   fprintf( '%-24s %3s %3s %3s %2s %2s %2s  %s\n' , 'transfer syntax' , 'BA' , 'BS' , 'HB' , 'PR' , 'S' , 'MF' , 'result' );
@@ -37,7 +40,7 @@ function check_dicom( listfile )
     V = permute( R , [ 2 1 4 3 ] );                    % cols x rows x frames (x samples)
     cls = class( R );
     % el .i3d: rejillas de indices, y UN bloque <dicom> con todos sus frames
-    H = { 'I3D 0.1  # check_dicom' , ...
+    H = { 'I3D  # check_dicom' , ...
           sprintf( '$DICOMDIR$ = "%s"' , root ) , ...
           sprintf( 'X[%d] = %s' , size(V,1) , rng_( size(V,1) ) ) , ...
           sprintf( 'Y[%d] = %s' , size(V,2) , rng_( size(V,2) ) ) , ...
@@ -47,7 +50,7 @@ function check_dicom( listfile )
     f = fullfile( dn , sprintf( 'f%03d.i3d' , q ) );
     fid = fopen( f , 'w' );  fwrite( fid , [ strjoin( H , newline ) , newline ] , 'char' );  fclose( fid );
     try
-      [ ~ , S ] = read_I3D( f );
+      S = read_I3D( f );
     catch LE
       if nc > 1, why = '(SamplesPerPixel > 1: v0)'; else, why = ''; end
       fprintf( '%s  C++ %s %s -- %s\n' , tag , LE.identifier , why , strtrim( LE.message(1:min(end,90)) ) );
@@ -69,10 +72,10 @@ function check_dicom( listfile )
   h = strrep( h , sprintf( '$DICOMDIR$ = "%s"' , root ) , '$DICOMDIR$ = "Z:/does/not/exist"' );
   f = fullfile( dn , 'moved.i3d' );  fid = fopen( f , 'w' );  fwrite( fid , h , 'char' );  fclose( fid );
   try, read_I3D( f ); ok1 = false; catch, ok1 = true; end               % sin override: falla
-  [ ~ , S ] = read_I3D( f , 'Variables' , { 'DICOMDIR' , root } );      % con override: lee
+  S = read_I3D( f , 'Variables' , { 'DICOMDIR' , root } );      % con override: lee
   fprintf( 'override: broken path fails %d, override reads %d\n' , ok1 , ~isempty( S.data ) );
 end
 
 function s = rng_( n )
-  if n == 1, s = '0.0'; else, s = sprintf( '0.0 : 1.0 : %s' , num2strI3D( n - 1 ) ); end
+  if n == 1, s = '0.0'; else, s = sprintf( '0.0 : 1.0 : %s' , calllib( 'i3d' , 'i3d_num2str' , n - 1 ) ); end
 end

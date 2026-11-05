@@ -27,7 +27,7 @@ def hidepart(lines):
     z = zlib.compress(('\n'.join(lines) + '\n').encode('utf-8'), 9)
     return _unhide(z[::-1], SEED_HIDDEN, MULT_HIDDEN)
 
-def mi3d(members, lines=(), hidden=None, sep=True, fill=b'', magic='MI3D 0.1', order=None, form='ab', crc=None, cut=0):
+def mi3d(members, lines=(), hidden=None, sep=True, fill=b'', magic='MI3D', order=None, form='ab', crc=None, cut=0):
     # members: [(n, bytes)] (bytes None: 'i3d(n) = <missing>'); lines: mas lineas
     # de cabecera; hidden: lineas de la parte <hidden>, su bloque el ULTIMO (SPEC
     # 14.3); sep: los separadores del escritor amable; fill: bytes entre miembros
@@ -146,7 +146,7 @@ def bad(name, b, ident, phrase, n=None):
     try:
         M = i3d_ctypes.MI3DFile(p)
         if n is not None:
-            F = M.member(n); F.data(); F.aux('thumbnailK')
+            F = M.member(n); F.data(); F.thumbnail()
         got.append('cpp: opened')
     except i3d_ctypes.I3DCError as e:
         got.append('cpp: ok' if e.ident == ident else 'cpp: ' + str(e))
@@ -166,14 +166,14 @@ W3 = {1: FILES[0], 2: FILES[1], 3: FILES[3]}
 print('-- good')
 ok('three', mi3d([(1, R[0]), (2, R[1]), (3, R[3])]), W3)
 ok('no separators', mi3d([(1, R[0]), (2, R[1]), (3, R[3])], sep=False), W3)
-ok('anything between', mi3d([(1, R[0]), (2, R[1]), (3, R[3])], fill=b'\x00\xffMI3D I3D 0.1\n---\n' * 3), W3)
+ok('anything between', mi3d([(1, R[0]), (2, R[1]), (3, R[3])], fill=b'\x00\xffMI3D I3D\n---\n' * 3), W3)
 ok('lines in any order', mi3d([(1, R[0]), (2, R[1]), (3, R[3])], order=[3, 1, 2]), W3)
 ok('@a+n', mi3d([(1, R[0]), (2, R[1]), (3, R[3])], form='plus'), W3)
 ok('@a:EOF', mi3d([(1, R[0]), (2, R[3])], sep=False, form='eof'), {1: FILES[0], 2: FILES[3]})
 ok('holes', mi3d([(1, R[0]), (3, R[2]), (5, None)]), {1: FILES[0], 2: None, 3: FILES[2], 4: None, 5: None})
 ok('one member, first is a hole', mi3d([(2, R[1])]), {1: None, 2: FILES[1]})
 ok('crc', mi3d([(1, R[0]), (2, R[1])], crc={1: zlib.crc32(R[0]), 2: zlib.crc32(R[1])}), {1: FILES[0], 2: FILES[1]})
-ok('empty container', b'MI3D 0.1  # nothing yet\n---\n', {})
+ok('empty container', b'MI3D  # nothing yet\n---\n', {})
 
 def summary(p, C):
     # la parte <hidden> se lee en su sitio; el resumen es solo entradas
@@ -195,11 +195,11 @@ ok('CRLF header', crlf(), {1: FILES[0], 2: FILES[1]})
 
 print('-- bad container')
 G = [(1, R[0]), (2, R[1])]
-bad('magic MI3D 0.2', mi3d(G, magic='MI3D 0.2'), 'badMagic', 'badMagic')
+bad('magic MI3D 0.1', mi3d(G, magic='MI3D 0.1'), 'badMagic', 'badMagic')
 bad('a space before MI3D', b' ' + mi3d(G), 'badMagic', 'badMagic')
 bad('an .i3d opened as .mi3d', R[0], 'badMagic', 'badMagic')
 bad('an I3Db opened as .mi3d', R[3], 'badMagic', 'badMagic')
-bad('no terminator', b'MI3D 0.1\ni3d(1) = <missing>\n--\n', 'badHeader', 'terminator')
+bad('no terminator', b'MI3D\ni3d(1) = <missing>\n--\n', 'badHeader', 'terminator')
 for sub in ['', '()', '(0)', '(1:2)', '(end)', '(+1)', '(1,1)', '( )', '(1234567890)']:
     b = mi3d(G).replace(b'i3d(1)', b'i3d' + sub.encode(), 1)
     bad('i3d%s' % (sub or ' without ( )'), b, 'badSubscript', 'badSubscript')
@@ -252,7 +252,7 @@ def lazy():
     ds.PixelData = v.tobytes()
     os.makedirs(os.path.join(TMP, 'dcm'), exist_ok=True)
     ds.save_as(os.path.join(TMP, 'dcm', 'a.dcm'), enforce_file_format=True)
-    m = ('I3D 0.1\nX = 0.0 : 1.0 : 5.0\nY = 0.0 : 1.0 : 4.0\nZ = 0.0\nT = 0.0\n'
+    m = ('I3D\nX = 0.0 : 1.0 : 5.0\nY = 0.0 : 1.0 : 4.0\nZ = 0.0\nT = 0.0\n'
          'data = <dicom uint16 "dcm/a.dcm">\n---\n').encode()
     p = put('lazy.mi3d', mi3d([(1, R[0]), (2, m)]))
     want = v.T.reshape(ni, nj, 1, 1)

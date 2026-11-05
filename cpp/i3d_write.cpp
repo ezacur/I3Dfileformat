@@ -34,7 +34,7 @@
 
 namespace i3d {
 
-static std::filesystem::path u8p( const std::string &s ){ return std::filesystem::u8path( s ); }
+static std::filesystem::path u8p( const std::string &s ){ return detail::fs_path( s ); }
 
 // ====================================================================== numeros
 // La forma mas corta que, leida de vuelta, da EXACTAMENTE el mismo double: se
@@ -144,16 +144,19 @@ static std::vector<uint8_t> jpegls_( std::vector<uint8_t> src , Type t , int64_t
   }
 }
 
-// un thumbnail uint8 {r c 1 f} como UNA imagen PNG gris de 8 bits de r x (c*f):
-// los frames uno al lado de otro (SPEC 7). Gris de 8 bits SIEMPRE: sin la
-// conversion automatica de lodepng, que con pocos grises escribiria 1, 2 o 4 bits
-// o una paleta, y el lector solo acepta gris de 8
-static std::vector<uint8_t> png_( const std::vector<uint8_t> &v , int64_t r , int64_t w ){
-  std::vector<uint8_t> img( (size_t)( r * w ) );
-  for( int64_t y = 0 ; y < r ; y++ ) for( int64_t x = 0 ; x < w ; x++ ) img[(size_t)( y * w + x )] = v[(size_t)( y + r * x )];
+// un thumbnail uint8 {r c nch f} (nch 1: gris, 3: RGB) como UNA imagen PNG de 8
+// bits de r x (c*f): los frames uno al lado de otro (SPEC 7). 8 bits SIEMPRE, gris o
+// RGB segun nch: sin la conversion automatica de lodepng, que con pocos grises
+// escribiria 1, 2 o 4 bits o una paleta, y el lector solo acepta gris o RGB de 8
+static std::vector<uint8_t> png_( const std::vector<uint8_t> &v , int64_t r , int64_t c , int64_t nch , int64_t nf ){
+  const int64_t w = c * nf;
+  std::vector<uint8_t> img( (size_t)( r * w * nch ) );
+  for( int64_t f = 0 ; f < nf ; f++ ) for( int64_t ch = 0 ; ch < nch ; ch++ ) for( int64_t x = 0 ; x < c ; x++ ) for( int64_t y = 0 ; y < r ; y++ )
+    img[(size_t)( ( y * w + f * c + x ) * nch + ch )] = v[(size_t)( y + r * ( x + c * ( ch + nch * f ) ) )];
+  const LodePNGColorType ct = nch == 3 ? LCT_RGB : LCT_GREY;
   lodepng::State st;
-  st.info_raw.colortype = LCT_GREY;          st.info_raw.bitdepth = 8;
-  st.info_png.color.colortype = LCT_GREY;    st.info_png.color.bitdepth = 8;
+  st.info_raw.colortype = ct;          st.info_raw.bitdepth = 8;
+  st.info_png.color.colortype = ct;    st.info_png.color.bitdepth = 8;
   st.encoder.auto_convert = 0;
   std::vector<unsigned char> out;
   unsigned e = lodepng::encode( out , img , (unsigned)w , (unsigned)r , st );
@@ -292,18 +295,6 @@ void Writer::set_data( const void *p , Type t , const std::vector<int64_t> &dims
   took_( DATA );
 }
 
-void Writer::set_rescale( double s , double i , const std::string &comment ){
-  if( !std::isfinite( s ) || !std::isfinite( i ) ) throw Error( "badInput" , "rescale must be finite" );
-  check_text( comment , "the comment of rescale" );
-  hasR_ = true;  slope_ = s;  icpt_ = i;  rcom_ = comment;
-  took_( RESCALE );
-}
-void Writer::set_window( double c , double w , const std::string &comment ){
-  if( !std::isfinite( c ) || !std::isfinite( w ) ) throw Error( "badInput" , "window must be finite" );
-  check_text( comment , "the comment of window" );
-  hasW_ = true;  wc_ = c;  ww_ = w;  wcom_ = comment;
-  took_( WINDOW );
-}
 
 void Writer::add_info_text( const std::string &key , const std::string &value , int visible , const std::string &comment ){
   Item it;  it.key = info_key_( key );  it.vis = vis_( visible );
@@ -334,16 +325,17 @@ void Writer::add_info_rows_text( const std::string &key , const std::vector<std:
   } else it.perplane = true;
   info_.push_back( it );  took_( INFO , info_.size() - 1 );
 }
-void Writer::add_info_rows_numbers( const std::string &key , const double *v , size_t n , bool integer , const std::vector<std::string> *comments , int visible ){
+void Writer::add_info_rows_numbers( const std::string &key , const double *v , size_t n , const std::vector<std::string> *comments , int visible ){
   Item it;  it.kind = 1;  it.key = info_key_( key );  it.vis = vis_( visible );
   if( !v || n == 0 ) throw Error( "badInput" , "info." + it.key + ": no rows" );
+  // todos enteros (y exactos en double, |v| <= 2^53): se escriben como enteros,
+  // '5' y no '5.0' (planes.series, series.SeriesNumber); si no, como doubles
+  bool integer = true;
   for( size_t i = 0 ; i < n ; i++ ){
     if( !std::isfinite( v[i] ) ) throw Error( "badInput" , "info." + it.key + ": a number that is not finite" );
-    if( integer ){
-      if( v[i] != std::floor( v[i] ) || std::fabs( v[i] ) > 9007199254740992.0 ) throw Error( "badInput" , "info." + it.key + ": " + num2str( v[i] ) + " is not an integer" );
-      it.rows.push_back( i2s( (int64_t)v[i] ) );
-    } else it.rows.push_back( num2str( v[i] ) );
+    if( v[i] != std::floor( v[i] ) || std::fabs( v[i] ) > 9007199254740992.0 ) integer = false;
   }
+  for( size_t i = 0 ; i < n ; i++ ) it.rows.push_back( integer ? i2s( (int64_t)v[i] ) : num2str( v[i] ) );
   if( comments ){
     if( comments->size() != n ) throw Error( "badInput" , "info." + it.key + ": one comment per row" );
     for( const auto &c : *comments ) check_text( c , "a comment of info." + it.key );
@@ -356,9 +348,7 @@ Writer::Notes &Writer::notes_( Piece p , size_t i ){
     case GRID:      return nG_[i];
     case TRANSFORM: return nA_;
     case DATA:      return nD_;
-    case RESCALE:   return nR_;
-    case WINDOW:    return nW_;
-    case AUX:       return aux_[i].notes;
+    case THUMB:     return nT_;
     case INFO:      return info_[i].notes;
     default:        throw Error( "internal" , "no piece" );
   }
@@ -377,18 +367,20 @@ void Writer::add_comment( const std::string &text ){
   if( !t.empty() && t[0] == '\b' ){ t.erase( 0 , 1 );  tail = true; }      // un BACKSPACE: sprintf('\b...') en MATLAB
   check_text( t , "a comment" );
   if( !tail ){ pend_.push_back( "# " + t );  return; }
-  if( last_ == NONE ) throw Error( "badInput" , "a '\\b' comment goes at the end of the line of what was given before it, and nothing was given yet." );
-  notes_( last_ , lastI_ ).tail += "  # " + t;
+  // sin nada dado todavia: al final de la PRIMERA linea, 'I3D  # texto'
+  if( last_ == NONE ) comment_ += "  # " + t;
+  else notes_( last_ , lastI_ ).tail += "  # " + t;
 }
-void Writer::add_aux( const std::string &name , const void *p , Type t , const std::string &tname , const std::vector<int64_t> &dims ){
-  if( !valid_key( name ) ) throw Error( "badInput" , "'" + name + "' is not an aux name" );
-  Aux a;  a.name = name;  a.t = t;  a.tname = tname;  a.dims = dims;
-  if( t == Type::uint8 ){
-    uint64_t n = 1;  for( int64_t d : dims ) n *= (uint64_t)std::max<int64_t>( d , 0 );
-    if( n && !p ) throw Error( "badInput" , "NULL aux data" );
-    if( n ) a.v.assign( (const uint8_t*)p , (const uint8_t*)p + n );
-  }
-  aux_.push_back( a );  took_( AUX , aux_.size() - 1 );
+void Writer::set_thumbnail( const void *p , Type t , const std::string &tname , const std::vector<int64_t> &dims ){
+  const bool ok = t == Type::uint8 && dims.size() >= 2 && dims.size() <= 4 && ( dims.size() < 3 || dims[2] == 1 || dims[2] == 3 ) &&
+                  std::all_of( dims.begin() , dims.end() , []( int64_t d ){ return d > 0; } );
+  if( !ok ) throw Error( "badInput" , "the thumbnail is uint8 grey {rows cols} or {rows cols 1 frames}, or RGB {rows cols 3 frames}, not " + tname + " [" + dims_text( dims , " " ) + "]" );
+  if( !p ) throw Error( "badInput" , "NULL thumbnail data" );
+  uint64_t n = 1;  for( int64_t d : dims ) n *= (uint64_t)d;
+  // uno solo: darlo otra vez lo reemplaza (y conserva sus comentarios)
+  hasTh_ = true;  th_.dims = dims;
+  th_.v.assign( (const uint8_t*)p , (const uint8_t*)p + n );
+  took_( THUMB );
 }
 void Writer::set_plane_ref( int64_t k , int64_t t , const std::string &path ){
   if( k < 1 || t < 1 ) throw Error( "badInput" , "planes are numbered from 1" );
@@ -403,9 +395,7 @@ static bool truth_( const std::string &v , const std::string &name ){
   throw Error( "badOption" , name + " is 0 or 1" );
 }
 void Writer::set_option( const std::string &name , const std::string &value ){
-  if( name == "Comment" ){
-    check_text( value , "Comment" );  comment_ = value;  hascomment_ = true;
-  } else if( name == "Blocks" ){
+  if( name == "Blocks" ){
     if( value != "auto" && value != "volume" && value != "t" ) throw Error( "badOption" , "Blocks must be 'auto', 'volume' or 't'." );
     blocks_ = value;
   } else if( name == "MaxBlockBytes" ){
@@ -415,12 +405,19 @@ void Writer::set_option( const std::string &name , const std::string &value ){
   } else if( name == "Hidden" ) hidden_ = truth_( value , name );
   else if( name == "Verify" ) verify_ = truth_( value , name );
   else if( name == "Lazy" ) lazy_ = truth_( value , name );
-  else if( name == "DicomDir" ){ check_text( value , "DicomDir" );  ddir_ = value; }
-  else throw Error( "badOption" , "no option '" + name + "' (Comment, Blocks, MaxBlockBytes, Hidden, Lazy, Verify, DicomDir)" );
+  else throw Error( "badOption" , "no option '" + name + "' (Blocks, MaxBlockBytes, Hidden, Lazy, Verify)" );
+}
+
+void Writer::set_variable( const std::string &name , const std::string &value ){
+  if( name.empty() || !std::all_of( name.begin() , name.end() , []( char c ){ return isalnum( (unsigned char)c ) || c == '_'; } ) )
+    throw Error( "badInput" , "'" + name + "' is not a variable name: letters, digits and _ (DICOMDIR, not $DICOMDIR$)" );
+  check_text( value , "$" + name + "$" );
+  for( auto &v : vars_ ) if( v.first == name ){ v.second = value;  return; }
+  vars_.push_back( { name , value } );
 }
 
 // ====================================================================== cabecera
-// una linea; las de data y aux con bytes en el binario llevan su @a:b aparte, para
+// una linea; las de data y del thumbnail con bytes en el binario llevan su @a:b aparte, para
 // correrlo D bytes cuando delante va el bloque <hidden>
 struct Line {
   std::string pre , post;                  // text = pre [ a+D ":" b+D post ]
@@ -691,10 +688,8 @@ void Writer::write( const std::string &path ) const {
 
   std::vector<Line> H;
   std::vector<int64_t> ssz = sz;  if( ncomp == 1 ) ssz.resize( 4 );
-  const std::string dims = "[ " + dims_text( ssz , " x " ) + " ]";
-  std::string c0 = comment_;
-  if( !hascomment_ ) c0 = "i3d " + detail::now_text();
-  H.push_back( Line( c0.empty() ? "I3D 0.1  # " + dims : "I3D 0.1  # " + c0 + ", " + dims ) );
+  // la primera linea: con los add_comment('\b...') dados antes que ninguna pieza
+  H.push_back( Line( "I3D" + comment_ ) );
 
   // las rejillas: sin darlas, 0 : 1 : n-1
   std::vector<double> G[4];
@@ -715,8 +710,6 @@ void Writer::write( const std::string &path ) const {
   };
   for( int g = 0 ; g < 4 ; g++ ) lines( grid_( AX[g] , G[g] , w ) , nG_[g] );
   lines( transform_( A_ ) , nA_ );
-  if( hasR_ ) lines( { "rescale = " + num2str( slope_ ) + " " + num2str( icpt_ ) + tail_( rcom_ ) } , nR_ );
-  if( hasW_ ) lines( { "window = " + num2str( wc_ ) + " " + num2str( ww_ ) + tail_( wcom_ ) } , nW_ );
 
   // ---------------------------------------------------------------- bloques
   const bool lazy = lazy_ || !refs_.empty();
@@ -755,7 +748,7 @@ void Writer::write( const std::string &path ) const {
         if( !o ) throw Error( "cannotOpen" , "cannot write the verification file " + tf.u8string() );
       };
       struct Rm { std::filesystem::path p; ~Rm(){ std::error_code ec;  std::filesystem::remove( p , ec ); } } rm{ tf };
-      std::string hv = "I3D 0.1\n" + hx + "Z[" + i2s( nk ) + "] = " + idx( nk ) + "\nT[" + i2s( nt ) + "] = " + idx( nt ) + "\n";
+      std::string hv = "I3D\n" + hx + "Z[" + i2s( nk ) + "] = " + idx( nk ) + "\nT[" + i2s( nt ) + "] = " + idx( nt ) + "\n";
       for( int64_t t = 1 ; t <= nt ; t++ ) for( int64_t k = 1 ; k <= nk ; k++ ){
         const size_t q = (size_t)( ( t - 1 ) * nk + ( k - 1 ) );
         hv += "data(:,:," + i2s( k ) + "," + i2s( t ) + ") = " + ( kind[q] == 1 ? "<dicom " + tn + " \"" + esc( ref[q] ) + "\">" : std::string( "<missing>" ) ) + "\n";
@@ -771,7 +764,7 @@ void Writer::write( const std::string &path ) const {
         for( int64_t t = 1 ; t <= nt ; t++ ) for( int64_t k = 1 ; k <= nk ; k++ ){
           const size_t q = (size_t)( ( t - 1 ) * nk + ( k - 1 ) );
           if( kind[q] != 1 ) continue;
-          put( "I3D 0.1\n" + hx + "Z[1] = 0.0\nT[1] = 0.0\ndata = <dicom " + tn + " \"" + esc( ref[q] ) + "\">\n---\n" );
+          put( "I3D\n" + hx + "Z[1] = 0.0\nT[1] = 0.0\ndata = <dicom " + tn + " \"" + esc( ref[q] ) + "\">\n---\n" );
           bool ok = false;
           try {
             File F( tf.u8string() );
@@ -783,8 +776,8 @@ void Writer::write( const std::string &path ) const {
         }
       }
     }
-    // $DICOMDIR$: la raiz comun de lo que se referencia, componente a componente
-    DDIR = ddir_;
+    // $DICOMDIR$: el dado, o la raiz comun de lo que se referencia, componente a componente
+    for( auto &v : vars_ ) if( v.first == "DICOMDIR" ) DDIR = v.second;
     if( DDIR.empty() ){
       std::vector<std::vector<std::string>> parts;
       for( size_t q = 0 ; q < kind.size() ; q++ ) if( kind[q] == 1 ){
@@ -807,14 +800,12 @@ void Writer::write( const std::string &path ) const {
     if( DDIR.back() != '/' ) DDIR += '/';
     for( size_t q = 0 ; q < kind.size() ; q++ ){
       if( kind[q] != 1 ) continue;
-      if( ref[q].compare( 0 , DDIR.size() , DDIR ) != 0 ) throw Error( "badOption" , "'" + ref[q] + "' is not under DicomDir '" + DDIR + "'." );
+      if( ref[q].compare( 0 , DDIR.size() , DDIR ) != 0 ) throw Error( "badOption" , "'" + ref[q] + "' is not under $DICOMDIR$ '" + DDIR + "'." );
       std::string s;  for( char c : ref[q].substr( DDIR.size() ) ){ s += c;  if( c == '$' ) s += '$'; }   // '$' literal: '$$' (SPEC 2)
       ref[q] = "$DICOMDIR$/" + s;
     }
     DDIR.pop_back();
     for( int64_t t = 1 ; t <= nt ; t++ ) for( int64_t k = 1 ; k <= nk ; k++ ) P.push_back( { k , k , t , t } );
-    iddir = H.size();
-    H.push_back( Line( "$DICOMDIR$ = \"" + DDIR + "\"" ) );
   } else {
     double MB = maxb_;
     if( jls ){
@@ -827,6 +818,15 @@ void Writer::write( const std::string &path ) const {
     }
     P = plan_( ni , nj , nk , nt , ncomp * es , blocks_ , MB );
   }
+  // las variables (set_variable), en el orden en que se dieron; con Lazy,
+  // $DICOMDIR$ siempre, con el valor de las referencias (iddir: su linea)
+  bool ddone = false;
+  for( const auto &v : vars_ ){
+    const bool dd = lazy && v.first == "DICOMDIR";
+    if( dd ){ iddir = H.size();  ddone = true; }
+    H.push_back( Line( "$" + v.first + "$ = " + quote_( dd ? DDIR : v.second ) ) );
+  }
+  if( lazy && !ddone ){ iddir = H.size();  H.push_back( Line( "$DICOMDIR$ = " + quote_( DDIR ) ) ); }
   const size_t nb = P.size();
   const std::string summary = "  # " + dims_text( ssz , " x " ) + ", " + tn;
 
@@ -879,21 +879,15 @@ void Writer::write( const std::string &path ) const {
     H.push_back( L );
     off += (int64_t)B.back().size();
   }
-  // aux (thumbnails), DETRAS de los bloques de data
-  for( const Aux &a : aux_ ){
-    const bool grey = a.t == Type::uint8 && a.dims.size() >= 2 && a.dims.size() <= 4 && ( a.dims.size() < 3 || a.dims[2] == 1 ) &&
-                      std::all_of( a.dims.begin() , a.dims.end() , []( int64_t d ){ return d > 0; } );
-    pre( a.notes , false );
-    if( !grey ){
-      H.push_back( Line( "# aux." + a.name + " skipped: a thumbnail is uint8 grey {rows cols 1 frames}, not " + a.tname + " [" + dims_text( a.dims , " " ) + "]" + a.notes.tail ) );
-      continue;
-    }
-    int64_t r = a.dims[0] , wd = 1;  for( size_t i = 1 ; i < a.dims.size() ; i++ ) wd *= a.dims[i];
-    B.push_back( png_( a.v , r , wd ) );
+  // el thumbnail, DETRAS de los bloques de data
+  if( hasTh_ ){
+    pre( nT_ , false );
+    const auto &td = th_.dims;
+    B.push_back( png_( th_.v , td[0] , td[1] , td.size() >= 3 ? td[2] : 1 , td.size() >= 4 ? td[3] : 1 ) );
     Line L;
-    L.pre = "aux." + a.name + " = <png uint8 {" + dims_text( a.dims , " " ) + "} @";
+    L.pre = "thumbnail = <png uint8 {" + dims_text( th_.dims , " " ) + "} @";
     L.off = true;  L.a = off;  L.b = off + (int64_t)B.back().size() - 1;
-    L.post = " crc " + hex8( crc32_( a.v.data() , a.v.size() ) ) + ">" + a.notes.tail;     // de los PIXELES, no del PNG
+    L.post = " crc " + hex8( crc32_( th_.v.data() , th_.v.size() ) ) + ">" + nT_.tail;     // de los PIXELES, no del PNG
     H.push_back( L );
     off += (int64_t)B.back().size();
   }
@@ -921,7 +915,7 @@ void Writer::write( const std::string &path ) const {
     size_t wv = 0;  for( const auto &v : it.rows ) wv = std::max( wv , v.size() );
     for( size_t i = 0 ; i < it.rows.size() ; i++ ){
       Line L( ( i == 0 ? head : spaces( (int64_t)head.size() ) ) + it.rows[i] );
-      if( !cm.empty() ) L.pre += spaces( (int64_t)( wv - it.rows[i].size() ) ) + "  # " + cm[i];
+      if( !cm.empty() && !cm[i].empty() ) L.pre +=spaces( (int64_t)( wv - it.rows[i].size() ) ) + "  # " + cm[i];
       if( i == 0 ) L.pre += it.notes.tail;
       L.info = true;  L.vis = it.vis;
       H.push_back( L );
@@ -935,7 +929,7 @@ void Writer::write( const std::string &path ) const {
   // Una ENTRADA es su linea, sus continuaciones (empiezan por espacio) y los
   // comentarios de linea entera que la preceden; los de transform -- lo que es en
   // palabras -- van DEBAJO y son suyos. Se oculta un info.* que se dio con
-  // visible = 0, y $DICOMDIR$ (una ruta local, que puede nombrar al paciente);
+  // visible = 0, y las variables $NOMBRE$ (rutas locales, que pueden nombrar al paciente);
   // nada mas: lo que hace falta para leer data esta siempre a la vista. Los
   // comentarios van con su entrada
   std::vector<Line> Hpre = { H[0] } , Hinf , Hh , pend;
@@ -949,7 +943,7 @@ void Writer::write( const std::string &path ) const {
     while( q < H.size() && !H[q].pre.empty() && ( H[q].pre[0] == ' ' || H[q].pre[0] == '\t' ) ) u.push_back( H[q++] );
     const std::string k = key_of_( l );
     if( k == "transform" ) while( q < H.size() && !H[q].pre.empty() && H[q].pre[0] == '#' ) u.push_back( H[q++] );
-    const bool hide = ( ininfo && !vis ) || k == "$DICOMDIR$";
+    const bool hide = ( ininfo && !vis ) || ( !k.empty() && k[0] == '$' );
     std::vector<Line> &to = hide ? Hh : ininfo ? Hinf : Hpre;
     app( to , pend );  app( to , u );
     pend.clear();

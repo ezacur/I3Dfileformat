@@ -111,7 +111,31 @@ static std::string strip_comment( const std::string &s ){
 // Toda ruta es UTF-8 (lo que pasan el MEX, Python y la API en C). En Windows un
 // std::ifstream( const char* ) la leeria en la pagina de codigos ANSI, y una
 // carpeta "Año" no abriria: se abre como ruta ancha
-static std::filesystem::path native_( const std::string &utf8 ){ return std::filesystem::u8path( utf8 ); }
+static std::filesystem::path native_( const std::string &utf8 ){ return detail::fs_path( utf8 ); }
+
+namespace detail {
+std::filesystem::path fs_path( const std::string &utf8 ){
+  std::filesystem::path p = std::filesystem::u8path( utf8 );
+#ifdef _WIN32
+  // Win32 corta en MAX_PATH (260, con el temporal '.partNNNN' de write_atomic
+  // incluido) salvo con el prefijo \\?\, que pide una ruta absoluta, con '\' y
+  // sin '.' ni '..' (no la normaliza nadie). Una corta queda como estaba
+  std::wstring w = p.wstring();
+  if( w.size() >= 200 && w.rfind( L"\\\\?\\" , 0 ) != 0 ){
+    std::error_code ec;
+    std::filesystem::path a = std::filesystem::absolute( p , ec );
+    if( !ec ){
+      std::wstring s = a.lexically_normal().wstring();
+      std::replace( s.begin() , s.end() , L'/' , L'\\' );
+      if( s.rfind( L"\\\\" , 0 ) == 0 ) s = L"\\\\?\\UNC\\" + s.substr( 2 );   // \\servidor\recurso
+      else                              s = L"\\\\?\\" + s;
+      return std::filesystem::path( s );
+    }
+  }
+#endif
+  return p;
+}
+}
 
 // una linea de la cabecera; las de la parte <hidden> (SPEC 1.2) van en negativo
 static std::string where( int line ){
@@ -268,8 +292,6 @@ Descriptor File::parse_descriptor( const std::string &value , int line ){
       d.has_crc = true;  d.crc = (uint32_t)v;
       i += 1;  continue;
     }
-    // (no hay 'rescale' por bloque: UNO para todo el stack, la clave rescale --
-    // SPEC 6, decidido 2026-10-13. Aqui es un token desconocido)
     if( w == "frames" ){
       if( i + 1 >= T.size() ) throw Error( "badDescriptor" , where( line ) + "frames needs a:b" );
       // frames a:b, 1-based, a <= b. Un 0 o un negativo NO es "todos": antes
@@ -461,24 +483,78 @@ void File::open_( const std::map<std::string,std::string> &overrides ){
   parse_header_();
   for( auto &kv : overrides ) vars_[ "$" + kv.first + "$" ] = kv.second;   // mandan
   build_data_();
+  build_infos_();
 }
 
-std::string File::resolve_path( const std::string &p0 ) const {
+// un valor que es SOLO cadenas entre comillas separadas por blancos (SPEC 2,
+// Literals) -> sus cadenas sin los escapes \" y \\; false si es otra cosa
+static bool parse_strings( const std::string &v , std::vector<std::string> &out ){
+  out.clear();
+  size_t i = 0;
+  for( ;; ){
+    while( i < v.size() && std::isspace( (unsigned char)v[i] ) ) i++;
+    if( i == v.size() ) break;
+    if( v[i] != '"' ) return false;
+    std::string s;
+    for( i++ ; ; i++ ){
+      if( i >= v.size() ) return false;                     // sin cerrar
+      if( v[i] == '"' ){ i++; break; }
+      if( is_escape( v , i ) ) i++;
+      s += v[i];
+    }
+    if( i < v.size() && !std::isspace( (unsigned char)v[i] ) ) return false;   // "a"b
+    out.push_back( std::move( s ) );
+  }
+  return !out.empty();
+}
+
+void File::build_infos_(){
+  // SPEC 7: un info.* es una lista de numeros o una de textos. Los textos, con
+  // las $VARIABLES$ sustituidas como en una ruta (SPEC 2): info.planes.Filename =
+  // "$DICOMDIR$/x.dcm" sale con la ruta de verdad. Lo que no es ni lo uno ni lo
+  // otro, crudo ('o'). Una variable mal citada NO impide abrir el fichero: ese
+  // info queda como 'e' con su error
+  infos_.clear();
+  for( auto &e : entries_ ){
+    if( e.key.compare( 0 , 5 , "info." ) != 0 ) continue;
+    Info I;  I.name = e.key.substr( 5 );
+    std::vector<std::string> s;
+    if( parse_strings( e.value , s ) ){
+      try {
+        for( auto &x : s ) I.text.push_back( substitute_( x , e.key ) );
+        I.kind = 't';
+      } catch( const Error &x ){ I.kind = 'e';  I.err = where( e.line ) + x.what();  I.err_id = x.id;  I.text.clear(); }
+    } else {
+      try { I.numbers = parse_numbers( e.value , e.key , e.line );  I.kind = I.numbers.empty() ? 'o' : 'n'; }
+      catch( const Error & ){ I.kind = 'o'; }
+      if( I.kind == 'o' ){ I.numbers.clear();  I.text.assign( 1 , e.value ); }
+    }
+    infos_.push_back( std::move( I ) );
+  }
+}
+
+std::string File::substitute_( const std::string &s0 , const std::string &what ) const {
   // $NOMBRE$ -> su valor, que entra TAL CUAL (no se vuelve a mirar); $$ -> un $
   // literal (SPEC 2, decidido 2026-10-23: \\srv\C$\... se escribe C$$); un $ sin
-  // pareja es un error. Una variable que no existe, error AL PEDIR el bloque
+  // pareja es un error. En las rutas de los descriptores y en los textos de info.*
   std::string p;
-  for( size_t i = 0 ; i < p0.size() ; ){
-    if( p0[i] != '$' ){ p += p0[i++]; continue; }
-    if( i + 1 < p0.size() && p0[i+1] == '$' ){ p += '$';  i += 2;  continue; }
-    const size_t b = p0.find( '$' , i + 1 );
-    if( b == std::string::npos ) throw Error( "badVariable" , "unclosed $ in path '" + p0 + "' (a literal $ is $$)" );
-    const std::string name = p0.substr( i , b - i + 1 );
+  for( size_t i = 0 ; i < s0.size() ; ){
+    if( s0[i] != '$' ){ p += s0[i++]; continue; }
+    if( i + 1 < s0.size() && s0[i+1] == '$' ){ p += '$';  i += 2;  continue; }
+    const size_t b = s0.find( '$' , i + 1 );
+    if( b == std::string::npos ) throw Error( "badVariable" , "unclosed $ in " + what + " '" + s0 + "' (a literal $ is $$)" );
+    const std::string name = s0.substr( i , b - i + 1 );
     auto it = vars_.find( name );
-    if( it == vars_.end() ) throw Error( "badVariable" , "undefined variable " + name + " in path '" + p0 + "'" );
+    if( it == vars_.end() ) throw Error( "badVariable" , "undefined variable " + name + " in " + what + " '" + s0 + "'" );
     p += it->second;
     i = b + 1;
   }
+  return p;
+}
+
+std::string File::resolve_path( const std::string &p0 ) const {
+  // las variables; una que no existe es un error AL PEDIR el bloque
+  std::string p = substitute_( p0 , "path" );
   for( auto &c : p ) if( c == '\\' ) c = '/';
   bool absolute = ( p.size() > 2 && isalpha( (unsigned char)p[0] ) && p[1] == ':' ) || ( !p.empty() && p[0] == '/' );
   if( !absolute ){
@@ -492,13 +568,13 @@ std::string File::resolve_path( const std::string &p0 ) const {
 
 // las claves que v0 interpreta (SPEC 2-7); el resto son desconocidas y se ignoran
 static bool known_key( const std::string &k ){
-  static const char *K[] = { "X" , "Y" , "Z" , "T" , "transform" , "rescale" , "window" , "fill" , "data" , "header" };
+  static const char *K[] = { "X" , "Y" , "Z" , "T" , "transform" , "fill" , "data" , "header" , "thumbnail" };
   for( auto s : K ) if( k == s ) return true;
-  return k[0] == '$' || !k.compare( 0 , 4 , "aux." ) || !k.compare( 0 , 5 , "info." );
+  return k[0] == '$' || !k.compare( 0 , 5 , "info." );
 }
 
-// Las lineas de una cabecera -> sus entradas. magic: la primera linea, 'I3D 0.1'
-// (o 'MI3D 0.1', SPEC 14); NULL, es el texto de una parte <hidden>, cuyas
+// Las lineas de una cabecera -> sus entradas. magic: la primera linea, 'I3D'
+// (o 'MI3D', SPEC 14); NULL, es el texto de una parte <hidden>, cuyas
 // lineas se numeran en negativo (sign = -1) para los mensajes
 static std::vector<Entry> parse_lines( const std::string &text , const char *magic , int sign ){
   std::vector<Entry> entries_;
@@ -508,11 +584,13 @@ static std::vector<Entry> parse_lines( const std::string &text , const char *mag
     n++;
     const int ln = sign * n;
     if( n == 1 && magic ){
-      // EMPIEZA por 'I3D 0.1', sin nada delante (SPEC 1: los 4 primeros bytes son
-      // la firma, 'I3D ' o 'I3Db', y un visor detecta el formato por ellos), y
-      // puede seguir un comentario: 'I3D 0.1  # ...'
+      // ES 'I3D', sin nada delante ni version (SPEC 1: un visor detecta el formato
+      // por los primeros bytes), y puede seguir un comentario: 'I3D  # ...'.
+      // Cualquier otra cosa detras -- 'I3D 0.1', 'I3D 2' -- es badMagic: asi un
+      // cambio incompatible futuro lo rechazan los lectores de hoy
       const size_t m = std::strlen( magic );
-      if( raw.compare( 0 , m , magic ) != 0 || !trim( strip_comment( raw.substr( std::min( m , raw.size() ) ) ) ).empty() )
+      const std::string rest = raw.substr( std::min( m , raw.size() ) );
+      if( raw.compare( 0 , m , magic ) != 0 || ( !rest.empty() && !std::isspace( (unsigned char)rest[0] ) ) || !trim( strip_comment( rest ) ).empty() )
         throw Error( "badMagic" , std::string( "the first line must be '" ) + magic + "', not '" + raw + "'" );
       continue;
     }
@@ -597,7 +675,7 @@ static void expand_hidden( std::vector<Entry> &E , const std::string &path , int
 }
 
 void File::parse_header_(){
-  entries_ = parse_lines( header_ , "I3D 0.1" , +1 );
+  entries_ = parse_lines( header_ , "I3D" , +1 );
   expand_hidden( entries_ , path_ , base_ , size_ , b0_ );
 
   // claves sin ( ) aparecen una vez
@@ -627,16 +705,6 @@ void File::parse_header_(){
     else throw Error( "badTransform" , where( e->line ) + "transform needs 3 numbers (a translation) or 12 (3 rows of 4), not " + std::to_string( a.size() ) );
   }
 
-  if( ( e = find( "rescale" ) ) ){
-    auto r = parse_numbers( e->value , "rescale" , e->line );
-    if( r.size() != 2 ) throw Error( "badHeader" , where( e->line ) + "rescale = SLOPE INTERCEPT" );
-    slope_ = r[0];  intercept_ = r[1];
-  }
-  if( ( e = find( "window" ) ) ){
-    auto r = parse_numbers( e->value , "window" , e->line );
-    if( r.size() != 2 ) throw Error( "badHeader" , where( e->line ) + "window = CENTER WIDTH" );
-    has_window_ = true;  wc_ = r[0];  ww_ = r[1];
-  }
   if( ( e = find( "fill" ) ) ){ has_fill_ = true;  fill_text_ = e->value; }
 
   // variables: su valor es una cadena entre comillas
@@ -759,9 +827,9 @@ void File::build_data_(){
     // un <missing> no tiene dato que proteger: un crc ahi diria algo que no se
     // comprueba nunca
     if( D.encoding == "missing" && D.has_crc ) throw Error( "badDescriptor" , where( r.line ) + "<missing> takes no crc: it has no data" );
-    // <png> y <gif> son de aux (SPEC 4): un bloque de data asi no es v0
+    // <png> y <gif> son del thumbnail (SPEC 4): un bloque de data asi no es v0
     if( D.encoding == "png" || D.encoding == "gif" )
-      throw Error( "badDescriptor" , where( r.line ) + "<" + D.encoding + "> is for aux only, not for a data block" );
+      throw Error( "badDescriptor" , where( r.line ) + "<" + D.encoding + "> is for the thumbnail only, not for a data block" );
     // y <hidden> es de la clave header (SPEC 1.2)
     if( D.encoding == "hidden" ) throw Error( "badDescriptor" , where( r.line ) + "<hidden> is for the key header only" );
     if( D.encoding == "dicom" && ( b.box[0].lo != 0 || b.box[0].hi != shape_[0] || b.box[1].lo != 0 || b.box[1].hi != shape_[1] ) )
@@ -902,39 +970,41 @@ std::vector<uint8_t> File::decode_( const Descriptor &d , size_t expected ) cons
     if( d.encoding == "raw" ) return buf;
     if( d.encoding == "png" ){
 #ifdef I3D_HAVE_LODEPNG
-      // SPEC 7: un aux uint8 {r c} o {r c 1 f} es UNA imagen PNG gris de 8 bits
-      // de r filas y c*f columnas, los frames uno al lado de otro. En orden
-      // columna eso es exactamente el array {r c 1 f}: el pixel (y, X) va a
-      // y + r*X. Gris de 8 bits y nada mas: lodepng convertiria en silencio un
-      // RGB o un 16 bits, y eso ya no seria lo que se escribio
+      // SPEC 7: un thumbnail uint8 {r c} o {r c 1 f} es UNA imagen PNG gris de 8 bits
+      // de r filas y c*f columnas, los frames uno al lado de otro; {r c 3 f}, una
+      // PNG RGB de 8 bits igual. El pixel (y, f*c+x), canal ch, va a
+      // y + r*(x + c*(ch + nch*f)). Gris o RGB de 8 bits segun {shape}, y nada
+      // mas: lodepng convertiria en silencio, y eso ya no seria lo que se escribio
       const auto &s = d.shape;
-      bool shape_ok = d.type == Type::uint8 && s.size() >= 2 && ( s.size() == 2 || s[2] == 1 );
+      bool shape_ok = d.type == Type::uint8 && s.size() >= 2 && ( s.size() == 2 || s[2] == 1 || s[2] == 3 );
       for( size_t q = 4 ; q < s.size() ; q++ ) shape_ok = shape_ok && s[q] == 1;
-      if( !shape_ok ) throw Error( "badDescriptor" , "<png> holds uint8 {rows cols} or {rows cols 1 frames}, not " + d.text );
-      const int64_t r = s[0] , W = s[1] * ( s.size() >= 4 ? s[3] : 1 );
+      if( !shape_ok ) throw Error( "badDescriptor" , "<png> holds uint8 {rows cols}, {rows cols 1 frames} or {rows cols 3 frames}, not " + d.text );
+      const int64_t r = s[0] , c = s[1] , nch = s.size() >= 3 ? s[2] : 1 , nf = s.size() >= 4 ? s[3] : 1 , W = c * nf;
+      const LodePNGColorType ct = nch == 3 ? LCT_RGB : LCT_GREY;
+      const char *ctn = nch == 3 ? "8-bit RGB" : "8-bit grey";
       // la cabecera IHDR primero: su tamano y su tipo, ANTES de que lodepng
       // reserve lo que diga (una PNG de 100 bytes puede declarar 2^31 x 2^31)
       {
         lodepng::State si;  unsigned w0 = 0 , h0 = 0;
         unsigned ei = lodepng_inspect( &w0 , &h0 , &si , buf.data() , buf.size() );
         if( ei ) throw Error( "badBlock" , std::string( "PNG: " ) + lodepng_error_text( ei ) + " in " + d.text );
-        if( si.info_png.color.colortype != LCT_GREY || si.info_png.color.bitdepth != 8 )
-          throw Error( "badBlock" , "<png> must be 8-bit grey, not colour type " + std::to_string( (int)si.info_png.color.colortype ) + " at " + std::to_string( si.info_png.color.bitdepth ) + " bits: " + d.text );
+        if( si.info_png.color.colortype != ct || si.info_png.color.bitdepth != 8 )
+          throw Error( "badBlock" , std::string( "<png> must be " ) + ctn + ", not colour type " + std::to_string( (int)si.info_png.color.colortype ) + " at " + std::to_string( si.info_png.color.bitdepth ) + " bits: " + d.text );
         if( (int64_t)h0 != r || (int64_t)w0 != W )
           throw Error( "badBlock" , "<png> is " + std::to_string( w0 ) + "x" + std::to_string( h0 ) + " (width x height); {shape} needs " + std::to_string( W ) + "x" + std::to_string( r ) + ": " + d.text );
       }
       lodepng::State st;
-      st.info_raw.colortype = LCT_GREY;  st.info_raw.bitdepth = 8;
+      st.info_raw.colortype = ct;  st.info_raw.bitdepth = 8;
       std::vector<unsigned char> img;  unsigned w = 0 , h = 0;
       unsigned e = lodepng::decode( img , w , h , st , buf.data() , buf.size() );
       if( e ) throw Error( "badBlock" , std::string( "PNG: " ) + lodepng_error_text( e ) + " in " + d.text );
-      if( st.info_png.color.colortype != LCT_GREY || st.info_png.color.bitdepth != 8 )
-        throw Error( "badBlock" , "<png> must be 8-bit grey, not colour type " + std::to_string( (int)st.info_png.color.colortype ) + " at " + std::to_string( st.info_png.color.bitdepth ) + " bits: " + d.text );
+      if( st.info_png.color.colortype != ct || st.info_png.color.bitdepth != 8 )
+        throw Error( "badBlock" , std::string( "<png> must be " ) + ctn + ", not colour type " + std::to_string( (int)st.info_png.color.colortype ) + " at " + std::to_string( st.info_png.color.bitdepth ) + " bits: " + d.text );
       if( (int64_t)h != r || (int64_t)w != W || img.size() != expected )
         throw Error( "badBlock" , "<png> is " + std::to_string( w ) + "x" + std::to_string( h ) + " (width x height); {shape} needs " + std::to_string( W ) + "x" + std::to_string( r ) + ": " + d.text );
       std::vector<uint8_t> out( expected );
-      for( int64_t y = 0 ; y < r ; y++ )
-        for( int64_t X = 0 ; X < W ; X++ ) out[(size_t)( y + r * X )] = img[(size_t)( y * W + X )];   // filas -> orden columna
+      for( int64_t q = 0 ; q < nf ; q++ ) for( int64_t ch = 0 ; ch < nch ; ch++ ) for( int64_t x = 0 ; x < c ; x++ ) for( int64_t y = 0 ; y < r ; y++ )
+        out[(size_t)( y + r * ( x + c * ( ch + nch * q ) ) )] = img[(size_t)( ( y * W + q * c + x ) * nch + ch )];   // filas -> orden columna
       return out;
 #else
       throw unsupported( "is not available in this build (compiled without lodepng)" );
@@ -1167,26 +1237,23 @@ std::vector<uint8_t> File::read_dicom_( const Descriptor &d , size_t expected ) 
 #endif
 }
 
-Descriptor File::aux_descriptor( const std::string &name ) const {
-  const Entry *e = find( "aux." + name );
-  if( !e ) throw Error( "noAux" , "no aux." + name );
+Descriptor File::thumbnail_descriptor() const {
+  const Entry *e = find( "thumbnail" );
+  if( !e ) throw Error( "noThumbnail" , "the file has no thumbnail" );
   return parse_descriptor( e->value , e->line );
 }
 
-std::vector<std::string> File::aux_names() const {
-  std::vector<std::string> v;
-  for( auto &e : entries_ ) if( e.key.size() > 4 && !e.key.compare( 0 , 4 , "aux." ) ) v.push_back( e.key.substr( 4 ) );
-  return v;
-}
-
-std::vector<uint8_t> File::read_aux( const std::string &name ) const {
-  // SPEC 7: un aux no tiene rejilla de la que sacar su forma: la lleva en {shape}
-  Descriptor d = aux_descriptor( name );
+std::vector<uint8_t> File::read_thumbnail() const {
+  // SPEC 7: el thumbnail no tiene rejilla de la que sacar su forma: la lleva en
+  // {shape}. uint8 gris {r c} o {r c 1 f}, en raw, zlib o png
+  Descriptor d = thumbnail_descriptor();
   if( d.encoding != "raw" && d.encoding != "zlib" && d.encoding != "png" )
-    throw Error( "unsupportedEncoding" , "aux." + name + ": <" + d.encoding + "> is not decoded for aux arrays by this reader" );
-  if( d.type == Type::none || d.shape.empty() ) throw Error( "badDescriptor" , "aux." + name + " needs a type and a {shape}" );
-  size_t n = type_size( d.type );
-  for( auto s : d.shape ){ if( s < 0 ) throw Error( "badDescriptor" , "aux." + name + ": negative {shape}" ); n *= (size_t)s; }
+    throw Error( "unsupportedEncoding" , "thumbnail: <" + d.encoding + "> is not decoded for the thumbnail by this reader" );
+  const auto &s = d.shape;
+  bool ok = d.type == Type::uint8 && s.size() >= 2 && s.size() <= 4 && ( s.size() < 3 || s[2] == 1 || s[2] == 3 );
+  for( auto x : s ) ok = ok && x >= 0;
+  if( !ok ) throw Error( "badDescriptor" , "the thumbnail is uint8 {rows cols}, {rows cols 1 frames} or RGB {rows cols 3 frames}, not " + d.text );
+  size_t n = 1;  for( auto x : s ) n *= (size_t)x;
   return read_bytes( d , n );
 }
 
@@ -1324,7 +1391,7 @@ void File::read_first_frame( void *out , size_t nbytes ) const {
 }
 
 // ====================================================================== .mi3d
-// SPEC 14: 'MI3D 0.1', i3d(n) = <i3d @a:b> | <missing>, header = <hidden ...>,
+// SPEC 14: 'MI3D', i3d(n) = <i3d @a:b> | <missing>, header = <hidden ...>,
 // info.* (un resumen: no se interpreta) y nada mas que cuente. Cada miembro es
 // un .i3d completo que se lee por su ventana del fichero
 Container::Container( const std::string &path ) : path_( path ){
@@ -1332,12 +1399,12 @@ Container::Container( const std::string &path ) : path_( path ){
   std::ifstream f = open_window( path , 0 , size_ );
   char magic[4] = { 0 , 0 , 0 , 0 };
   f.read( magic , 4 );
-  if( f.gcount() == 4 && ( !std::memcmp( magic , "I3Db" , 4 ) || !std::memcmp( magic , "I3D " , 4 ) ) )
+  if( f.gcount() == 4 && !std::memcmp( magic , "I3D" , 3 ) && std::strchr( "b \t\r\n" , magic[3] ) )
     throw Error( "badMagic" , "'" + path + "' is an .i3d, not a .mi3d container" );
   f.clear();  f.seekg( 0 );
   header_ = read_text_header( f , size_ , path , b0_ );
   check_utf8( header_ , "'" + path + "'" , +1 );
-  entries_ = parse_lines( header_ , "MI3D 0.1" , +1 );
+  entries_ = parse_lines( header_ , "MI3D" , +1 );
   expand_hidden( entries_ , path_ , 0 , size_ , b0_ );
 
   // claves sin ( ) aparecen una vez (i3d lleva siempre la suya)

@@ -54,7 +54,7 @@ def dcm(path, frames, bits_stored=16, signed=False, ts=ExplicitVRLittleEndian):
     ds.save_as(path, enforce_file_format=True)
 
 def i3d(path, lines):
-    open(path, 'w', encoding='utf-8', newline='\n').write('\n'.join(['I3D 0.1'] + lines) + '\n---\n')
+    open(path, 'w', encoding='utf-8', newline='\n').write('\n'.join(['I3D'] + lines) + '\n---\n')
 
 def grids(nk):
     return ['X = 0.0 : 1.0 : %d.0' % (NI - 1), 'Y = 0.0 : 1.0 : %d.0' % (NJ - 1),

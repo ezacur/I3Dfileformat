@@ -8,7 +8,7 @@
 | **Consumers** | the C++ library, wrapped for Python and JS |
 
 ```
-I = readI3D('serie.i3d');   I.X;   I.data;   I.aux('thumbnailK') -> null
+I = readI3D('serie.i3d');   I.X;   I.data;   I.thumbnail -> null
 ```
 
 Implemented and tested (tests/, [section 12](#12-tests)):
@@ -16,7 +16,7 @@ Implemented and tested (tests/, [section 12](#12-tests)):
 | language | files |
 |---|---|
 | C++ | `cpp/i3d.hpp` + `i3d.cpp` (the reader), `i3d_write.cpp` (THE writer of the canonical form), `i3d_c.h` (C API, the stable boundary for the wrappers): `build/i3d.dll`; `mi3d.hpp` + `mi3d.cpp` (the container: write, append, remove, compact) and `mi3d_c.h`: `build/mi3d.dll`; `i3dinfo.exe` |
-| MATLAB | no MEX: `matlab/lib/` holds the two DLLs, loaded with `loadlibrary` (`enableI3Dlibrary`) and called with `calllib`. `write_I3D.m`, `read_I3D.m`, `hideI3Dfile.m` / `showI3Dfile.m` and the container's `write_MI3D.m`, `append_MI3D.m`, `remove_MI3D.m`, `read_MI3D.m` only translate an `@I3D` (and its DICOMstack) to those calls |
+| MATLAB | no MEX, no thunk: `matlab/` holds `i3d.dll` and its prototype `i3d_proto.m`; `write_I3D.m` and `read_I3D.m` load it themselves with `loadlibrary` (once) and call it with `calllib`. `buildI3Dlibrary.m` unloads it, rebuilds it (`cpp\build.bat`) and puts the new one there |
 | Python | `tests/read_i3d.py` (an independent REFERENCE reader) and `tests/i3d_ctypes.py` (a thin ctypes wrapper of the DLL) |
 | bundled | verbatim, in `third_party/`: zlib 1.3.2, CharLS 2.4.5, lodepng 20261006, a subset of DCMTK 3.7.0 (each with its `ORIGIN.txt`) |
 
@@ -38,12 +38,12 @@ Items marked **[OPEN]** are not decided yet; they are all listed in [section 11]
 ```
 
 - Extension: `.i3d`
-- The first line is the magic and version, optionally with a comment:
+- The first line is the magic `I3D`, WITHOUT a version number (decided 2026-11-03), optionally followed by whitespace and a comment:
   ```
-  I3D 0.1  # DICOMstackCollect, series 12 'cine 4ch'
+  I3D  # DICOMstackCollect, series 12 'cine 4ch'
   ```
-  **[OPEN]** what a reader does with another version (`I3D 0.2`). The v0 readers accept only `I3D 0.1`.
-- The file STARTS with exactly those bytes, `I3D 0.1` (or `I3Db`, [1.1](#11-the-hidden-variant-i3db)): nothing before them, not a space, not a BOM (decided 2026-10-23). The first 4 bytes are the signature an application recognises the format by; a file that hides them behind a space would not be recognised. ` I3D 0.1` is `badMagic`.
+  Anything else after `I3D` is `badMagic`: `I3D 0.1`, `I3D 2`, `I3Dx`. The format grows by keys that old readers ignore ([section 2](#2-header-grammar)); if a change ever has to be incompatible, its files will start with something else after `I3D` (`I3D 2`), and today's readers refuse them instead of misreading them.
+- The file STARTS with exactly those bytes, `I3D` followed by a space, a tab, CR or LF (or `I3Db`, [1.1](#11-the-hidden-variant-i3db)): nothing before them, not a space, not a BOM (decided 2026-10-23). The first 4 bytes are the signature an application recognises the format by; a file that hides them behind a space would not be recognised. ` I3D` is `badMagic`.
 - The header ends at the first line that is exactly `---` (three hyphens, nothing else but an optional CR). The binary section starts at the byte that follows that line's LF. A file whose values are all literals or external references may have an empty binary section.
 - **ALL OFFSETS ARE RELATIVE TO THE START OF THE BINARY SECTION**, not to the start of the file. This is what lets the header be edited by hand (fix a string, add a comment) without breaking a single offset — and what makes the hidden variant ([1.1](#11-the-hidden-variant-i3db)) a rewrite of the start of the file only. MEASURED: a file with a hand-added comment line reads exactly as the original.
 - Line endings: LF. Readers must also accept CRLF.
@@ -63,21 +63,21 @@ To keep the header from the casual reader, a file may store it COMPRESSED and OB
 +--------------------------------------------------+
 ```
 
-- The hidden header is the plain-text header (its UTF-8 bytes, from its `I3D 0.1` line to the line before `---`, lines ending in LF), compressed as one zlib stream (RFC 1950) `z` of EXACTLY L bytes (no bytes after the end of the stream); the stream REVERSED, `r(i) = z(L-1-i)`; and then, byte by byte,
+- The hidden header is the plain-text header (its UTF-8 bytes, from its `I3D` line to the line before `---`, lines ending in LF), compressed as one zlib stream (RFC 1950) `z` of EXACTLY L bytes (no bytes after the end of the stream); the stream REVERSED, `r(i) = z(L-1-i)`; and then, byte by byte,
   ```
   k(i)      = ( ( i * 0x5C2D8F1B + 0x49334462 ) mod 2^32  >>  8 )  AND 0xFF      0x49334462 = "I3Db"
   hidden(i) = ( NOT r(i) ) XOR k(i)            i = 0 .. L-1
   ```
   (32-bit unsigned arithmetic; NOT is the bit flip of the byte.) A reader undoes it — `r(i) = NOT( hidden(i) XOR k(i) )`, `z` is `r` reversed —, inflates, and parses the text exactly as [section 2](#2-header-grammar) says. The `<hidden>` block of [1.2](#12-a-hidden-part-of-the-header-decided-2026-10-23) is obfuscated the same way with constants of its own. (Until 2026-10-24: no reversal, and the multiplier 2654435761 — Knuth's, known at sight in a disassembly.)
 - The inflated size is NOT stored: the zlib stream knows where it ends, and its Adler-32 checks what it inflates to. A reader inflates in chunks (and may refuse an absurd size; the C++ core refuses L or an inflated header over 1 GiB).
-- The binary section starts right after the hidden header, at byte `12 + L`. Offsets stay relative to it, so hiding or showing a header rewrites only the start of the file. MEASURED: `showI3Dfile(hidden)` and `hideI3Dfile(text)` give, byte for byte, what the writer gives in each form.
+- The binary section starts right after the hidden header, at byte `12 + L`. Offsets stay relative to it, so hiding or showing a header rewrites only the start of the file. MEASURED: `i3d_rewrite(hidden, f, 0)` and `i3d_rewrite(text, f, 1)` give, byte for byte, what the writer gives in each form (`tests/check_roundtrip.m`).
 
 ### 1.2 A hidden PART of the header (decided 2026-10-23)
 
 Some entries can be kept out of the readable header while the rest stays in plain text, editable by hand. `write_I3D` does it BY DEFAULT: everything needed to read data stays visible, and of the `info.*` only a few ([section 9](#9-the-canonical-form-what-a-writer-must-produce), example in [section 10](#10-a-complete-example)). Like I3Db, **it is NOT protection**: it keeps the casual reader away, and everything needed to read it is in this section.
 
 ```
-I3D 0.1  # write_I3D 2026-10-23
+I3D  # write_I3D 2026-10-23
 X[512] = 0.0 : 0.8984 : 459.0824
 ...
 header = <hidden @3935131:3936020>  # the rest of the header
@@ -92,11 +92,11 @@ binary section: ... the <hidden> block, 890 bytes ...
   hidden(i) = ( NOT r(i) ) XOR k(i)
   ```
   A reader undoes it: `r(i) = NOT( hidden(i) XOR k(i) )`, `z` is `r` reversed, and inflates. WHY THE REVERSAL: the fixed start of a zlib stream (`78 DA`) is no longer the start of every block, and it lands at a different i — so a different k — in each file, since blocks differ in length. (I3Db: the same procedure with `0x5C2D8F1B` and `0x49334462` = `"I3Db"`: the two do not share the sequence k.) The stream takes exactly the bytes of the block.
-- The text is header lines, UTF-8, LF: entries, their continuation lines and comments. It has no `I3D 0.1` line and no `---`, and it cannot hold another `header` entry (one level).
+- The text is header lines, UTF-8, LF: entries, their continuation lines and comments. It has no `I3D` line and no `---`, and it cannot hold another `header` entry (one level).
 - A reader reads those lines **as if they were written in the place of the `header` entry**. The rules of the header apply to all the lines together: a key repeated between the visible and the hidden part is `badHeader`, and so on. The hidden lines may hold anything, `data` included: offsets stay relative to the binary section.
 - The block can be anywhere in the binary section. The canonical form puts it FIRST (`@0:n-1`), followed by a gap of 0 to 31 bytes (zeros) before the next block. WHY THE GAP: if the hidden lines hold offsets of the blocks after it (data), those offsets depend on the size of the block, which depends on them; the writer estimates the start D of the next block, encodes, and accepts when the block fits (n ≤ D) leaving less than 32 bytes, otherwise it estimates again from n. Bytes of the binary section that no descriptor points to are ignored by a reader, as those of a block dropped by hand ([5.1](#51-data-is-assigned-in-blocks)).
-- It combines with I3Db. **What a reader shows as the header (`i3d_header`, `i3dinfo --header`, `showI3Dfile`) is the header AS WRITTEN, with the `header = <hidden ...>` line, not its content.** So someone who can dump an I3Db file still does not see the hidden part. A reader's entries (`i3d_entry`) do include the hidden ones: it needs them.
-- `<hidden>` anywhere else (a data block, an aux) is `badDescriptor`.
+- It combines with I3Db. **What a reader shows as the header (`i3d_header`, `i3dinfo --header`, `i3d_rewrite(f, g, 0)`) is the header AS WRITTEN, with the `header = <hidden ...>` line, not its content.** So someone who can dump an I3Db file still does not see the hidden part. A reader's entries (`i3d_entry`) do include the hidden ones: it needs them.
+- `<hidden>` anywhere else (a data block, the thumbnail) is `badDescriptor`.
 - A reader older than this section does not know the key `header` and ignores it ([2](#2-header-grammar)): it loses the hidden lines — a coverage error if they held data, silence if they held `info.*`. There are no such readers outside this repository.
 
 MEASURED: `tests/check_invalid.py` (hidden part in text and in I3Db, first or last in the binary, with and without crc; and bad crc, two `header` entries, `header` inside `<hidden>`, `header( )`, another encoding, a type, past the end, a byte too many, `<hidden>` as data; the dump), `tests/check_roundtrip.m` (`'Visible',{}` on every case: all `info.*` hidden, three readers, `showI3Dfile` byte for byte).
@@ -133,9 +133,9 @@ continuation:= one or more spaces/tabs, then more of the PREVIOUS entry's value
   ```
   `:` is "the whole dimension"; its extent is defined elsewhere (for data, by the grids). Open ranges `a:` and `:b` run to the last / from the first. No steps and no `end`. Missing subscripts follow [5.2](#52-subscripts-of-a-block) for data; for any other key, an entry without `( )` assigns the whole value (and grids take no `( )`).
   A subscript is never empty: `data()` and `data(:,:,1,)` are `badSubscript` (an empty one is not `:`), and so is a sign (`1:-1`, `+2`).
-  In v0, `( )` is defined for `data` only. On another key that v0 KNOWS (`X Y Z T transform rescale window fill`, `aux.*`, `info.*`, `$VAR$`) it is `badHeader`. On an UNKNOWN key it is ignored, like the key itself (decided 2026-10-23): so a v0 reader opens a file of a later version that adds arrays assigned in blocks — `labels(:,:,:,1) = <...>`, [section 8](#8-what-of-i3d-is-not-in-v0). MEASURED (`tests/check_invalid.py`).
+  In v0, `( )` is defined for `data` only. On another key that v0 KNOWS (`X Y Z T transform fill thumbnail`, `info.*`, `$VAR$`) it is `badHeader`. On an UNKNOWN key it is ignored, like the key itself (decided 2026-10-23): so a v0 reader opens a file of a later version that adds arrays assigned in blocks — `labels(:,:,:,1) = <...>`, [section 8](#8-what-of-i3d-is-not-in-v0). MEASURED (`tests/check_invalid.py`).
 - An array may be assigned in several entries (data usually is); the entries must cover it **EXACTLY ONCE**: an element assigned twice, or never, makes the file invalid. There is no "last one wins". A key without `( )` appears once.
-- **VARIABLES.** An entry whose key is `$NAME$` defines a variable; its value is a quoted string. Inside a `"path"` of a descriptor, `$NAME$` is replaced by it:
+- **VARIABLES.** An entry whose key is `$NAME$` defines a variable; its value is a quoted string. Inside a `"path"` of a descriptor, and inside every string of an `info.*` (decided 2026-11-05), `$NAME$` is replaced by it:
   ```
   $DICOMDIR$ = "D:/DICOMS/MR 001/DICOM/000062D6"
   data(:,:,1) = <dicom uint16 "$DICOMDIR$/AA77D253/00000001">
@@ -143,7 +143,7 @@ continuation:= one or more spaces/tabs, then more of the PREVIOUS entry's value
   A reader MUST let the caller give variables at open time that OVERRIDE the file's (C: `i3d_open_vars`; MATLAB: `read_I3D(f,'Variables',{'DICOMDIR',p})`): the referenced files can move without editing the `.i3d`. MEASURED. An undefined variable is an error when the block that uses it is requested.
   **A literal `$` in a path is written `$$`** (decided 2026-10-23): `\\srv\C$\x.dcm` is `"//srv/C$$/x.dcm"`. A `$` with no partner is `badVariable`. The VALUE of a variable is inserted as it is — a `$` in it is literal, and it is not searched for variables again — so `$DICOMDIR$ = "//srv/C$"` needs no escape. `write_I3D` escapes the paths it writes. MEASURED (`tests/check_dicom_fixtures.py`).
 - Key order is free for a READER, which resolves dependencies itself (X Y Z T before data). A WRITER uses the canonical order ([section 9](#9-the-canonical-form-what-a-writer-must-produce)).
-- A value is either a LITERAL or a DESCRIPTOR `<...>` ([section 4](#4-descriptors)). Any key may take a descriptor; the v0 readers read descriptors in data and aux only.
+- A value is either a LITERAL or a DESCRIPTOR `<...>` ([section 4](#4-descriptors)). Any key may take a descriptor; the v0 readers read descriptors in data and the thumbnail only.
 
 ### Literals
 
@@ -228,7 +228,7 @@ A descriptor, between `< >`, says HOW to obtain the bytes of a value:
 | part | meaning |
 |---|---|
 | `type` | `int8 uint8 int16 uint16 int32 uint32 int64 uint64 single double` (MATLAB names). logical is stored as uint8 0/1 — **[OPEN]** 3. |
-| `{shape}` | `{n1 n2 ...}`, the size of the array, column-major (first index fastest). REQUIRED where nothing else gives the shape (aux in raw/zlib). In a data block the shape is its subscript `( )`, so it is not written; if it is, it must match. |
+| `{shape}` | `{n1 n2 ...}`, the size of the array, column-major (first index fastest). REQUIRED where nothing else gives the shape (the thumbnail). In a data block the shape is its subscript `( )`, so it is not written; if it is, it must match. |
 | `@where` | where the bytes are in the binary section (offsets relative to its start, [section 1](#1-file-layout)). Decimal integers — see below. |
 | `"path"` | an external file. `$VARIABLES$` are substituted ([section 2](#2-header-grammar)); a relative result is relative to the directory of the `.i3d`; `/` and `\` are both accepted. |
 | `key val` | options — see below. |
@@ -274,7 +274,7 @@ A lossless JPEG-LS (ISO/IEC 14495-1, NEAR = 0) codestream of ONE single-componen
 #### `<dicom type "path" [frames a:b]>`
 The pixel data of a DICOM file, decoded by the reader (DCMTK in the C++ core). Byte order and transfer syntax come FROM THE FILE.
 
-- **What is returned, exactly:** one plane per frame, Columns × Rows with the column fastest (the i of `@I3D`: DICOMstack permutes dicomread's Rows × Columns); the STORED values — the BitsStored bits that end at HighBit, masked, and sign-extended when PixelRepresentation = 1 —, WITHOUT the DICOM's own Rescale (the authority is the `.i3d`'s `rescale`, [section 6](#6-rescale-window-image)).
+- **What is returned, exactly:** one plane per frame, Columns × Rows with the column fastest (the i of `@I3D`: DICOMstack permutes dicomread's Rows × Columns); the STORED values — the BitsStored bits that end at HighBit, masked, and sign-extended when PixelRepresentation = 1 —, WITHOUT the DICOM's own Rescale ([section 6](#6-stored-values-no-rescale-no-window)).
 - type must be the file's (BitsAllocated 8/16/32 with PixelRepresentation); it is written so that the type of the volume is known WITHOUT opening every referenced `.dcm`.
 - SamplesPerPixel must be 1 in v0 (**[OPEN]** 13).
 - Without `frames`, a single-frame file covers one plane and a multi-frame file as many planes as it has frames.
@@ -286,18 +286,18 @@ The pixel data of a DICOM file, decoded by the reader (DCMTK in the C++ core). B
 #### `<missing>`
 data only: this part of the volume could not be read. See [5.5](#55-coverage-and-what-a-reader-does-with-a-hole).
 
-#### `<png uint8 {rows cols} @where>` , `<png uint8 {rows cols 1 frames} @where>`
-aux only: ONE PNG image, 8-bit GREY (colour type 0, bit depth 8), of `rows` rows and `cols·frames` columns, the frames side by side. Its pixel at row y, column X goes to element `y + rows·X` of the array in column-major order — which is exactly the MATLAB array `{rows cols 1 frames}`: in MATLAB, `reshape(v, rows, [])` writes it and `reshape(img, [rows cols 1 frames])` reads it. Any other PNG (colour, 16 bits, a size that does not match `{shape}`) is `badBlock`: a reader must not convert it silently. The C++ core decodes it with the bundled lodepng; the Python reference reader with imagecodecs. MEASURED.
+#### `<png uint8 {rows cols} @where>` , `<png uint8 {rows cols 1 frames} @where>` , `<png uint8 {rows cols 3 frames} @where>`
+thumbnail only: ONE PNG image, 8-bit GREY (colour type 0, bit depth 8), of `rows` rows and `cols·frames` columns, the frames side by side. Its pixel at row y, column X goes to element `y + rows·X` of the array in column-major order — which is exactly the MATLAB array `{rows cols 1 frames}`: in MATLAB, `reshape(v, rows, [])` writes it and `reshape(img, [rows cols 1 frames])` reads it. With `{rows cols 3 frames}` (decided 2026-11-04: a colour image's thumbnail) it is ONE 8-bit RGB PNG (colour type 2, bit depth 8) of the same size: its pixel at row y, column X = f·cols + x, channel ch goes to element `y + rows·(x + cols·(ch + 3·f))` — the MATLAB array `{rows cols 3 frames}`, channel in dim 3. Any other PNG (a colour type that does not match `{shape}`, 16 bits, palette, alpha, a size that does not match `{shape}`) is `badBlock`: a reader must not convert it silently. The C++ core decodes it with the bundled lodepng; the Python reference reader with imagecodecs. MEASURED.
 
 #### `<gif ...>`
-aux only, reserved: NOT decoded by the v0 readers (they report it instead of failing the file).
+thumbnail only, reserved: NOT decoded by the v0 readers (they report it instead of failing the file).
 
 ### Rules common to all encodings
 
-- `crc XXXXXXXX`: 8 hex digits, the CRC-32 of zlib (`crc32()`, the IEEE polynomial, as Python's `zlib.crc32` and Java's `java.util.zip.CRC32`) of the block's **DECODED** bytes — exactly the bytes the block contributes: its sub-array in its own type, little-endian, column-major `i j k t c` ([5.3](#53-bytes-of-a-block)); for a signed jpegls, after undoing the offset; for a `<dicom>`, the stored values as section 4 defines them; for an aux, its array in column-major order (a `<png>`: its pixels, not the PNG). A reader that finds a mismatch raises `badCRC` for that block. MEASURED.
+- `crc XXXXXXXX`: 8 hex digits, the CRC-32 of zlib (`crc32()`, the IEEE polynomial, as Python's `zlib.crc32` and Java's `java.util.zip.CRC32`) of the block's **DECODED** bytes — exactly the bytes the block contributes: its sub-array in its own type, little-endian, column-major `i j k t c` ([5.3](#53-bytes-of-a-block)); for a signed jpegls, after undoing the offset; for a `<dicom>`, the stored values as section 4 defines them; for the thumbnail, its array in column-major order (a `<png>`: its pixels, not the PNG). A reader that finds a mismatch raises `badCRC` for that block. MEASURED.
   WHY THE DECODED BYTES, and not the bytes in the file (as until 2026-10-14): what has to be right is the DATA. A decoder that gets it wrong — the old CharLS inside DCMTK, dicomread's sign extension, a near-lossless JPEG-LS — passes a crc of the file bytes and fails this one; the same crc holds whatever the encoding, so a block re-encoded (zlib → jpegls) keeps it; and a `<dicom>` block, which has no bytes in the file, can carry one. The price: a reader decodes before it can check, so corrupted input reaches the decoder (which must be robust: the C++ core did not crash in 10 000 fuzzed files), and a file cannot be checked without its codecs. A zlib block also has its own Adler-32 of the inflated bytes.
 - `<missing>` takes no `crc` (it has no data): `badDescriptor`.
-- An unknown encoding is an error WHEN THAT VALUE IS REQUESTED, not when the file is opened: a reader that cannot decode one aux can still return the volume. MEASURED (a build without zlib opened zlib files and failed only on their data).
+- An unknown encoding is an error WHEN THAT VALUE IS REQUESTED, not when the file is opened: a reader that cannot decode the thumbnail can still return the volume. MEASURED (a build without zlib opened zlib files and failed only on their data).
 - Byte order of the binary section is little-endian, always. **[OPEN]** 5.
 
 ---
@@ -380,52 +380,43 @@ The ONE partial read the readers offer (decided 2026-10-13) is the **first frame
 |---|---|
 | C API | `i3d_first_frame_bytes(f)` , `i3d_read_first_frame(f, out, nbytes)` |
 | C++ | `File::first_frame_shape()` , `first_frame_bytes()` , `read_first_frame(out, nbytes)` |
-| MATLAB | `I = read_I3D(f,'firstFrame')` — an `@I3D` with `T = T(1)` |
+| MATLAB | `R = read_I3D(f,'Data','first')` — `R.data` is `data(:,:,:,1,c...)` |
 | Python (ctypes) | `I3DFile(f).first_frame()` |
 
 MEASURED on the 43 files of `tests/out_piechnik_canon`: the first frame equals `data(:,:,:,1)` bit for bit in all of them; on the 400-instant cine (102×128×12×400) it takes 0.006 s against 2.16 s for the whole volume (335×).
 
 ---
 
-## 6. Rescale, window, image
+## 6. Stored values: no rescale, no window
 
-```
-rescale = SLOPE INTERCEPT          default 1.0 0.0
-window  = CENTER WIDTH             in RESCALED units
-```
-
-- `I.data` ALWAYS returns the stored values (in the type of [5.4](#54-the-type-of-idata)).
-- `I.values()` is `slope*data + intercept` in double, and `I.image()` the grey in [0,1] with the CLEAN linear window, which is NOT the DICOM formula (no −0.5, no width−1):
-  ```
-  image = clamp( ( values - (center - width/2) ) / width , 0 , 1 )
-  ```
-  NaN stays NaN.
-- **ONE rescale for the whole stack** (decided 2026-10-13). There is no per-block or per-plane rescale: a `rescale` option inside a descriptor is an unknown token, `badDescriptor`. A stack whose RescaleSlope/RescaleIntercept change from slice to slice (PET, some CT) cannot be written: `write_I3D` refuses it (`write_I3D:rescaleNotCommon`) rather than lose the physical values in silence.
-- **[OPEN]** 7: the v0 readers return rescale and window but do NOT compute `values()` or `image()`. Also open: what `image()` does when there is no window key.
+- `I.data` ALWAYS returns the stored values (in the type of [5.4](#54-the-type-of-idata)), and that is all the format says about them.
+- **There is no `rescale` and no `window` in the format** (removed 2026-11-03). A `rescale = …` or `window = …` line is an unknown key, ignored like any other ([section 2](#2-header-grammar)); a `rescale` option inside a descriptor is an unknown token, `badDescriptor`. The writer has no `i3d_set_rescale` / `i3d_set_window`, and the reader no `i3d_rescale` / `i3d_window`.
+- The DICOM's RescaleSlope/RescaleIntercept/RescaleType and WindowCenter/WindowWidth are attributes like any other: `write_I3D` writes them to `info.*` when they are common to the stack ([section 7](#7-thumbnail-and-info)), and nothing applies them.
 
 ---
 
-## 7. Aux and info
+## 7. Thumbnail and info
 
 | key | |
 |---|---|
-| `aux.NAME` | auxiliary arrays — thumbnails, masks, anything that is not the volume. A descriptor with `{shape}`. `I.aux(name)` returns null when the key does not exist. |
+| `thumbnail` | ONE small preview image of the volume, uint8 grey `{rows cols}` or `{rows cols 1 frames}`, or RGB `{rows cols 3 frames}`. A descriptor with type and `{shape}`. A reader returns null when the file has none. |
 | `info.NAME` | metadata, a literal (a string or numbers). A DICOM attribute goes under its DICOM keyword: `info.SeriesDescription`, ... |
 
-An aux array's bytes are the array in column-major order, as MATLAB holds it; no other meaning. The v0 readers decode aux in raw, zlib and png.
+The thumbnail's bytes are the array in column-major order, as MATLAB holds it; no other meaning. The v0 readers decode it in raw, zlib and png, and reject any other type or shape (`badDescriptor`). There is no other auxiliary array: `aux.*` (until 2026-11-03) is now an unknown key, ignored.
 
-**Thumbnails** (what `write_I3D` writes from `I.INFO.thumbnail*`, e.g. the ones of DICOMstackCollect): `aux.thumbnailK = <png uint8 {rows cols 1 frames} ...>`, a MATLAB image: dim 1 = rows top to bottom, dim 2 = columns, then one frame per instant — stored as ONE grey PNG with the frames side by side (section 4). `read_I3D` puts it back in `I.INFO.thumbnailK`, identical. MEASURED.
+**The thumbnail** (ONE per file, decided 2026-11-03: the writer's `i3d_set_thumbnail`, and what `write_I3D` writes from `I.INFO.thumbnail`, the slice view of DICOMstackCollect): `thumbnail = <png uint8 {rows cols 1 frames} ...>`, a MATLAB image: dim 1 = rows top to bottom, dim 2 = columns, then one frame per instant — stored as ONE grey PNG with the frames side by side (section 4). A colour image's thumbnail is `{rows cols 3 frames}` (RGB in dim 3), ONE RGB PNG. `read_I3D` puts it back in `I.INFO.thumbnail`, identical. MEASURED.
 
 **Info from a DICOMstack** (`write_I3D 'Info'`, default `'auto'`):
 
 - **everything COMMON to every slice of the stack** (`commonINFO`) — patient identifiers, every UID and ID included —, in commented blocks in the order of the DICOMstack display: `# -- Patient`, `Study`, `Series`, `Image`, `Device`, `Dates and times`, then `UIDs and IDs` and `Acquisition and others`. Each Date is followed by its Time. An attribute that names Patient, Study or Series goes to that block first (so PatientID is in Patient, StudyInstanceUID in Study);
 - Patient, Study and Device attributes that are not in `commonINFO` come from the first file (marked `# from the first file`): they do not change between the series of a study. Never a per-SLICE attribute (SOPInstanceUID, InstanceNumber, ImagePositionPatient...) as if it were the stack's;
 - left out: what is not a DICOM attribute (`Private_*`, DICOMstack's own `x*`, what MATLAB's dicominfo adds: Filename, FileModDate, Width, BitDepth...), the geometry (it is in X Y Z and `transform`), the pixel encoding (BitsAllocated..., given by the type of data). PhotometricInterpretation IS written: with MONOCHROME1 white is 0;
-- a DICOM person name (PN, which dicominfo returns as a struct) is written in DICOM's own text form, `"Family^Given^Middle^Prefix^Suffix"` without trailing `^`: `info.PatientName = "Cine3D^Breathing"`;
+- `PatientName` is written in DICOM's own text form, `"Family^Given^Middle^Prefix^Suffix"` without trailing `^`: `info.PatientName = "Cine3D^Breathing"` (DICOMstack gives it as text). The other person names (`ReferringPhysicianName`, `OperatorsName`, `PerformingPhysicianName`…, which dicominfo returns as a struct) are written like any other struct, with `uneval`: `info.ReferringPhysicianName = "struct('FamilyName','…')"`. MEASURED on `D:\DICOMS` with dicominfo (2026-11-05);
+- an attribute that would need `uneval` and has 200 elements or more (Siemens' CSA private tags, palette lookup tables, overlay data) is not written: expensive, and no use as text;
 - `info.PlaneName`: the acquisition plane DICOMstack GUESSES from ImageOrientationPatient (`AX`/`COR`/`SAG` within 1e-3 rad, otherwise the nearest cardiac view `hla`/`vla`/`lvot`/`sa`, with no distance threshold). Not a DICOM attribute, and its comment says so;
 - what cannot be written is skipped WITH A COMMENT that says why: a string with control characters, a sequence (struct), more than 16 numbers;
 - a number is a list of doubles (so an integer attribute such as SeriesNumber reads `5.0`);
-- RescaleSlope/Intercept and WindowCenter/Width, when common to the stack, become the `rescale` and `window` keys ([section 6](#6-rescale-window-image)), not `info.*`.
+- RescaleSlope/Intercept and WindowCenter/Width are `info.*` like any other attribute: the format has no `rescale` or `window` ([section 6](#6-stored-values-no-rescale-no-window)).
 - `'Info'` with a list writes exactly those attributes, in that order, without blocks; `{}` writes none.
 
 **Series and planes** (what is NOT common to the stack: only these, decided 2026-10-13). A stack can be the fusion of several series (DICOMstackCollect joins, say, one series per slice), and every plane is its own image. The writer adds, after the blocks above:
@@ -453,9 +444,9 @@ info.planes.AcquisitionDate    = ...              (ONLY if not common to the sta
 - A per-plane list has `nk·nt` values, plane (k,t) at position `k + nk·(t−1)` — k fastest, as everything in this format. `info.planes.series` is the series of each plane (1-based); 0 and `""` = a plane with no file.
 - The series table holds each series once; `info.planes.series` points into it. The common attributes (`info.SeriesInstanceUID` ... above) are still written when the stack is a single series.
 - The image UID is the MediaStorageSOPInstanceUID DICOMstack groups by, which the standard makes equal to SOPInstanceUID.
-- `read_I3D` returns a string list as a cellstr row (`I.INFO.planes_SOPInstanceUID{q}`). MEASURED on the 10 series of the PIECHNIK short-axis stack (250 planes): 12 planes spread over the stack, each against its own `.dcm`, give the same SOPInstanceUID, series UID, number, description and AcquisitionTime.
+- `read_I3D` returns a string list as a cell, and a per-plane list as `[nK nT]` (`R.INFO.planes.SOPInstanceUID{k,t}`). MEASURED on the 10 series of the PIECHNIK short-axis stack (250 planes): 12 planes spread over the stack, each against its own `.dcm`, give the same SOPInstanceUID, series UID, number, description and AcquisitionTime.
 
-The dot is just part of a name: `aux.thumbnailK` is one key, not a hierarchy. **[OPEN]** 8: whether readers expose `info.a.b` as nested.
+The dot is just part of a name: `info.series.SeriesNumber` is one key, not a hierarchy. **[OPEN]** 8: whether readers expose `info.a.b` as nested.
 
 ---
 
@@ -463,7 +454,7 @@ The dot is just part of a name: `aux.thumbnailK` is one key, not a hierarchy. **
 
 | | what |
 |---|---|
-| **in v0** | X Y Z T, SpatialTransform, data (with components), thumbnails and chosen DICOM attributes (aux/info), rescale and window |
+| **in v0** | X Y Z T, SpatialTransform, data (with components), a thumbnail and chosen DICOM attributes (info) |
 | **later** | LABELS + LABELS_INFO, FIELDS on the same grid — as more named arrays next to data, assigned in blocks the same way. **[OPEN]** 9 |
 | **never** | POINTER (a MATLAB recipe), isGPU/GPUvars (runtime state), INFO.DICOMstack (a MATLAB object; selected attributes go to `info.*`), MESHES/CONTOURS/LANDMARKS until someone needs them |
 | **[OPEN] 10** | the interpolation settings (SpatialInterpolation, BoundaryMode, OutsideValue, ...) as `info.*`, so a round trip keeps them |
@@ -476,8 +467,8 @@ Sections 1–8 are the **general grammar**: what a READER must accept — files 
 
 | what | canonical form | not allowed in a canonical file (but readers accept it) |
 |---|---|---|
-| layout | the header lines in this order: magic + comment, `X Y Z T`, `transform` (its description in full-line comments below it), `rescale`, `window`, `$DICOMDIR$` (Lazy), data blocks, `aux.*`, a BLANK line, `info.*`, a BLANK line, `---`. Those two blank lines and no other; comments at the end of their line otherwise (and `# -- block` titles in `info.*`). The comment of the first line ends with the size of data: `# write_I3D 2026-10-23 10:00:00, [ 192 x 156 x 14 x 30 ]` | any other order, other blank lines |
-| what is visible (by default) | everything needed to read data — the magic line, `X Y Z T`, `transform`, `rescale`, `window`, ALL the data blocks and the `aux.*` — and the `info.*` of `'Visible'` (by default StudyDate StudyTime StudyDescription SeriesDescription DeviceSerialNumber Manufacturer ManufacturerModelName ImplementationVersionName InstitutionName InstitutionAddress), with the titles and comments that precede them. The other `info.*` (with the titles and comments that precede them) and `$DICOMDIR$` are the hidden part ([1.2](#12-a-hidden-part-of-the-header-decided-2026-10-23)), and `header = <hidden …>` goes right before the first data block. A file with nothing to hide has no `header` line. With `'Visible','all'` every `info.*` is visible; `$DICOMDIR$` stays hidden. The writer's C API says it per entry: `i3d_add_info_*( … , visible , … )`, 1 visible, 0 hidden | — |
+| layout | the header lines in this order: magic + comment, `X Y Z T`, `transform` (its description in full-line comments below it), the variables (`$DICOMDIR$`...), data blocks, `thumbnail`, a BLANK line, `info.*`, a BLANK line, `---`. Those two blank lines and no other; comments at the end of their line otherwise (and `# -- block` titles in `info.*`). The first line carries only the comments given with a leading backspace BEFORE any piece (`i3d_add_comment( w , sprintf('\btext') )`): `I3D  # text`; without one, just `I3D` | any other order, other blank lines |
+| what is visible (by default) | everything needed to read data — the magic line, `X Y Z T`, `transform`, ALL the data blocks and the `thumbnail` — and the `info.*` of `'Visible'` (by default StudyDate StudyTime StudyDescription SeriesDescription DeviceSerialNumber Manufacturer ManufacturerModelName ImplementationVersionName InstitutionName InstitutionAddress), with the titles and comments that precede them. The other `info.*` (with the titles and comments that precede them) and `$DICOMDIR$` are the hidden part ([1.2](#12-a-hidden-part-of-the-header-decided-2026-10-23)), and `header = <hidden …>` goes right before the first data block. A file with nothing to hide has no `header` line. With `'Visible','all'` every `info.*` is visible; `$DICOMDIR$` stays hidden. The writer's C API says it per entry: `i3d_add_info_*( … , visible , … )`, 1 visible, 0 hidden | — |
 | grids | a range `a : s : b` if the grid is uniform BIT FOR BIT under [3.1](#31-grids-x-y-z-t-all-four-required), otherwise the list in shortest form, with the `[n]` annotation | a near-uniform grid snapped to a range |
 | `transform` | ALWAYS present, ALWAYS 12 numbers (3 rows), also for `eye(4)` or a pure translation | omitted (= identity); 3 numbers (= translation) |
 | data subscripts | COMPLETE: i, j, k, t and every component dimension. i and j: `:`. k and t: `n` for one index, `:` for the whole dimension (of more than one), `a:b` otherwise. Component dimensions: always `n` or `1:n` | missing positions (`data`, `data(:,:,2)`); open ranges `a:` and `:b` |
@@ -485,10 +476,9 @@ Sections 1–8 are the **general grammar**: what a READER must accept — files 
 | data blocks | jpegls and zlib alike: the FIRST INSTANT (all its planes and components) in ONE block, and the other instants in the FEWEST blocks that fit — whole instants if at least one fits, otherwise each instant split along k. What fits: 2^31−9 bytes (a Java array, for zlib), and for jpegls also 65535 rows. So a cine is `data(:,:,:,1)` + `data(:,:,:,2:nt)`, and a stack is one block | one block per plane where they fit in one; any other split by default |
 | offsets | `@a:b`, both inclusive | `@a+n`, `@a+Inf`, `@a:EOF`, `@a` |
 | hidden part | `header = <hidden @0:b>` right before the first data block, the hidden lines in their order, the block FIRST in the binary section followed by 0–31 zero bytes, NO crc ([1.2](#12-a-hidden-part-of-the-header-decided-2026-10-23)) | the block elsewhere; a gap of 32 bytes or more; a crc |
-| `crc` | ON EVERY BLOCK THAT HAS DATA — jpegls, zlib, `<dicom>` — and on every aux: the CRC-32 of its decoded bytes ([section 4](#4-descriptors)). `<missing>` has none | a block or an aux without its `crc` |
-| thumbnails | `aux.thumbnailK = <png uint8 {rows cols 1 frames} @a:b>`: ONE 8-bit grey PNG of rows × (cols·frames), the frames side by side ([section 7](#7-aux-and-info)), with ONLY the chunks IHDR, IDAT, IEND — so its bytes depend on the pixels alone (MATLAB's imwrite adds a tIME with the clock: two writes of the same image differed) | `<zlib>` / `<raw>` thumbnails, colour PNG, ancillary chunks (tIME, text...) |
-| per-plane metadata | only `info.series.*` (SeriesInstanceUID, SeriesNumber, SeriesDescription) and `info.planes.*` (series, SOPInstanceUID, AcquisitionTime, and AcquisitionDate if not common), as lists, k fastest, ONE VALUE PER ROW with its comment (`# series n` / the block of data of the plane) ([section 7](#7-aux-and-info)) | any other per-plane attribute; several values on a row |
-| `rescale` | ONE key for the whole stack (or none = 1.0 0.0); a writer refuses a stack whose rescale changes from slice to slice ([section 6](#6-rescale-window-image)) | — (there is no per-block rescale any more) |
+| `crc` | ON EVERY BLOCK THAT HAS DATA — jpegls, zlib, `<dicom>` — and on the thumbnail: the CRC-32 of its decoded bytes ([section 4](#4-descriptors)). `<missing>` has none | a block or a thumbnail without its `crc` |
+| thumbnail | `thumbnail = <png uint8 {rows cols 1 frames} @a:b>` (or `{rows cols 3 frames}`): ONE 8-bit grey (or RGB) PNG of rows × (cols·frames), the frames side by side ([section 7](#7-thumbnail-and-info)), with ONLY the chunks IHDR, IDAT, IEND — so its bytes depend on the pixels alone (MATLAB's imwrite adds a tIME with the clock: two writes of the same image differed) | `<zlib>` / `<raw>` thumbnails, palette or alpha PNG, an RGB PNG for a grey `{shape}` (or the other way), ancillary chunks (tIME, text...) |
+| per-plane metadata | only `info.series.*` (SeriesInstanceUID, SeriesNumber, SeriesDescription) and `info.planes.*` (series, SOPInstanceUID, AcquisitionTime, and AcquisitionDate if not common), as lists, k fastest, ONE VALUE PER ROW with its comment (`# series n` / the block of data of the plane) ([section 7](#7-thumbnail-and-info)) | any other per-plane attribute; several values on a row |
 | text | UTF-8 as it is, no escapes but `\"` and `\\` ([section 1](#1-file-layout)) | — |
 | numbers | shortest round-trip form with `.0` ([section 2](#2-header-grammar)) | anything else |
 
@@ -497,45 +487,50 @@ WHY jpegls for the 8/16-bit integers: MEASURED on real series (`bench/real_jpegl
 ### 9.1 `write_I3D` (MATLAB)
 
 ```
-write_I3D( I , filename , options ... )
+write_I3D( S , fname )          S: ONE DICOMstack (or an @I3D with INFO.DICOMstack)
 ```
 
-There is no encoding argument: the canonical form fixes it (passing `'raw'`, `'zlib'` or `'jpegls'` is the error `write_I3D:badEncoding`). Nor a `'CRC'` option (since 2026-10-14): every block and every aux carries its crc, always; passing `'CRC'` is `write_I3D:badOption`.
+No options (decided 2026-11-03: the writer's API is the C one, and `write_I3D` drives it). What it writes:
+
+- the grids, `transform`, `data` and the thumbnail of `I.INFO.thumbnail` (grey or RGB);
+- the `info.*` of `commonINFO` ([section 7](#7-thumbnail-and-info)), visible when they are in its list `ATTS_VISIBLES` and in the hidden part otherwise; without `Filename` (an absolute path) nor the series' own attributes (they go to `series.*`); an attribute that would need `uneval` with 200 elements or more is skipped;
+- `involvedSeries`, `series.*` and `planes.*` (with `planes.Filename = "$DICOMDIR$/..."`, `$DICOMDIR$` being the common folder of the stack, in the hidden part);
+- every `$` of an `info.*` string as `$$` (section 2).
+
+The options are those of the C writer, for any caller of `i3d.dll` (`i3d_set_option( w , name , value )`):
 
 | option | |
 |---|---|
-| `'Comment'` | the comment of the first line (default `write_I3D <date>`) |
-| `'Blocks'` | `'auto'` (default) \| `'volume'` \| `'t'` |
-| `'MaxBlockBytes'` | the largest block, uncompressed (2^31−9, a Java array's limit) |
-| `'Hidden'` | the I3Db variant ([1.1](#11-the-hidden-variant-i3db)) |
-| `'Lazy'` | from a DICOMstack: `<dicom>` references instead of pixels |
-| `'Verify'` | (with Lazy, default true) check each reference with the reader |
-| `'DicomDir'` | the value of `$DICOMDIR$` (default: the common root of the files) |
-| `'Info'` | the DICOM attributes for `info.*`: `'auto'` (default, everything common to the stack, [section 7](#7-aux-and-info)), a list, or `{}` = none |
-| `'Visible'` | the `info.*` names that stay visible (`*` wildcard); default the 10 of section 9 (the layout rows). `'all'`: every `info.*` visible; `{}`: none. The others go to the hidden part ([1.2](#12-a-hidden-part-of-the-header-decided-2026-10-23)), as a block FIRST in the binary section, then 0–31 bytes of gap, without crc. Combines with `'Hidden'` |
+| `Blocks` | `auto` (default) \| `volume` \| `t` |
+| `MaxBlockBytes` | the largest block, uncompressed (2^31−9, a Java array's limit) |
+| `Hidden` | `1`: the I3Db variant ([1.1](#11-the-hidden-variant-i3db)) |
+| `Lazy` | `1`: `<dicom>` references instead of pixels (`i3d_set_plane_ref`) |
+| `Verify` | (with Lazy, default `1`) check each reference with the reader |
+
+and per entry: `i3d_add_info_*( … , visible , … )` (1 visible, 0 hidden part), `i3d_set_variable( w , name , value )` (always hidden), `i3d_add_comment`.
 
 - **Blocks `'auto'`** (zlib and jpegls): the FIRST INSTANT in its own block, the others in the FEWEST blocks that fit MaxBlockBytes (and, in jpegls, 65535 rows); an instant that does not fit is split along k. `'volume'`: all of data in the fewest blocks; `'t'`: one block per instant. Lazy: one block per plane.
 - From DICOMstack, X and Y come out as ranges and Z as a list.
-- A thumbnail that is not uint8 grey is not written: it becomes a `# aux.X skipped: ...` comment.
+- A thumbnail that is not uint8 grey or RGB `{rows cols 3 frames}` is not written: it becomes a `# thumbnail skipped: ...` comment.
 - **`'Lazy'`:** a plane is REFERENCED only if its file
   - is in a lossless transfer syntax the C++ reader decodes (native LE/BE, RLE, JPEG lossless .57/.70, JPEG-LS lossless .80),
   - is one single-frame grey plane of the class of `I.data`,
   - appears once (its path may carry any character but control characters: the header is UTF-8),
   - and — with `'Verify'` — THE C++ READER gives EXACTLY that plane of `I.data`.
 
-  With the reader and not with dicomread: MEASURED (`tests/probe_jpll.m`), dicomread of R2022a decodes JPEG lossless of 10 and 15 bits wrongly and does not sign-extend when BitsStored < BitsAllocated, so the file must reproduce `I.data` as the reader will see it. Otherwise the plane is materialised, in the encoding its type fixes. A plane with no file and all zeros is `<missing>`. The `$DICOMDIR$` line says how many planes were referenced, materialised and missing.
+  With the reader and not with dicomread: MEASURED (`tests/probe_jpll.m`, removed on 2026-11-05: it is in the git history), dicomread of R2022a decodes JPEG lossless of 10 and 15 bits wrongly and does not sign-extend when BitsStored < BitsAllocated, so the file must reproduce `I.data` as the reader will see it. Otherwise the plane is materialised, in the encoding its type fixes. A plane with no file and all zeros is `<missing>`. The `$DICOMDIR$` line says how many planes were referenced, materialised and missing.
   Each `<dicom>` reference carries the crc of ITS PLANE OF `I.data` — what the writer had, not what a reader may later see —, so the guarantee of `'Verify'` travels with the file: a referenced `.dcm` that later changes, or that another reader decodes differently, gives `badCRC` instead of other pixels. Without `'Verify'` the crc is still there, and a wrong reference fails when it is read rather than when it is written.
 
 ---
 
 ## 10. A complete example
 
-Real `write_I3D` output with the defaults (section 9): three slices of a short-axis cine, from three series, collected by `DICOMstackCollect(F,'onlyK','info')`; 182 × 224 × 3 × 25, uint16, 2.4 MiB. MEASURED: read back exactly by `read_I3D`.
+Real `write_I3D` output with the defaults (section 9): three slices of a short-axis cine, from three series, collected by `DICOMstackCollect(F,'info')`; 182 × 224 × 3 × 25, uint16, 2.4 MiB. MEASURED: read back exactly by `read_I3D`.
 
-What anyone sees — the header as written, and what `i3dinfo --header` or `showI3Dfile` give. Everything needed to read the volume is here:
+What anyone sees — the header as written, and what `i3dinfo --header` gives. Everything needed to read the volume is here:
 
 ```
-I3D 0.1  # write_I3D 2026-10-24 00:25:50, [ 182 x 224 x 3 x 25 ]
+I3D  # write_I3D 2026-10-24 00:25:50
 X[182] = 0.0 : 1.7857142686844 : 323.2142826318764
 Y[224] = 0.0 : 1.7857142686844 : 398.21428191662125
 Z[3]   = 0.0 9.999997924440159 19.99999801794808  # not uniform: steps 9.999997924440159 .. 10.000000093507921
@@ -548,7 +543,7 @@ transform =  0.5094810470925264    -0.29231538930220785    -0.809308825993258   
 header = <hidden @0:2921>  # the rest of the header
 data(:,:,:,1)    = <jpegls uint16 @2938:76206 crc 3546fe20>  # 182 x 224 x 3 x 25, uint16
 data(:,:,:,2:25) = <jpegls uint16 @76207:1804968 crc cb23ba8f>
-aux.thumbnailK = <png uint8 {98 384 1 25} @1804969:2499206 crc 6ddd56a9>
+thumbnail = <png uint8 {98 384 1 25} @1804969:2499206 crc 6ddd56a9>
 
 info.StudyDate = "20171028"
 info.StudyTime = "101635.290000"
@@ -610,15 +605,15 @@ The whole study (8118 files, 42 stacks) in `tests/out_piechnik_canon` was writte
 | 4 | ~~integrity check for a referenced `.dcm`~~ — **decided 2026-10-14**: the crc of a block is of its DECODED bytes, so a `<dicom>` carries the crc of its pixels | 4 |
 | 5 | little-endian always: confirm | 4 |
 | 6 | more encodings and filters (zstd, shuffle, delta, JPEG 2000) — measured in `bench/`, not adopted. (~~several planes per `<jpegls>` block~~ — **decided 2026-10-14**: whole planes stacked in one image, at most 65535 rows) | 4 |
-| 7 | `values()` / `image()` in the readers; `image()` without a window key. (The per-block rescale is gone: one rescale per stack, decided 2026-10-13) | 6 |
+| 7 | ~~`values()` / `image()` in the readers~~ — **decided 2026-11-03**: no `rescale` or `window` in the format; data are the stored values | 6 |
 | 8 | `info.a.b` as nested in the readers | 7 |
 | 9 | LABELS / FIELDS as arrays next to data | 8 |
 | 10 | interpolation settings in `info.*` | 8 |
 | 11 | NaN in the HEADER loses sign and payload (MATLAB's NaN is `fff8000000000000`, strtod's `7ff8000000000000`): matters for a signed-NaN sentinel; binary blocks keep the bits | 2 |
-| 12 | what a reader does with another version, and confirm "unknown keys are ignored" (~~an unknown key with `( )`~~ — **decided 2026-10-23**: ignored too) | 1, 2 |
+| 12 | ~~what a reader does with another version~~ — **decided 2026-11-03**: no version; anything after the magic but a comment is `badMagic` (section 1). Confirm "unknown keys are ignored" (~~an unknown key with `( )`~~ — **decided 2026-10-23**: ignored too) | 1, 2 |
 | 13 | `<dicom>` with SamplesPerPixel > 1 (colour), and JPEG 2000 (needs a decoder the bundled DCMTK does not have) | 4 |
 | 14 | an UNKNOWN DESCRIPTOR OPTION: today it fails the file at open (both readers), while an unknown KEY is ignored. Proposed rule: an option that changes the bytes (a filter) must fail; say which, if any, may be ignored | 2, 4 |
-| 15 | "any key may take a descriptor": the v0 readers reject one in X Y Z T / transform / rescale. Restrict v0 to data and aux, or implement it | 2 |
+| 15 | "any key may take a descriptor": the v0 readers reject one in X Y Z T / transform. Restrict v0 to data and the thumbnail, or implement it | 2 |
 | 16 | lossless promotion of MIXED block types: specified and implemented in C++, produced by nobody, untested, not in the Python reader. Keep, or require one type per file in v0 | 5.4 |
 | 17 | a reader without `<dicom>` (the JS/WebAssembly build) is conforming? | 4 |
 | 18 | PhotometricInterpretation MONOCHROME1 in a `<dicom>`: the stored values come back as stored, and nothing in the file says white = 0. (The writer now records PhotometricInterpretation in `info.*`; the readers do not act on it) | 4 |
@@ -630,16 +625,15 @@ The whole study (8118 files, 42 stacks) in `tests/out_piechnik_canon` was writte
 
 | file | what |
 |---|---|
-| `tests/check_num2str.m` | shortest-form numbers vs Python (240 003 values) |
-| `tests/check_roundtrip.m` | the battery (94 files): every case × every writer option, read by THREE readers (Python reference, the DLL by ctypes, the DLL by `calllib` from MATLAB), bit for bit, thumbnails (PNG) included; EVERY file `write_I3D` writes is checked to be canonical (section 9: complete subscripts, 12-number transform, `@a:b`, the encodings of the profile, a crc on every block and aux); with negative controls (a corrupted byte; a crc that does not match the data, which all three must refuse with `badCRC`) and NON-canonical files the readers must still accept (header edited by hand, `@a+n` / `@a+Inf` / `@a:EOF`, a raw block); hide/show byte for byte. `check_roundtrip(outdir)` keeps the files |
-| `tests/check_dicom.m` | `<dicom>` vs dicomread over the variety of `d:\DICOMS` |
-| `tests/probe_jpll.m` | who decodes JPEG lossless 10/15-bit right (RLE as the arbiter) |
+| `tests/check_num2str.m` | `i3d_num2str` (the DLL) vs Python: shortest-form numbers (240 003 values) |
+| `tests/check_roundtrip.m` | the battery (87 files + a path of 300 characters): 10 cases (every type, 2D to 6D, NaN/-0/Inf, components, grey and RGB thumbnails) × every writer option (default, all `info.*` visible, `Blocks` volume / t, `MaxBlockBytes`, `Hidden`, all `info.*` hidden, in text and I3Db), written with the DLL's writer through `calllib` and read by THREE readers (`read_I3D`, the DLL by ctypes, the Python reference), bit for bit: grids, transform, data, first frame, thumbnail and `info.*` (a `$$`, quotes and `\`, a `$DICOMDIR$` path resolved, numbers, rows, UTF-8; a lone `$` is a warning and the rest reads). EVERY written file is canonical (section 9), the writer is deterministic (written twice, the same bytes), and `i3d_rewrite` text ↔ I3Db is byte for byte; no C function takes more than 6 arguments. Negative controls (a corrupted data byte; a crc that does not match, refused with `badCRC`) and NON-canonical files the readers must accept (header edited by hand, `@a+n` / `@a+Inf` / `@a:EOF`, a raw block). `check_roundtrip(outdir)` keeps the files |
+| `tests/make_cs_refs.py` | the references of the C# tests (`csharp/I3D.Tests`) from a directory of `.i3d` (the battery's), read by the Python reference, and the special files: `Info`/`InfoErrors` against `read_i3d`'s, raw entries, data, first frame, thumbnail, errors with their id (2 392 checks) |
+| `tests/check_dicom.m` | `<dicom>` vs dicomread over the variety of `d:\DICOMS` (not a regression test: 34 exact, 15 known differences) |
 | `tests/check_dicom_py.py` | lazy files: pydicom vs DCMTK, bit for bit |
 | `tests/check_invalid.py` | 56 hand-made files and 2 calls to the C API with NULL (2026-10-23: every case where the two readers used to diverge, files that would make a reader allocate gigabytes, `( )` on an unknown key; and before that:) 34, bad and odd-but-valid: each reader must refuse with the right error (bad magic, no terminator, repeated key, `( )` outside data, fill out of range, hidden stream cut / with a byte too many, range not closing, grid not increasing, overlap, gap, unknown option, an `order` option, a `rescale` option, a Latin-1 header, raw length, truncated, bad crc, a zlib crc of the COMPRESSED bytes, a crc on `<missing>`, undefined variable, near-lossless jpegls, a jpegls block that is not whole i,j planes, a jpegls image of 65536 rows) or read exactly (unknown key, CRLF, crc, a zlib crc of the decoded data, fill, NaN default, hidden, a UTF-8 header with accents, a jpegls block of two planes) |
-| `tests/check_mi3d.py`, `tests/check_mi3d.m` | the container `.mi3d` ([section 14](#14-the-container-mi3d-decided-2026-10-24)): 47 hand-made cases for the two readers, and the MATLAB writer end to end. `python check_mi3d.py DIR` compares the DLL and Python on every `.mi3d` of DIR |
+| `tests/check_mi3d.py` | the container `.mi3d` ([section 14](#14-the-container-mi3d-decided-2026-10-24)): 47 hand-made cases for the two readers (C++ and Python). `python check_mi3d.py DIR` compares the DLL and Python on every `.mi3d` of DIR |
 | `tests/check_dicom_fixtures.py` | `<dicom>` WITHOUT `d:\DICOMS` (15 cases; 2026-10-23: a `$$` path, a lone `$`, a `$` in a variable's value, `{…}` in a path): synthetic `.dcm` with known values (native 12-bit, signed 12-bit sign extension, RLE, JPEG-LS, multi-frame and `frames a:b`), a variable overridden at open, a `\` path, a non-ASCII folder; the crc of a `<dicom>` (RLE, JPEG-LS, `frames`, signed) and a `.dcm` that no longer matches its crc (`badCRC`) |
-| `tests/try_*.m`, `convert_study.m` | real series and a whole study (not regression tests: they depend on `d:\DICOMS`) |
-| `tests/dll_selftest.m` | a hand-made `.i3d` read through `calllib` (no `@I3D`, no writer): grids, transform, data with a `<missing>` and its fill, rescale/window, and the right error id for a bad file |
+| `tests/dll_selftest.m` | a hand-made `.i3d` read with `read_I3D` (no writer): grids, transform, data with a `<missing>` and its fill, the `<missing>` box by the API, and the right error id for a bad file; and the writer's row comments |
 
 ---
 
@@ -661,10 +655,10 @@ Found by the audit of 2026-10-13 (`AUDIT_2026-10-13.md`, which has the details).
 
 ## 14. The container `.mi3d` (decided 2026-10-24)
 
-**Implemented** (2026-10-24): `write_MI3D`, `append_MI3D`, `remove_MI3D`, `read_MI3D` (MATLAB), `i3d::Container` and the C API, the Python reference reader. One file that holds several `.i3d` files (the series of a study, say), each byte for byte as it was written, so that any one of them can be opened without reading the others.
+**Implemented** (2026-10-24): `i3d::Container` and the C API (`mi3d.dll`), the Python reference reader. The MATLAB functions (`write_MI3D`, `append_MI3D`, `remove_MI3D`, `read_MI3D`) were removed on 2026-11-04 with the rest of the MATLAB layer; what this section says about them is how they behaved. One file that holds several `.i3d` files (the series of a study, say), each byte for byte as it was written, so that any one of them can be opened without reading the others.
 
 ```
-MI3D 0.1  # write_MI3D 2026-10-24, 9 stacks
+MI3D  # write_MI3D 2026-10-24, 9 stacks
 i3d(1) = <i3d @0:4355291>         # 001.Ax FIESTA ungated (AX).i3d [ 512 x 512 x 27 x 1 ]
 i3d(2) = <i3d @4355330:9917404>   # 002.SA cine (SA).i3d [ 256 x 256 x 12 x 30 ]
 i3d(3) = <missing>
@@ -680,7 +674,7 @@ info.InstitutionName = "..."
 #                                     (8192 bytes of reserve: a comment line of spaces)
 ---
 ****** # 001.Ax FIESTA ungated (AX).i3d [ 512 x 512 x 27 x 1 ]
-I3D 0.1  # write_I3D ...                    <- stack 1, byte for byte
+I3D  # write_I3D ...                        <- stack 1, byte for byte
 ...
 ++++++ # 001.Ax FIESTA ungated (AX).i3d
 ****** # 002.SA cine (SA).i3d [ 256 x 256 x 12 x 30 ]
@@ -690,8 +684,8 @@ I3D 0.1  # write_I3D ...                    <- stack 1, byte for byte
 
 ### 14.1 Layout and header
 
-- Extension `.mi3d`. The file starts with exactly `MI3D 0.1` (nothing before it, as in [section 1](#1-file-layout)), optionally followed by a comment. The header is UTF-8 text lines up to the first `---` line; the binary section follows, and **all offsets are relative to the start of the binary section**. The rules of [section 2](#2-header-grammar) apply to the header (comments, literals, continuation lines, CRLF, UTF-8, a repeated key is `badHeader`).
-- The container knows three keys: `i3d(n)`, `header` and `info.*`. Any other key is ignored, as an unknown key in an `.i3d`. In particular `X`, `data`, `aux.*` mean nothing in a container.
+- Extension `.mi3d`. The file starts with exactly `MI3D`, without a version (nothing before it, as in [section 1](#1-file-layout)), optionally followed by whitespace and a comment; anything else after it (`MI3D 0.1`) is `badMagic`. The header is UTF-8 text lines up to the first `---` line; the binary section follows, and **all offsets are relative to the start of the binary section**. The rules of [section 2](#2-header-grammar) apply to the header (comments, literals, continuation lines, CRLF, UTF-8, a repeated key is `badHeader`).
+- The container knows three keys: `i3d(n)`, `header` and `info.*`. Any other key is ignored, as an unknown key in an `.i3d`. In particular `X`, `data`, `thumbnail` mean nothing in a container.
 - **[OPEN]** an `MI3Db` variant (the whole header of the container hidden, as I3Db). Not proposed for now: the `<hidden>` part ([14.3](#143-the-summary-info-and-the-hidden-part)) covers what the container hides.
 
 ### 14.2 Members: `i3d(n)`
@@ -728,13 +722,13 @@ The header is at the start, so a header that grew would move the whole binary se
 
 | | list | open member n |
 |---|---|---|
-| MATLAB | `C = read_MI3D(f)`: `N`, `present`, `offset`/`length` (in the file), `tag` (from the comments), the summary `INFO`, `header`, `entries` | `I = read_MI3D(f, n, ...)` — the options of `read_I3D` (also `read_I3D(f, 'Member', n)`); `[]` for a hole |
+| MATLAB | none since 2026-11-04 (it was `read_MI3D`); `mi3d.dll` can be called with `calllib` like `i3d.dll` | — |
 | C | `mi3d.dll` (`mi3d_c.h`): `mi3d_open` / `mi3d_count` / `mi3d_present` / `mi3d_range` / `mi3d_tag` / `mi3d_entry_*` / `mi3d_header` (`i3d::Container` in C++) | `mi3d_range(m, n, &offset, &length)`, then `i3d_open_window(path, offset, length, nvars, names, values)` of `i3d.dll` → an `i3d_file`, as `i3d_open` |
 | Python | `read_mi3d(path)` (`tests/read_i3d.py`), `MI3DFile` (`tests/i3d_ctypes.py`, over `mi3d.dll`) | `read_mi3d(path, n)` → as `read_i3d`, `None` for a hole |
 
 A member is read through its WINDOW of the file: the C++ core opens the container, checks the member, and reads it as a file of `length` bytes that starts at `offset`. An `.mi3d` opened as an `.i3d` is `badMagic` (with a hint), and an `.i3d` opened as an `.mi3d` too.
 
-Errors: `badMagic` (not `MI3D 0.1`), `badSubscript`, `badIndex`, `missingMember`, and those of the member itself.
+Errors: `badMagic` (not `MI3D`), `badSubscript`, `badIndex`, `missingMember`, and those of the member itself.
 
 MEASURED: `tests/check_mi3d.py` (both readers on hand-made containers: text, `<hidden>` and I3Db members, holes, `<missing>`, lines in any order, `@a+n`, `@a:EOF`, anything between members, crc, CRLF, a `<hidden>` part holding a member line, an empty container; and bad: the magic, every bad subscript, a repeated n, other descriptors, past the end, a member that is a `.mi3d`, a window that cuts the member's header or its binary, a bad crc; a Lazy member resolved from the container's folder) and `tests/check_mi3d.m` (the four MATLAB functions: members byte for byte, the summary, append and remove in place with the binary untouched, 12 members appended one by one through a full rewrite, compaction, `'Renumber'`, `lazyFolder`; and every container written, read by the DLL and by Python).
 
@@ -756,6 +750,17 @@ MEASURED: `tests/check_mi3d.py` (both readers on hand-made containers: text, `<h
 | 2026-10-13 | canonical PNG thumbnails carry only IHDR, IDAT, IEND (imwrite's tIME made two writes of the same image differ) |
 | 2026-10-13 | **the header is UTF-8** (open item 1); **one rescale per stack**, the per-block `rescale` option removed (a writer refuses a stack whose rescale varies); **the first frame** as the one partial read (5.7: C API, MATLAB, Python); per-series and per-plane lists ONE VALUE PER ROW, each with its series / its block of data in a comment |
 | 2026-10-14 | **the `crc` is of the DECODED bytes**, no longer of the bytes in the file (section 4); a `<dicom>` block carries one (open item 4 decided); `<missing>` takes none; **the canonical form has a crc on every block and every aux**, and `write_I3D` loses its `'CRC'` option. Files written before this change with a crc on a compressed block (zlib, jpegls, png) now fail with `badCRC`: the ones in `tests/` were rewritten |
+| 2026-11-03 | **`i3d_set_variable( w , name , value )`** replaces the writer's `DicomDir` option: it writes `$NAME$ = "value"` (any name of `[A-Za-z0-9_]`, always in the hidden part), with or without Lazy; with Lazy, `DICOMDIR` is the root of the references (not given: the common root). So an `info.*` can cite a variable, e.g. `info.planes.Filename = "$DICOMDIR$/x.dcm"` (one row per plane, `exampleDICOMS/my_export_to_i3d.m`). Variables are still replaced only inside descriptor paths: in an `info.*` value `$DICOMDIR$` is text, for the caller to resolve |
+| 2026-11-03 | **`thumbnail` is a key of its own; `aux.*` is gone**: the file says `thumbnail = <png uint8 {..} @a:b crc ..>` (section 7), uint8 grey, one per file. `aux.NAME` is no longer part of the format (an unknown key, ignored). The reader's C API `i3d_aux_count/name/shape/type/read` becomes `i3d_thumbnail_shape( f , &ndims , dims )` (ndims 0: no thumbnail) and `i3d_thumbnail_read( f , out , nbytes )`; C# `AuxNames`/`ReadAux` become `ReadThumbnail()`; Python `I['aux']` becomes `I['thumbnail']` |
+| 2026-11-03 | **one thumbnail, `aux.thumbnail`**: the writer's `i3d_add_aux` is replaced by `i3d_set_thumbnail( w , data , type , ndims , dims )` (uint8 grey, otherwise `badInput`; given again, it replaces the first); `write_I3D` writes `I.INFO.thumbnail` and `read_I3D` gives it back there. DICOMstackCollect makes only that one by default (`'thumbnailIJK'` for the three views; `'onlyK'` is gone). Readers still read any `aux.NAME` |
+| 2026-11-05 | **the tests, back on the current API**: `check_roundtrip.m` rewritten over the DLL's writer (`calllib`), with RGB thumbnails, `info.*` read by the three readers (`$$`, a `$DICOMDIR$` path, a lone `$`), determinism, `i3d_rewrite` text ↔ I3Db and a path of 300 characters; `dll_selftest.m`, `check_num2str.m` (`i3d_num2str`) and `check_dicom.m` on `read_I3D`; the MATLAB tests of what is gone (`check_mi3d.m`, `try_*.m`, `convert_study.m`, `probe_jpll.m`) removed. The Python reference gives `I['info']` / `I['info_errors']` as the DLL (section 2: variables in `info.*`), `i3d_ctypes.py` binds `i3d_info_*`, C# gains `Info` / `InfoErrors`, and `tests/make_cs_refs.py` (the lost `make_refs.py`) makes the C# tests run again: 2 392 checks. Section 7: only `PatientName` is written as `Family^Given`; the other person names go by `uneval` |
+| 2026-11-05 | **variables are replaced in the strings of `info.*` too** (section 2), with the same rules as in a path: `$$` is a literal `$`, and a lone `$` or an undefined variable is `badVariable` for THAT info (the file still opens). `info.planes.Filename = "$DICOMDIR$/x.dcm"` reads as the real path, also with a `$DICOMDIR$` given at open. `write_I3D` writes every `$` of an info string as `$$`. Files written before with a `$` in an info string read that info as an error. The reader's C API gains `i3d_info_count/key/type/length/numbers/text` (type `numbers`, `text`, `other` or `error`), so a caller no longer parses `i3d_entry_value`. MEASURED (the 626 info strings of `exampleDICOMS` against an independent decoder; synthetic `$$`, lone `$`, undefined variable, `i3d_open_vars`) |
+| 2026-11-05 | **MATLAB without thunk**: `matlab\` holds `i3d.dll` and `i3d_proto.m` only; the prototype calls the DLL with calltype `cdecl` (not documented by MathWorks for 64 bits; MEASURED on R2022a). calllib then takes at most 6 arguments, so `i3d_add_info_rows_numbers` loses `integer` (all-integer rows are written as integers) and `cpp\matlab_proto.m` fails the build if a function takes more. The reader's `i3d_grid_length/copy( f , axis , ... )` become `i3d_Xgrid_length( f )` / `i3d_Xgrid_copy( f , out , n )` and the same for Y Z T |
+| 2026-11-04 | **RGB thumbnails**: `thumbnail = <png uint8 {rows cols 3 frames}>`, ONE 8-bit RGB PNG with the frames side by side (sections 4, 7, 9); `i3d_set_thumbnail` takes uint8 `{rows cols 3 frames}` and the readers (C++, Python) give it back. Grey thumbnails are unchanged. MEASURED (`tests/dll_selftest.m` and a roundtrip of `{r c}`, `{r c 1 f}`, `{r c 3}`, `{r c 3 f}`) |
+| 2026-11-04 | **long paths on Windows**: the C++ core opens, renames and deletes a path of 200 characters or more through `\\?\` (absolute), so `MAX_PATH` (260, with the `.partNNNN` temporary of the atomic write) no longer cuts it. MEASURED (335 characters absolute, 254 relative) |
+| 2026-11-03 | **no version in the magic**: the first line is `I3D` (`MI3D` for the container), optionally with a comment; `I3D 0.1` and anything else after the magic is `badMagic`, so files written before are no longer read (section 1, open item 12) |
+| 2026-11-03 | **no first-line comment by default**: the writer writes `I3D  # text` only for an `i3d_add_comment( w , sprintf('\btext') )` given before any piece, and adds nothing to it (the size of data and the default `i3d <date>` are gone); the option `Comment` of `i3d_set_option` is gone |
+| 2026-11-03 | **`rescale` and `window` removed from the format** (section 6): no keys, no `i3d_set_rescale` / `i3d_set_window` / `i3d_rescale` / `i3d_window`, no `Rescale` / `Window` in C#, no `INFO.rescale` / `INFO.window` / `ImageTransform` from `read_I3D`. A `rescale` or `window` line in an older file is an unknown key, ignored. `write_I3D` writes the DICOM's Rescale*/Window* to `info.*` like any other attribute, and `write_I3D:rescaleNotCommon` is gone |
 | 2026-10-30 | **the writer hides per entry, nothing else**: `i3d_add_info_*( … , visible , … )` with 1 (visible) or 0 (hidden part); the options `Visible` and `HideKeys` of the C API, and `write_I3D 'HideKeys'`, are gone. What reading data needs is always visible, `$DICOMDIR$` always hidden; the titles and comments of the info section go with the entry that follows them. `i3d_add_comment( w , text )`: the line above the next piece given, or with a leading backspace at the end of the line of the last one. `i3d_set_Xgrid` … `i3d_set_Tgrid` replace `i3d_set_grid` |
 | 2026-10-25 | **one writer, in C++** (`cpp/i3d_write.cpp`, `i3d::Writer`, its C API in `i3d_c.h`): what `write_I3D.m` did -- the canonical form, the hidden part, Lazy references with their verification, I3Db, hide/show (`i3d_rewrite`) -- is now in `i3d.dll`; the container's writing (`mi3d_write`, `mi3d_append`, `mi3d_remove`, `mi3d_compact`) and reading, in a second DLL, `mi3d.dll`; `i3d.dll` opens a member by its window (`i3d_open_window`). **No MEX**: MATLAB loads the two DLLs with `loadlibrary` and calls them with `calllib`; its `.m` only translate an `@I3D` and its DICOMstack. MEASURED (233 files written both ways from the same `@I3D`, synthetic and the 9 series of `exampleDICOMS`, every option): the same header up to the offsets, the data blocks (zlib, jpegls) byte for byte, the same decoded content; only the thumbnails' PNG bytes differ (lodepng, not imwrite). The DLLs are built with `/DNDEBUG` (without it CharLS was 1.6× slower) |
 | 2026-10-24 | **section 14: the container `.mi3d`**: `i3d(n) = <i3d @a:b>`, members by number with holes, a summary `info.*` (an I3Db member hides all its own), its `<hidden>` block always last, a reserve in the header to add and remove members without rewriting the file. Implemented: `write_MI3D` / `append_MI3D` / `remove_MI3D` / `read_MI3D`, `i3d::Container` and its C API, `read_mi3d` in Python; the C++ core reads any file through a window. Tests `check_mi3d.py`, `check_mi3d.m`. The Python reader now checks that a `<png>` aux is inside the file (a PNG cut before its IEND decoded anyway) |

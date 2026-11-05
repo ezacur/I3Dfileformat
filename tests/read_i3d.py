@@ -10,6 +10,12 @@
 #   I['transform']                   -> 4x4
 #   I['data']                        -> ndarray (i,j,k,t[,c...]), order='F'
 #   I['entries']                     -> todas las entradas, crudas
+#   I['info']                        -> los info.* interpretados, por su nombre sin
+#                                       'info.': numeros -> lista de float; textos ->
+#                                       str (uno) o lista de str, con las $VARIABLES$
+#                                       sustituidas; otra cosa -> el texto crudo
+#   I['info_errors']                 -> los info.* que no se pueden leer (un $ suelto,
+#                                       una variable que no existe): nombre -> motivo
 #
 #   C = read_mi3d('estudio.mi3d')      un contenedor (SPEC 14): C['N'], C['members']
 #   I = read_mi3d('estudio.mi3d', 2)   su miembro 2, como read_i3d; None si es un hueco
@@ -108,18 +114,19 @@ ENTRY = re.compile(r'^([A-Za-z0-9_.]+|\$[A-Za-z0-9_]+\$)(?:\[[^\]]*\])?(\([^)]*\
 
 def _known(k):
     # las claves que v0 interpreta (SPEC 2-7); el resto son desconocidas
-    return k in ('X', 'Y', 'Z', 'T', 'transform', 'rescale', 'window', 'fill', 'data', 'header') or \
-           k.startswith(('$', 'aux.', 'info.'))
+    return k in ('X', 'Y', 'Z', 'T', 'transform', 'fill', 'data', 'header', 'thumbnail') or \
+           k.startswith(('$', 'info.'))
 
-def _entries(text, magic='I3D 0.1'):
-    # magic: la primera linea de la cabecera, 'I3D 0.1' (o 'MI3D 0.1', SPEC 14);
+def _entries(text, magic='I3D'):
+    # magic: la primera linea de la cabecera, 'I3D' (o 'MI3D', SPEC 14);
     # None, el texto de una parte <hidden> (SPEC 1.2), que no la lleva
     lines = text.split('\n')
     if magic:
-        # EMPIEZA por 'I3D 0.1', sin nada delante (SPEC 1: los 4 primeros bytes
-        # son la firma), y puede seguir un comentario: 'I3D 0.1  # ...'
+        # ES 'I3D', sin nada delante ni version (SPEC 1), y puede seguir un
+        # comentario: 'I3D  # ...'. 'I3D 0.1', 'I3D 2'... son badMagic
         l0 = lines[0].rstrip('\r')
-        if not l0.startswith(magic) or _strip_comment(l0[len(magic):]).strip(): raise I3DError('badMagic: bad magic: %r' % lines[0])
+        rest = l0[len(magic):]
+        if not l0.startswith(magic) or (rest and not rest[0].isspace()) or _strip_comment(rest).strip(): raise I3DError('badMagic: bad magic: %r' % lines[0])
         lines = lines[1:]
     E = []
     for ln in lines:
@@ -266,7 +273,6 @@ def _descriptor(val):
             if not 1 <= a <= b: raise I3DError('badDescriptor: frames is a:b with 1 <= a <= b, not %r' % f)
             d['frames'] = (a, b); i += 1
         # (no hay 'order': los bytes van SIEMPRE en i j k t c -- SPEC 5.3)
-        # (ni 'rescale' por bloque: uno para todo el stack, la clave rescale -- SPEC 6)
         else: raise I3DError('unknown descriptor token %r' % (t,))
         i += 1
     if 'frames' in d and d['encoding'] != 'dicom': raise I3DError('badDescriptor: frames is for <dicom> only: ' + val)
@@ -288,33 +294,54 @@ def _jpegls_near(b):
         p += 2 + L
     raise I3DError('badBlock: <jpegls> has no SOS')
 
-def _resolve(p, variables, i3dpath):
+def _substitute(p, variables, what='path'):
     # $NOMBRE$ -> su valor (los del fichero, o los que se pasan al abrir, que
     # mandan), que entra TAL CUAL; $$ -> un $ literal; un $ sin pareja, error
-    # (SPEC 2). Una ruta relativa, respecto al directorio del .i3d
+    # (SPEC 2). En las rutas de los descriptores y en los textos de info.*
     out, i = [], 0
     while i < len(p):
         if p[i] != '$': out.append(p[i]); i += 1; continue
         if p[i + 1:i + 2] == '$': out.append('$'); i += 2; continue
         j = p.find('$', i + 1)
-        if j < 0: raise I3DError('badVariable: unclosed $ in path %r (a literal $ is $$)' % p)
+        if j < 0: raise I3DError('badVariable: unclosed $ in %s %r (a literal $ is $$)' % (what, p))
         name = p[i:j + 1]
-        if name not in variables: raise I3DError('badVariable: undefined variable ' + name)
+        if name not in variables: raise I3DError('badVariable: undefined variable %s in %s %r' % (name, what, p))
         out.append(variables[name]); i = j + 1
-    p = ''.join(out).replace('\\', '/')
+    return ''.join(out)
+
+def _info(v, variables, key):
+    # un info.* (SPEC 7): SOLO cadenas -> sus textos, con las variables
+    # sustituidas (str si es una, lista si son varias); SOLO numeros -> lista de
+    # float; otra cosa -> el texto crudo. Como la DLL (i3d_info_*)
+    v = v.strip()
+    try: T = _string_tokens(v)
+    except I3DError: T = None
+    if T and all(isinstance(t, tuple) and t[0] == '"' for t in T):
+        s = [_substitute(t[1], variables, key) for t in T]
+        return s[0] if len(s) == 1 else s
+    toks = v.split()
+    if toks and not any('_' in t for t in toks):        # float() acepta '1_000'; la DLL, no
+        try: return [float(t) for t in toks]
+        except ValueError: pass
+    return v
+
+def _resolve(p, variables, i3dpath):
+    # las variables, y una ruta relativa, respecto al directorio del .i3d
+    p = _substitute(p, variables).replace('\\', '/')
     if not (re.match(r'^[A-Za-z]:/', p) or p.startswith('/')):
         p = os.path.join(os.path.dirname(os.path.abspath(i3dpath)), p)
     return os.path.normpath(p)
 
-def _png_aux(raw, b0, d, name):
-    # SPEC 7: un aux uint8 {r c} o {r c 1 f} es UNA imagen PNG gris de 8 bits de
+def _png_thumb(raw, b0, d, name):
+    # SPEC 7: un thumbnail uint8 {r c} o {r c 1 f} es UNA imagen PNG gris de 8 bits de
     # r filas y c*f columnas, los frames uno al lado de otro; en orden columna es
-    # el array {r c 1 f}. Se decodifica con imagecodecs (otra implementacion que
-    # lodepng)
+    # el array {r c 1 f}. {r c 3 f}: una PNG RGB de 8 bits igual. Se decodifica con
+    # imagecodecs (otra implementacion que lodepng)
     import imagecodecs
     s = d['shape']
-    if d.get('type') != 'uint8' or len(s) < 2 or (len(s) > 2 and s[2] != 1) or any(v != 1 for v in s[4:]):
-        raise I3DError('badDescriptor: <png> holds uint8 {rows cols} or {rows cols 1 frames}: ' + name)
+    if d.get('type') != 'uint8' or len(s) < 2 or (len(s) > 2 and s[2] not in (1, 3)) or any(v != 1 for v in s[4:]):
+        raise I3DError('badDescriptor: <png> holds uint8 {rows cols}, {rows cols 1 frames} or {rows cols 3 frames}: ' + name)
+    nch = s[2] if len(s) > 2 else 1;  nf = s[3] if len(s) > 3 else 1
     L = d['length']
     if L is None: raise I3DError('png needs a length: ' + name)
     if L == 'EOF': L = len(raw) - (b0 + d['offset'])
@@ -325,11 +352,15 @@ def _png_aux(raw, b0, d, name):
     # gris de 8 bits y nada mas: la cabecera IHDR (bit depth, colour type) a mano
     if fb[:8] != b'\x89PNG\r\n\x1a\n' or fb[12:16] != b'IHDR': raise I3DError('badBlock: not a PNG: ' + name)
     w, h = struct.unpack('>II', fb[16:24]);  bit, ct = fb[24], fb[25]
-    if bit != 8 or ct != 0: raise I3DError('badBlock: <png> must be 8-bit grey, not colour type %d at %d bits: %s' % (ct, bit, name))
+    want = 2 if nch == 3 else 0                         # colour type PNG: 0 gris, 2 RGB
+    if bit != 8 or ct != want: raise I3DError('badBlock: <png> must be 8-bit %s, not colour type %d at %d bits: %s' % ('RGB' if nch == 3 else 'grey', ct, bit, name))
     img = imagecodecs.png_decode(fb)
-    W = s[1] * (s[3] if len(s) > 3 else 1)
-    if img.shape != (s[0], W): raise I3DError('badBlock: <png> is %s, {shape} needs %dx%d: %s' % (img.shape, s[0], W, name))
-    a = np.reshape(img, s, order='F')
+    W = s[1] * nf
+    if img.shape != ((s[0], W, 3) if nch == 3 else (s[0], W)): raise I3DError('badBlock: <png> is %s, {shape} needs %dx%d: %s' % (img.shape, s[0], W, name))
+    if nch == 3:   # (r, f*c+x, ch) -> {r c 3 f}
+        a = img.reshape(s[0], nf, s[1], 3).transpose(0, 2, 3, 1).reshape(s)
+    else:
+        a = np.reshape(img, s, order='F')
     _crc(d, a.tobytes(order='F'), name)                 # de los pixeles, en orden columna
     return a
 
@@ -399,6 +430,11 @@ def _read(raw, path, variables):
         if len(t) != 1 or not (isinstance(t[0], tuple) and t[0][0] == '"'): raise I3DError('%s must be a quoted string' % k)
         V[k] = t[0][1]
     V.update({('$%s$' % k.strip('$')): v for k, v in (variables or {}).items()})
+    I['info'], I['info_errors'] = {}, {}
+    for k, _, v in E:
+        if not k.startswith('info.'): continue
+        try: I['info'][k[5:]] = _info(v, V, k)
+        except I3DError as e: I['info_errors'][k[5:]] = str(e)
     for g in 'XYZT':
         e = [x for x in E if x[0] == g]
         if len(e) != 1: raise I3DError('need exactly one %s' % g)
@@ -412,15 +448,6 @@ def _read(raw, path, variables):
         elif len(v) == 12: A[:3, :] = np.array(v).reshape(3, 4)
         else: raise I3DError('transform needs 3 or 12 numbers, not %d' % len(v))
     I['transform'] = A
-    # rescale = SLOPE INTERCEPT (default 1 0), window = CENTER WIDTH (SPEC 6):
-    # dos numeros cada una, o el fichero no vale
-    I['rescale'], I['window'] = (1.0, 0.0), None
-    for key, label in (('rescale', 'SLOPE INTERCEPT'), ('window', 'CENTER WIDTH')):
-        e = [x for x in E if x[0] == key]
-        if not e: continue
-        v = _numbers(e[0][2].split(), key)
-        if len(v) != 2: raise I3DError('badHeader: %s = %s' % (key, label))
-        I[key] = tuple(v)
 
     ext = [I['X'].size, I['Y'].size, I['Z'].size, I['T'].size]
     blocks = []
@@ -428,8 +455,8 @@ def _read(raw, path, variables):
         if name != 'data': continue
         ss = _subs(sub) or []
         d = _descriptor(val)
-        # <png> y <gif> son de aux (SPEC 4); <hidden>, de la clave header (SPEC 1.2)
-        if d['encoding'] in ('png', 'gif'): raise I3DError('badDescriptor: <%s> is for aux only, not for a data block' % d['encoding'])
+        # <png> y <gif> son del thumbnail (SPEC 4); <hidden>, de la clave header (SPEC 1.2)
+        if d['encoding'] in ('png', 'gif'): raise I3DError('badDescriptor: <%s> is for the thumbnail only, not for a data block' % d['encoding'])
         if d['encoding'] == 'hidden': raise I3DError('badDescriptor: <hidden> is for the key header only')
         # SPEC 5.2: si falta i, j o k vale ':'; si falta t vale 1; un componente
         # que falta tambien vale 1. Asi  data = <...>  es data(:,:,:,1)
@@ -552,14 +579,18 @@ def _read(raw, path, variables):
     if ncd == 0: data = data.reshape(ext, order='F')
     I['data'] = data
 
-    # aux.NAME en raw/zlib/png: el array con su {shape}, en orden columna (SPEC 7)
-    I['aux'] = {}
+    # el thumbnail en raw/zlib/png: uint8 {r c}, {r c 1 f} o {r c 3 f}, en orden columna
+    # (SPEC 7); None si no hay
+    I['thumbnail'] = None
     for name, sub, val in E:
-        if not name.startswith('aux.'): continue
+        if name != 'thumbnail': continue
         d = _descriptor(val)
         if d['encoding'] not in ('raw', 'zlib', 'png') or 'shape' not in d: continue
+        s = d['shape']
+        if d['type'] != 'uint8' or not (2 <= len(s) <= 4) or (len(s) >= 3 and s[2] not in (1, 3)):
+            raise I3DError('badDescriptor: the thumbnail is uint8 {rows cols}, {rows cols 1 frames} or {rows cols 3 frames}, not ' + val)
         if d['encoding'] == 'png':
-            I['aux'][name[4:]] = _png_aux(raw, b0, d, name)
+            I['thumbnail'] = _png_thumb(raw, b0, d, name)
             continue
         adt = np.dtype(TYPES[d['type']])
         n = int(np.prod(d['shape'])) * adt.itemsize
@@ -576,7 +607,7 @@ def _read(raw, path, variables):
         buf = fb if d['encoding'] == 'raw' else zlib.decompress(fb)
         if len(buf) != n: raise I3DError('%s has %d bytes, expected %d' % (name, len(buf), n))
         _crc(d, buf, name)
-        I['aux'][name[4:]] = np.frombuffer(buf, dtype=adt).reshape(d['shape'], order='F')
+        I['thumbnail'] = np.frombuffer(buf, dtype=adt).reshape(d['shape'], order='F')
     return I
 
 # ====================================================================== .mi3d
@@ -602,7 +633,7 @@ def read_mi3d(path, n=None, variables=None):
     return _read(m, path, variables)
 
 def _container(raw):
-    if raw[:4] in (b'I3Db', b'I3D '): raise I3DError('badMagic: an .i3d, not a .mi3d container')
+    if raw[:3] == b'I3D' and raw[3:4] in (b'b', b' ', b'\t', b'\r', b'\n'): raise I3DError('badMagic: an .i3d, not a .mi3d container')
     # la cabecera, solo en texto: hasta la PRIMERA linea que es exactamente ---
     pos = 0
     while True:
@@ -612,7 +643,7 @@ def _container(raw):
         if nl < 0: raise I3DError('badHeader: no terminator line ---')
         pos = nl + 1
     text, b0 = _utf8(raw[:pos]), min(end + 1, len(raw))
-    E = _expand_hidden(_entries(text, magic='MI3D 0.1'), raw, b0)
+    E = _expand_hidden(_entries(text, magic='MI3D'), raw, b0)
     once = set()
     for k, sub, _ in E:
         if k == 'i3d' or sub is not None: continue

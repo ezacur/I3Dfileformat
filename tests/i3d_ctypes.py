@@ -33,14 +33,19 @@ def _lib():
     L.i3d_first_frame_bytes.restype = C.c_size_t;  L.i3d_first_frame_bytes.argtypes = [C.c_void_p]
     L.i3d_read_first_frame.argtypes = [C.c_void_p, C.c_void_p, C.c_size_t]
     L.i3d_missing_count.argtypes = [C.c_void_p]
-    L.i3d_aux_count.argtypes = [C.c_void_p]
-    L.i3d_aux_name.restype = C.c_char_p;        L.i3d_aux_name.argtypes = [C.c_void_p, C.c_int]
-    L.i3d_aux_shape.argtypes = [C.c_void_p, C.c_char_p, C.POINTER(C.c_int), C.POINTER(C.c_int64), C.POINTER(C.c_char_p)]
-    L.i3d_aux_read.argtypes = [C.c_void_p, C.c_char_p, C.c_void_p, C.c_size_t]
+    L.i3d_thumbnail_shape.argtypes = [C.c_void_p, C.POINTER(C.c_int), C.POINTER(C.c_int64)]
+    L.i3d_thumbnail_read.argtypes = [C.c_void_p, C.c_void_p, C.c_size_t]
     P3 = [C.POINTER(C.c_char_p)] * 3
     L.i3d_entry_count.argtypes = [C.c_void_p]
     L.i3d_entry.argtypes = [C.c_void_p, C.c_int] + P3
     L.i3d_header.restype = C.c_char_p;          L.i3d_header.argtypes = [C.c_void_p]
+    # los info.* interpretados por la DLL (SPEC 7)
+    L.i3d_info_count.argtypes = [C.c_void_p]
+    for f in ('key', 'type'):
+        g = getattr(L, 'i3d_info_' + f);  g.restype = C.c_char_p;  g.argtypes = [C.c_void_p, C.c_int]
+    L.i3d_info_length.restype = C.c_int64;      L.i3d_info_length.argtypes = [C.c_void_p, C.c_int]
+    L.i3d_info_numbers.argtypes = [C.c_void_p, C.c_int, C.POINTER(C.c_double), C.c_int64]
+    L.i3d_info_text.restype = C.c_char_p;       L.i3d_info_text.argtypes = [C.c_void_p, C.c_int, C.c_int64]
     # un miembro de un .mi3d: los bytes [offset, offset+length) del fichero
     L.i3d_open_window.restype = C.c_void_p
     L.i3d_open_window.argtypes = [C.c_char_p, C.c_int64, C.c_int64, C.c_int, C.POINTER(C.c_char_p), C.POINTER(C.c_char_p)]
@@ -121,16 +126,35 @@ class I3DFile:
         self._check(_L.i3d_read_first_frame(self.h, out.ctypes.data_as(C.c_void_p), out.nbytes))
         return out
     def missing_count(self): return _L.i3d_missing_count(self.h)
-    def aux(self, name):
-        # None si no existe (como I.aux('thumbnailK') -> null de la libreria)
-        names = [_L.i3d_aux_name(self.h, a).decode() for a in range(_L.i3d_aux_count(self.h))]
-        if name not in names: return None
-        nd = C.c_int(); d = (C.c_int64 * 16)(); t = C.c_char_p()
-        self._check(_L.i3d_aux_shape(self.h, name.encode(), C.byref(nd), d, C.byref(t)))
-        out = np.empty(tuple(d[:nd.value]), dtype=NP[t.value.decode()], order='F')
-        self._check(_L.i3d_aux_read(self.h, name.encode(), out.ctypes.data_as(C.c_void_p), out.nbytes))
+    def thumbnail(self):
+        # None si el fichero no tiene (como I.thumbnail -> null de la libreria)
+        nd = C.c_int(); d = (C.c_int64 * 16)()
+        self._check(_L.i3d_thumbnail_shape(self.h, C.byref(nd), d))
+        if nd.value == 0: return None
+        out = np.empty(tuple(d[:nd.value]), dtype=np.uint8, order='F')
+        self._check(_L.i3d_thumbnail_read(self.h, out.ctypes.data_as(C.c_void_p), out.nbytes))
         return out
     def entries(self): return _entries(_L.i3d_entry_count, _L.i3d_entry, self.h)
+    def info(self):
+        # (info, errores), como read_i3d: info[nombre] -> lista de float, str o
+        # lista de str; errores[nombre] -> el motivo
+        I, err = {}, {}
+        for i in range(_L.i3d_info_count(self.h)):
+            k = _L.i3d_info_key(self.h, i).decode('utf-8')
+            t = _L.i3d_info_type(self.h, i).decode()
+            n = _L.i3d_info_length(self.h, i)
+            if t == 'numbers':
+                x = (C.c_double * n)()
+                self._check(_L.i3d_info_numbers(self.h, i, x, n))
+                I[k] = list(x)
+            elif t == 'text':
+                s = [_L.i3d_info_text(self.h, i, j).decode('utf-8') for j in range(n)]
+                I[k] = s[0] if n == 1 else s
+            elif t == 'other':
+                I[k] = _L.i3d_info_text(self.h, i, 0).decode('utf-8')
+            else:
+                err[k] = _L.i3d_last_error(self.h).decode('utf-8')
+        return I, err
     def header(self): return _L.i3d_header(self.h).decode('utf-8')
     def close(self):
         if self.h: _L.i3d_close(self.h); self.h = None

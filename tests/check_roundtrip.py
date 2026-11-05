@@ -39,7 +39,7 @@ def compare(get, R, want_thumb):
         want = np.asfortranarray(np.reshape(D, d.shape, order='F')[:, :, :, :1])
         if ff.shape != want.shape or ff.tobytes(order='F') != want.tobytes(order='F'):
             msgs.append('first frame')
-    th = get('thumbnailK')
+    th = get('thumbnail')
     if want_thumb and th is None:
         msgs.append('thumbnail missing')
     elif th is not None and (th.dtype != np.uint8 or th.tobytes(order='F') != np.reshape(R['TH'], th.shape, order='F').tobytes(order='F')):
@@ -48,14 +48,14 @@ def compare(get, R, want_thumb):
 
 def via_py(f):
     I = read_i3d(f)
-    return lambda k: I['aux'].get(k) if k.startswith('thumbnail') else None if k == 'first' else I[k]
+    return lambda k: I['thumbnail'] if k == 'thumbnail' else None if k == 'first' else I[k]
 
 def via_cpp(f):
     F = i3d_ctypes.I3DFile(f)
     def get(k):
         if k in 'XYZT': return F.grid(k)
         if k == 'transform': return F.transform()
-        if k.startswith('thumbnail'): return F.aux(k)
+        if k == 'thumbnail': return F.thumbnail()
         if k == 'first': return F.first_frame()
         return F.data()
     return get
@@ -88,8 +88,18 @@ for f in sorted(glob.glob(os.path.join(dn, '*.i3d'))):
         except Exception as e:
             # con el byte corrupto, que el lector LANCE tambien es detectarlo
             res[who] = 'ok(raised)' if enc == 'corrupt' else f'FAIL({type(e).__name__}: {e})'
+    # los info.* (SPEC 7): los dos lectores interpretan IGUAL -- numeros, textos
+    # con las $VARIABLES$ sustituidas, y los que no se pueden leer
+    res['info'] = '-'
+    if have_dll and enc not in ('corrupt', 'crcbad'):
+        try:
+            P = read_i3d(f)
+            ic, ec = i3d_ctypes.I3DFile(f).info()
+            res['info'] = 'ok' if (P['info'], set(P['info_errors'])) == (ic, set(ec)) else 'FAIL(info differs)'
+        except Exception as e:
+            res['info'] = f'FAIL({type(e).__name__}: {e})'
     bad = any(v.startswith('FAIL') for v in res.values())
     nbad += bad
-    print(f'  {"FAIL" if bad else "ok  "} {name:16s} {enc:7s}  py: {res["py"]:10s}  cpp: {res["cpp"]}')
+    print(f'  {"FAIL" if bad else "ok  "} {name:16s} {enc:7s}  py: {res["py"]:10s}  cpp: {res["cpp"]:10s}  info: {res["info"]}')
 print(f'{ncase} files, {nbad} failed')
 sys.exit(1 if nbad else 0)

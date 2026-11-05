@@ -21,6 +21,7 @@
 #include <array>
 #include <map>
 #include <stdexcept>
+#include <filesystem>
 
 namespace i3d {
 
@@ -62,6 +63,16 @@ struct Entry {                          // una entrada de la cabecera, cruda
   int line = 0;
 };
 
+// un info.* ya interpretado (SPEC 7), en el orden del fichero, visible u oculto
+struct Info {
+  std::string name;                     // la clave sin 'info.': "planes.Filename"
+  char kind = 'o';                      // 'n' numeros, 't' textos, 'o' otra cosa, 'e' error
+  std::vector<double> numbers;          // 'n'
+  std::vector<std::string> text;        // 't': sin escapes y con las $VARIABLES$ sustituidas
+                                        // 'o': UNO, el valor crudo
+  std::string err , err_id;             // 'e': una variable que no existe, un $ sin pareja
+};
+
 class File {
 public:
   // overrides: variables $NOMBRE$ -> valor que MANDAN sobre las del fichero (asi
@@ -92,16 +103,14 @@ public:
   const std::vector<Block> &blocks() const { return blocks_; }
   std::vector<const Block*> missing() const;
 
-  // rescale / window / fill
-  double slope() const { return slope_; }
-  double intercept() const { return intercept_; }
-  bool   has_window() const { return has_window_; }
-  double window_center() const { return wc_; }
-  double window_width() const { return ww_; }
+  // fill
 
-  // todo lo demas: info.*, aux.*, y claves que esta version no conoce
+  // todo lo demas: info.*, y claves que esta version no conoce
   const std::vector<Entry> &entries() const { return entries_; }
   const Entry *find( const std::string &key ) const;
+  // los info.* interpretados: numeros, o textos con las $VARIABLES$ ya sustituidas
+  // (las del fichero y las de overrides), como en las rutas de los descriptores
+  const std::vector<Info> &infos() const { return infos_; }
   // en claro, tambien si el fichero es I3Db, pero TAL CUAL: una parte <hidden>
   // (SPEC 1.2) sigue siendo su linea 'header = <hidden ...>'. Sus entradas, en
   // cambio, si estan en entries(), en el sitio de esa linea
@@ -109,11 +118,11 @@ public:
   bool    hidden() const { return hidden_; }                // SPEC 1.1
   int64_t binary_start() const { return b0_; }           // desde el inicio del fichero (o del miembro)
 
-  // aux.NAME: arrays auxiliares (thumbnails...). Nombres sin el 'aux.'
-  std::vector<std::string> aux_names() const;
-  Descriptor aux_descriptor( const std::string &name ) const;   // lanza si no existe
-  // aux en raw/zlib/png, con {shape} y tipo: los bytes decodificados (orden columna)
-  std::vector<uint8_t> read_aux( const std::string &name ) const;
+  // thumbnail (SPEC 7): si lo hay, su descriptor (lanza noThumbnail si no), y sus
+  // bytes decodificados, uint8 en orden columna {filas cols}, {filas cols 1 frames} o RGB {filas cols 3 frames}
+  bool has_thumbnail() const { return find( "thumbnail" ) != nullptr; }
+  Descriptor thumbnail_descriptor() const;
+  std::vector<uint8_t> read_thumbnail() const;
   // los bytes DECODIFICADOS de un bloque, y si lleva crc, comprobados (badCRC)
   std::vector<uint8_t> read_bytes( const Descriptor &d , size_t expected ) const;
 
@@ -135,18 +144,19 @@ private:
   std::vector<Block> blocks_;
   std::vector<int64_t> shape_;
   Type type_ = Type::none;
-  double slope_ = 1.0 , intercept_ = 0.0;
-  bool has_window_ = false;  double wc_ = 0.0 , ww_ = 0.0;
   bool has_fill_ = false;    double fill_ = 0.0;  int64_t ifill_ = 0;  std::string fill_text_;
+  std::vector<Info> infos_;
 
   void open_( const std::map<std::string,std::string> &overrides );
   void parse_header_();
+  void build_infos_();
+  std::string substitute_( const std::string &s0 , const std::string &what ) const;   // $VAR$ y $$
   void build_data_();
   void read_box_( const std::vector<Range> &W , void *out , size_t nbytes ) const;
 };
 
 // ====================================================================== .mi3d
-// El contenedor (SPEC 14): una cabecera 'MI3D 0.1' con i3d(n) = <i3d @a:b>, un
+// El contenedor (SPEC 14): una cabecera 'MI3D' con i3d(n) = <i3d @a:b>, un
 // resumen info.* y quiza una parte <hidden>; cada miembro es un .i3d completo.
 //
 //   i3d::Container C( "estudio.mi3d" );     // solo lee y valida la cabecera
@@ -196,7 +206,7 @@ private:
 //
 // La VISIBILIDAD (SPEC 1.2) la da cada add_info_*: visible 1, a la vista (texto
 // legible de la cabecera); 0, a la parte oculta (el bloque <hidden>). Lo que hace
-// falta para leer data (rejillas, transform, rescale, window, data, aux) va
+// falta para leer data (rejillas, transform, data, thumbnail) va
 // siempre a la vista, y $DICOMDIR$ siempre a la parte oculta.
 class Writer {
 public:
@@ -204,8 +214,6 @@ public:
   void set_grid( char axis , const double *v , size_t n );       // sin darla: 0 : 1 : n-1
   void set_transform( const double *rows16 );                     // 4x4 por filas; sin darla: eye(4)
   void set_data( const void *p , Type t , const std::vector<int64_t> &dims );   // i j k t c...
-  void set_rescale( double slope , double intercept , const std::string &comment );
-  void set_window( double center , double width , const std::string &comment );
 
   // info.KEY (KEY sin el 'info.'): una cadena, o una lista de numeros; comment, al
   // final de la linea ("" ninguno)
@@ -215,29 +223,35 @@ public:
   // (nullptr) y con nk*nt filas: una por PLANO (k la mas rapida), y el comentario
   // de cada una lo pone write(): el bloque de data de ese plano
   void add_info_rows_text( const std::string &key , const std::vector<std::string> &values , const std::vector<std::string> *comments , int visible );
-  void add_info_rows_numbers( const std::string &key , const double *v , size_t n , bool integer , const std::vector<std::string> *comments , int visible );
+  void add_info_rows_numbers( const std::string &key , const double *v , size_t n , const std::vector<std::string> *comments , int visible );   // todos enteros: como enteros
   // un comentario, EN EL SITIO donde se pide (la cabecera sale en el orden
   // canonico, no en el de las llamadas: el sitio es lo que se da antes o despues):
   //   "texto"    una linea '# texto' ENCIMA de lo SIGUIENTE que se de (rejilla,
-  //              transform, data, rescale, window, aux, info.*); si no se da nada
+  //              transform, data, thumbnail, info.*); si no se da nada
   //              mas, al final de la cabecera
   //   "\btexto"  '  # texto' al FINAL de la linea de lo ULTIMO que se dio (de una
-  //              entrada de varias lineas, la primera). '\b' es un BACKSPACE (char 8:
-  //              sprintf('\b...') en MATLAB)
+  //              entrada de varias lineas, la primera); si no se dio nada todavia,
+  //              al final de la PRIMERA linea, 'I3D  # texto'. '\b' es un BACKSPACE
+  //              (char 8: sprintf('\b...') en MATLAB)
   void add_comment( const std::string &text );
-  // aux.NAME: un thumbnail uint8 gris {filas cols} o {filas cols 1 frames}, como
-  // UNA imagen PNG. Otra cosa no se escribe: queda un comentario "skipped"
-  void add_aux( const std::string &name , const void *p , Type t , const std::string &tname , const std::vector<int64_t> &dims );
+  // thumbnail: uint8 gris {filas cols} o {filas cols 1 frames}, o RGB {filas cols 3 frames}, como UNA
+  // imagen PNG (los frames uno al lado de otro). Otra cosa es badInput. Uno solo:
+  // darlo otra vez lo reemplaza
+  void set_thumbnail( const void *p , Type t , const std::string &tname , const std::vector<int64_t> &dims );
   // 'Lazy' (SPEC 4): el plano (k,t), 1-based, es una REFERENCIA a un .dcm sin
   // perdida de un componente. path "" = el plano no tiene fichero: <missing> si
   // data es entera y ese plano es todo ceros; si no, se materializa
   void set_plane_ref( int64_t k , int64_t t , const std::string &path );
-  // Comment, Blocks (auto|volume|t), MaxBlockBytes, Hidden (0|1: I3Db),
+  // Blocks (auto|volume|t), MaxBlockBytes, Hidden (0|1: I3Db),
   // Lazy (0|1: un bloque por plano y $DICOMDIR$, aunque ningun plano sea una
   // referencia; con alguna set_plane_ref ya lo es),
-  // Verify (0|1, default 1: cada referencia se lee y tiene que dar su plano),
-  // DicomDir (el valor de $DICOMDIR$; default la raiz comun)
+  // Verify (0|1, default 1: cada referencia se lee y tiene que dar su plano)
   void set_option( const std::string &name , const std::string &value );
+  // $NOMBRE$ = "valor" (SPEC 2), NOMBRE de [A-Za-z0-9_]; va a la parte oculta. Lo
+  // citan las rutas de <dicom> y, como texto, los info.* ("$DICOMDIR$/x.dcm").
+  // Darla otra vez la reemplaza. Con Lazy, $DICOMDIR$ es la raiz de las
+  // referencias (sin darla: la raiz comun de los .dcm)
+  void set_variable( const std::string &name , const std::string &value );
   void write( const std::string &path ) const;
 
   struct Notes {                                 // los comentarios de add_comment de una pieza
@@ -257,24 +271,22 @@ private:
   std::vector<double> G_[4];  bool hasG_[4] = { false , false , false , false };
   double A_[16] = { 1,0,0,0 , 0,1,0,0 , 0,0,1,0 , 0,0,0,1 };
   std::vector<uint8_t> D_;  Type type_ = Type::none;  std::vector<int64_t> dims_;
-  bool hasR_ = false;  double slope_ = 1 , icpt_ = 0;  std::string rcom_;
-  bool hasW_ = false;  double wc_ = 0 , ww_ = 0;     std::string wcom_;
   std::vector<Item> info_;
-  struct Aux { std::string name , tname; Type t; std::vector<int64_t> dims; std::vector<uint8_t> v;  Notes notes; };
-  std::vector<Aux> aux_;
-  // add_comment: los comentarios de las piezas que no son de info_ ni de aux_, los
-  // que esperan a la siguiente pieza, y cual fue la ultima (para '\b')
-  enum Piece { NONE , GRID , TRANSFORM , DATA , RESCALE , WINDOW , AUX , INFO };
-  Notes nG_[4] , nA_ , nD_ , nR_ , nW_;
+  struct Thumb { std::vector<int64_t> dims; std::vector<uint8_t> v; };
+  bool hasTh_ = false;  Thumb th_;
+  // add_comment: los comentarios de las piezas que no son de info_, los que
+  // esperan a la siguiente pieza, y cual fue la ultima (para '\b')
+  enum Piece { NONE , GRID , TRANSFORM , DATA , THUMB , INFO };
+  Notes nG_[4] , nA_ , nD_ , nT_;
   std::vector<std::string> pend_;
   Piece last_ = NONE;  size_t lastI_ = 0;
   Notes &notes_( Piece p , size_t i );
   void took_( Piece p , size_t i = 0 );
   std::map<std::pair<int64_t,int64_t>,std::string> refs_;
-  std::string comment_;  bool hascomment_ = false;
+  std::string comment_;                          // el '  # ...' de la primera linea
   std::string blocks_ = "auto";  double maxb_ = 2147483647.0 - 8;
   bool hidden_ = false , verify_ = true , lazy_ = false;
-  std::string ddir_;
+  std::vector<std::pair<std::string,std::string>> vars_;   // set_variable, en orden
 };
 
 // La cabecera de src en claro y su binario byte a byte, a dst: oculta (I3Db,
@@ -292,6 +304,9 @@ namespace detail {
   void write_atomic( const std::string &path , const std::vector<Chunk> &chunks );
   std::vector<uint8_t> hide_block( const std::string &text );     // un bloque <hidden> (SPEC 1.2)
   std::string now_text();                                         // "2026-10-25 10:00:00"
+  // la ruta UTF-8 para abrir, renombrar o borrar; en Windows, una larga (>= 200)
+  // va con \\?\ y absoluta, que MAX_PATH (260) no la corte
+  std::filesystem::path fs_path( const std::string &utf8 );
 }
 
 } // namespace i3d
