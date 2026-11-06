@@ -397,24 +397,48 @@ static void check_utf8( const std::string &t , const std::string &what , int sig
   }
 }
 
+// un istream sobre bytes en memoria (un .i3d de Writer::encode): lo que el
+// lector hace con un ifstream (read, gcount, getline, seekg, tellg)
+namespace {
+struct MemBuf : std::streambuf {
+  explicit MemBuf( const std::vector<uint8_t> &v ){ char *p = (char*)v.data();  setg( p , p , p + v.size() ); }
+  pos_type seekoff( off_type o , std::ios_base::seekdir d , std::ios_base::openmode ) override {
+    char *p = d == std::ios_base::beg ? eback() : d == std::ios_base::cur ? gptr() : egptr();
+    if( o < eback() - p || o > egptr() - p ) return pos_type( off_type( -1 ) );
+    setg( eback() , p + o , egptr() );
+    return pos_type( gptr() - eback() );
+  }
+  pos_type seekpos( pos_type q , std::ios_base::openmode m ) override { return seekoff( off_type( q ) , std::ios_base::beg , m ); }
+};
+struct MemStream : std::istream {
+  MemBuf b;
+  explicit MemStream( const std::vector<uint8_t> &v ) : std::istream( nullptr ) , b( v ){ rdbuf( &b ); }
+};
+}
+
 // Un fichero se lee por una VENTANA [base, base+size): el fichero entero (base 0,
 // size -1: hasta el final) o un miembro de un .mi3d (SPEC 14). Todo lo que se
-// compara con "el tamano del fichero" se compara con size. Deja f en base
-static std::ifstream open_window( const std::string &path , int64_t base , int64_t &size ){
-  std::ifstream f( native_( path ) , std::ios::binary );
-  if( !f ) throw Error( "cannotOpen" , "cannot open '" + path + "'" );
-  f.seekg( 0 , std::ios::end );
-  const int64_t fsize = (int64_t)f.tellg();
+// compara con "el tamano del fichero" se compara con size. Deja f en base. mem:
+// los bytes, si el fichero esta en memoria (path es entonces solo su nombre)
+static std::unique_ptr<std::istream> open_window( const std::string &path , const std::vector<uint8_t> *mem , int64_t base , int64_t &size ){
+  std::unique_ptr<std::istream> f;
+  if( mem ) f.reset( new MemStream( *mem ) );
+  else {
+    f.reset( new std::ifstream( native_( path ) , std::ios::binary ) );
+    if( !*f ) throw Error( "cannotOpen" , "cannot open '" + path + "'" );
+  }
+  f->seekg( 0 , std::ios::end );
+  const int64_t fsize = (int64_t)f->tellg();
   if( size < 0 ) size = fsize - base;
   if( base < 0 || base > fsize || size < 0 || size > fsize - base )
     throw Error( "truncated" , "'" + path + "' ends before the bytes asked for" );
-  f.seekg( base );
+  f->seekg( base );
   return f;
 }
 
 // La cabecera en texto: hasta la PRIMERA linea que es exactamente --- (CR
 // opcional), sin salir de la ventana. b0: donde empieza el binario, desde base
-static std::string read_text_header( std::ifstream &f , int64_t size , const std::string &path , int64_t &b0 ){
+static std::string read_text_header( std::istream &f , int64_t size , const std::string &path , int64_t &b0 ){
   std::string line , text;  int64_t pos = 0;
   while( std::getline( f , line ) ){
     if( pos + (int64_t)line.size() > size ) break;            // se sale de la ventana
@@ -428,11 +452,11 @@ static std::string read_text_header( std::ifstream &f , int64_t size , const std
 
 // Los bytes [off, off+len) de la ventana, comprobados contra ella ANTES de
 // reservar. len LEN_EOF: hasta el final de la ventana
-static std::vector<uint8_t> read_window( const std::string &path , int64_t base , int64_t size , int64_t off , int64_t len , const std::string &what ){
+static std::vector<uint8_t> read_window( const std::string &path , const std::vector<uint8_t> *mem , int64_t base , int64_t size , int64_t off , int64_t len , const std::string &what ){
   if( len == Descriptor::LEN_EOF ) len = size - off;
   if( off < 0 || off > size || len < 0 || len > size - off ) throw Error( "truncated" , "the file ends inside " + what );
   int64_t s = -1;
-  std::ifstream f = open_window( path , base , s );
+  auto fp = open_window( path , mem , base , s );  std::istream &f = *fp;
   std::vector<uint8_t> buf( (size_t)len );
   f.seekg( base + off );
   f.read( (char*)buf.data() , (std::streamsize)len );
@@ -449,9 +473,15 @@ File::File( const std::string &path , const std::map<std::string,std::string> &o
   open_( overrides );
 }
 
+File::File( std::shared_ptr<const std::vector<uint8_t>> bytes , const std::string &name , const std::map<std::string,std::string> &overrides )
+  : path_( name ) , base_( 0 ) , size_( -1 ) , mem_( std::move( bytes ) ){
+  if( !mem_ ) throw Error( "badInput" , "no bytes" );
+  open_( overrides );
+}
+
 void File::open_( const std::map<std::string,std::string> &overrides ){
   const std::string &path = path_;
-  std::ifstream f = open_window( path , base_ , size_ );
+  auto fp = open_window( path , mem_.get() , base_ , size_ );  std::istream &f = *fp;
 
   char magic[4] = { 0 , 0 , 0 , 0 };
   f.read( magic , 4 );
@@ -644,7 +674,7 @@ static std::vector<Entry> parse_lines( const std::string &text , const char *mag
 // que se vuelca (i3d_header, i3dinfo --header, showI3Dfile) sigue sin mostrarla.
 // La ventana del fichero (base, size) y su binario (b0): la de un .i3d, la de un
 // miembro o la de un .mi3d (SPEC 14.3)
-static void expand_hidden( std::vector<Entry> &E , const std::string &path , int64_t base , int64_t size , int64_t b0 ){
+static void expand_hidden( std::vector<Entry> &E , const std::string &path , const std::vector<uint8_t> *mem , int64_t base , int64_t size , int64_t b0 ){
   size_t at = E.size();
   for( size_t q = 0 ; q < E.size() ; q++ ) if( E[q].key == "header" ){
     if( at != E.size() ) throw Error( "badHeader" , where( E[q].line ) + "repeated key 'header'" );
@@ -662,7 +692,7 @@ static void expand_hidden( std::vector<Entry> &E , const std::string &path , int
   if( d.offset > size - b0 || L < 0 || L > size - b0 - d.offset )
     throw Error( "truncated" , where( h.line ) + "the file ends inside the <hidden> part of the header" );
   if( L == 0 || (uint64_t)L > MAXH ) throw Error( "badHeader" , where( h.line ) + "implausible length of the <hidden> part of the header" );
-  std::vector<uint8_t> buf = read_window( path , base , size , b0 + d.offset , L , "the <hidden> part of the header" );
+  std::vector<uint8_t> buf = read_window( path , mem , base , size , b0 + d.offset , L , "the <hidden> part of the header" );
   uint32_t c = 0;
   const std::string text = unhide_inflate( std::move( buf ) , OBF_HIDDEN , where( h.line ) + "the <hidden> part of the header" , &c );
   check_utf8( text , "the <hidden> part of the header" , -1 );
@@ -676,7 +706,7 @@ static void expand_hidden( std::vector<Entry> &E , const std::string &path , int
 
 void File::parse_header_(){
   entries_ = parse_lines( header_ , "I3D" , +1 );
-  expand_hidden( entries_ , path_ , base_ , size_ , b0_ );
+  expand_hidden( entries_ , path_ , mem_.get() , base_ , size_ , b0_ );
 
   // claves sin ( ) aparecen una vez
   for( size_t a = 0 ; a < entries_.size() ; a++ ){
@@ -943,7 +973,7 @@ std::vector<uint8_t> File::decode_( const Descriptor &d , size_t expected ) cons
   };
   if( d.encoding == "raw" || d.encoding == "zlib" || d.encoding == "jpegls" || d.encoding == "png" ){
     int64_t fsize = size_;                                 // la ventana: el fichero o el miembro
-    std::ifstream f = open_window( path_ , base_ , fsize );
+    auto fp = open_window( path_ , mem_.get() , base_ , fsize );  std::istream &f = *fp;
     int64_t L = d.length;
     if( L == Descriptor::LEN_EOF ){                        // hasta el final del fichero
       L = fsize - ( b0_ + d.offset );
@@ -1396,7 +1426,7 @@ void File::read_first_frame( void *out , size_t nbytes ) const {
 // un .i3d completo que se lee por su ventana del fichero
 Container::Container( const std::string &path ) : path_( path ){
   size_ = -1;
-  std::ifstream f = open_window( path , 0 , size_ );
+  auto fp = open_window( path , nullptr , 0 , size_ );  std::istream &f = *fp;
   char magic[4] = { 0 , 0 , 0 , 0 };
   f.read( magic , 4 );
   if( f.gcount() == 4 && !std::memcmp( magic , "I3D" , 3 ) && std::strchr( "b \t\r\n" , magic[3] ) )
@@ -1405,7 +1435,7 @@ Container::Container( const std::string &path ) : path_( path ){
   header_ = read_text_header( f , size_ , path , b0_ );
   check_utf8( header_ , "'" + path + "'" , +1 );
   entries_ = parse_lines( header_ , "MI3D" , +1 );
-  expand_hidden( entries_ , path_ , 0 , size_ , b0_ );
+  expand_hidden( entries_ , path_ , nullptr , 0 , size_ , b0_ );
 
   // claves sin ( ) aparecen una vez (i3d lleva siempre la suya)
   for( size_t a = 0 ; a < entries_.size() ; a++ ){
@@ -1461,7 +1491,7 @@ void Container::window( int n , int64_t &base , int64_t &size ) const {
   const Member &m = member( n );
   base = b0_ + m.desc.offset;  size = m.length;
   // un nivel: un miembro no es otro contenedor
-  auto head = read_window( path_ , 0 , size_ , base , std::min<int64_t>( 4 , size ) , "member " + std::to_string( n ) );
+  auto head = read_window( path_ , nullptr , 0 , size_ , base , std::min<int64_t>( 4 , size ) , "member " + std::to_string( n ) );
   if( head.size() == 4 && !std::memcmp( head.data() , "MI3D" , 4 ) )
     throw Error( "badBlock" , where( m.line ) + "member " + std::to_string( n ) + " is a .mi3d: a container holds .i3d files only (one level)" );
   if( m.desc.has_crc ){
@@ -1469,7 +1499,7 @@ void Container::window( int n , int64_t &base , int64_t &size ) const {
     // el crc de un miembro es de sus bytes tal cual (es lo que el miembro ES).
     // Por tramos: un miembro puede ser de cientos de MB
     int64_t s = -1;
-    std::ifstream f = open_window( path_ , 0 , s );
+    auto fp = open_window( path_ , nullptr , 0 , s );  std::istream &f = *fp;
     f.seekg( base );
     std::vector<char> chunk( 1 << 20 );
     uLong c = crc32( 0L , Z_NULL , 0 );

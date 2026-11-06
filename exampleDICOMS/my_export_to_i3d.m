@@ -23,3 +23,15 @@ for TS = unique( DS.StudyInstanceUID_ ).'
     write_I3D( S , fname );
   end
 end
+
+
+%%
+
+for TS = unique( DS.StudyInstanceUID_ ).'
+  T = DS.byStudyInstanceUID( TS{1} );
+
+  mname = fixfilename( sprintf( '%s.%s.mi3d' , T(1).Person , T(1).StudyDescription ) );
+  while isfile( mname ), mname = regexprep( mname , '\.mi3d$','_.mi3d'); end
+
+  write_MI3D( T( order( [ T.SeriesNumber ] ) ) , mname );
+end

@@ -16,7 +16,7 @@ Implemented and tested (tests/, [section 12](#12-tests)):
 | language | files |
 |---|---|
 | C++ | `cpp/i3d.hpp` + `i3d.cpp` (the reader), `i3d_write.cpp` (THE writer of the canonical form), `i3d_c.h` (C API, the stable boundary for the wrappers): `build/i3d.dll`; `mi3d.hpp` + `mi3d.cpp` (the container: write, append, remove, compact) and `mi3d_c.h`: `build/mi3d.dll`; `i3dinfo.exe` |
-| MATLAB | no MEX, no thunk: `matlab/` holds `i3d.dll` and its prototype `i3d_proto.m`; `write_I3D.m` and `read_I3D.m` load it themselves with `loadlibrary` (once) and call it with `calllib`. `buildI3Dlibrary.m` unloads it, rebuilds it (`cpp\build.bat`) and puts the new one there |
+| MATLAB | no MEX, no thunk: `matlab/` holds `i3d.dll` and `mi3d.dll` and their prototypes `i3d_proto.m` and `mi3d_proto.m`; `write_I3D.m`, `read_I3D.m`, `write_MI3D.m` and `read_MI3D.m` load them themselves with `loadlibrary` (once) and call them with `calllib`. `buildI3Dlibrary.m` unloads both, rebuilds them (`cpp\build.bat`) and puts the new ones there |
 | Python | `tests/read_i3d.py` (an independent REFERENCE reader) and `tests/i3d_ctypes.py` (a thin ctypes wrapper of the DLL) |
 | bundled | verbatim, in `third_party/`: zlib 1.3.2, CharLS 2.4.5, lodepng 20261006, a subset of DCMTK 3.7.0 (each with its `ORIGIN.txt`) |
 
@@ -487,15 +487,19 @@ WHY jpegls for the 8/16-bit integers: MEASURED on real series (`bench/real_jpegl
 ### 9.1 `write_I3D` (MATLAB)
 
 ```
-write_I3D( S , fname )          S: ONE DICOMstack (or an @I3D with INFO.DICOMstack)
+write_I3D( S , fname )          S: ONE DICOMstack, an @I3D with INFO.DICOMstack, or a struct R like the one of read_I3D
 ```
 
-No options (decided 2026-11-03: the writer's API is the C one, and `write_I3D` drives it). What it writes:
+No options (decided 2026-11-03: the writer's API is the C one, and `write_I3D` drives it). A DICOMstack or an `@I3D` is first converted to a struct R (decided 2026-11-05), the one `read_I3D` returns (`X Y Z T SpatialTransform data thumbnail INFO`), and that R is written, so `write_I3D( read_I3D( f ) , g )` rewrites `f` (MEASURED: byte-identical on the 20 stacks of `exampleDICOMS`). What it writes:
 
-- the grids, `transform`, `data` and the thumbnail of `I.INFO.thumbnail` (grey or RGB);
-- the `info.*` of `commonINFO` ([section 7](#7-thumbnail-and-info)), visible when they are in its list `ATTS_VISIBLES` and in the hidden part otherwise; without `Filename` (an absolute path) nor the series' own attributes (they go to `series.*`); an attribute that would need `uneval` with 200 elements or more is skipped;
-- `involvedSeries`, `series.*` and `planes.*` (with `planes.Filename = "$DICOMDIR$/..."`, `$DICOMDIR$` being the common folder of the stack, in the hidden part);
+- the grids, `transform`, `data` and the thumbnail (`R.thumbnail`, optional; from a DICOMstack, `I.INFO.thumbnail`; grey or RGB);
+- a comment at the end of the first line, `NNN.description (plane)  [ I x J x K x T x C ]`: the smallest non-zero `series.SeriesNumber`, the first non-empty `series.SeriesDescription` and `INFO.PlaneName` (left out when R has none);
+- `involvedSeries` (one row per series, also when R gives a single char) and then the other `info.*` of `R.INFO` in their order: numbers (a vector of fewer than 20, all finite) as numbers, a char as a text, a cell of char as one row per text, other numbers by `uneval` (skipped with 200 elements or more), and a struct or a cell (a DICOM sequence, a person name) by `uneval` when it takes less than 10 kB in memory, otherwise skipped with a warning. Visible when they are in its list `ATTS_VISIBLES` (and `involvedSeries`, `series.*`, `planes.*`), in the hidden part otherwise. Control characters in a text become ` | ` (the DLL refuses them);
+- from a DICOMstack, `R.INFO` holds `PlaneName`, the attributes of `commonINFO` ([section 7](#7-thumbnail-and-info)) without `Filename` (an absolute path) — the series' own attributes (`SeriesNumber`, `SeriesDescription`, ...) included when common, as well as in `series.*` —, `involvedSeries`, and `series.*` and `planes.*` as `[nK nT]` arrays with their `planeIdx`, `{'data(:,:,k,t)'}` (what `read_I3D` gives back too);
+- at the end, `series.SeriesNumber/SeriesDescription/SeriesInstanceUID` and `planes.Filename/MediaStorageSOPInstanceUID`, those that R has, one row per plane, each with its `planeIdx` as comment (none when R has no `planeIdx`); `planes.Filename` takes absolute paths and is written `"$DICOMDIR$/..."`, `$DICOMDIR$` (in the hidden part) being the common folder of all of them; a plane without DICOM is `""`, and with no common folder (two drives) the paths are written as they are;
 - every `$` of an `info.*` string as `$$` (section 2).
+
+A part that cannot be written (`involvedSeries`, a row of `series.*` or `planes.*`, `planes.Filename`) is a warning `write_I3D:...` and the file goes out without it; a bad input is `write_I3D:input`.
 
 The options are those of the C writer, for any caller of `i3d.dll` (`i3d_set_option( w , name , value )`):
 
@@ -655,7 +659,7 @@ Found by the audit of 2026-10-13 (`AUDIT_2026-10-13.md`, which has the details).
 
 ## 14. The container `.mi3d` (decided 2026-10-24)
 
-**Implemented** (2026-10-24): `i3d::Container` and the C API (`mi3d.dll`), the Python reference reader. The MATLAB functions (`write_MI3D`, `append_MI3D`, `remove_MI3D`, `read_MI3D`) were removed on 2026-11-04 with the rest of the MATLAB layer; what this section says about them is how they behaved. One file that holds several `.i3d` files (the series of a study, say), each byte for byte as it was written, so that any one of them can be opened without reading the others.
+**Implemented** (2026-10-24): `i3d::Container` and the C API (`mi3d.dll`), the Python reference reader. The MATLAB functions (`write_MI3D`, `append_MI3D`, `remove_MI3D`, `read_MI3D`) were removed on 2026-11-04 with the rest of the MATLAB layer; what this section says about them is how they behaved. Since 2026-11-06 `write_MI3D` writes a container from memory again, and `read_MI3D` reads it (section 14.6). One file that holds several `.i3d` files (the series of a study, say), each byte for byte as it was written, so that any one of them can be opened without reading the others.
 
 ```
 MI3D  # write_MI3D 2026-10-24, 9 stacks
@@ -722,7 +726,7 @@ The header is at the start, so a header that grew would move the whole binary se
 
 | | list | open member n |
 |---|---|---|
-| MATLAB | none since 2026-11-04 (it was `read_MI3D`); `mi3d.dll` can be called with `calllib` like `i3d.dll` | — |
+| MATLAB | `Rs = read_MI3D( f )` and `write_MI3D` (section 14.6), with `calllib` on `mi3d.dll` and `i3d.dll` | — |
 | C | `mi3d.dll` (`mi3d_c.h`): `mi3d_open` / `mi3d_count` / `mi3d_present` / `mi3d_range` / `mi3d_tag` / `mi3d_entry_*` / `mi3d_header` (`i3d::Container` in C++) | `mi3d_range(m, n, &offset, &length)`, then `i3d_open_window(path, offset, length, nvars, names, values)` of `i3d.dll` → an `i3d_file`, as `i3d_open` |
 | Python | `read_mi3d(path)` (`tests/read_i3d.py`), `MI3DFile` (`tests/i3d_ctypes.py`, over `mi3d.dll`) | `read_mi3d(path, n)` → as `read_i3d`, `None` for a hole |
 
@@ -731,6 +735,28 @@ A member is read through its WINDOW of the file: the C++ core opens the containe
 Errors: `badMagic` (not `MI3D`), `badSubscript`, `badIndex`, `missingMember`, and those of the member itself.
 
 MEASURED: `tests/check_mi3d.py` (both readers on hand-made containers: text, `<hidden>` and I3Db members, holes, `<missing>`, lines in any order, `@a+n`, `@a:EOF`, anything between members, crc, CRLF, a `<hidden>` part holding a member line, an empty container; and bad: the magic, every bad subscript, a repeated n, other descriptors, past the end, a member that is a `.mi3d`, a window that cuts the member's header or its binary, a bad crc; a Lazy member resolved from the container's folder) and `tests/check_mi3d.m` (the four MATLAB functions: members byte for byte, the summary, append and remove in place with the binary untouched, 12 members appended one by one through a full rewrite, compaction, `'Renumber'`, `lazyFolder`; and every container written, read by the DLL and by Python).
+
+### 14.6 Writing from memory (decided 2026-11-06)
+
+A container is written WITHOUT any intermediate `.i3d` on disk (the members of a study carry patient data: a temporary file is a copy that can be left behind). `mi3d.dll` has a writer with the API of the `.i3d` writer (`i3d_c.h`, section 9), each function `mi3d_*` instead of `i3d_*`, acting on the member in progress:
+
+```
+m = mi3d_new()
+mi3d_add_stack( m , tag )            member 1 begins (tag: the comment of its line i3d(1))
+mi3d_set_data / mi3d_set_Xgrid ... / mi3d_add_info_* / mi3d_add_comment / mi3d_set_thumbnail / mi3d_set_option / mi3d_set_variable ...
+mi3d_add_stack( m , tag )            member 1 is encoded IN MEMORY, its data freed; member 2 begins
+mi3d_add_hole( m )                   a number without member
+mi3d_write( m , path )               the container, all or nothing
+mi3d_free( m )
+```
+
+A member is encoded exactly as `i3d_write` would write it (the same `i3d::Writer`, `Writer::encode`), and its header is read from memory (`i3d::File` over bytes) for the summary and its dimensions. Container options, `mi3d_set_option` at any time: `Comment`, `Reserve`, `LazyKeep`; the others are the member's. The result is the same `.mi3d` as writing every member with `i3d_write` and putting them together with `mi3d_write_files` (the by-path writer, formerly `mi3d_write`) with the same tags. In memory there are only the members already compressed, and the stack being written.
+
+MATLAB: `write_MI3D( DS(1:10) , fname )`, `write_MI3D( { R1 , R2 } , fname )`, `write_MI3D( { I1 , I2 } , fname )` (a cell can mix them), `'Comment'`. Each member goes through `write_I3D( S , callmi3d )`: the same conversion to R and the same calls as a `.i3d`, on the writer of `mi3d.dll`; its tag is `NNN.description (plane)`, as the first comment of its header. `mi3d_write_files` and `mi3d_append` take 7 and 8 arguments and cannot be called by `calllib` without thunk; MATLAB does not use them.
+
+MEASURED (the 20 stacks of `exampleDICOMS`, as DICOMstacks, as Rs of `read_I3D`, as I3D, and a mixed cell of 4): `write_MI3D` gives a container byte-identical to the oracle (each stack written with `write_I3D` to a file, then `mi3d_write_files`), each member byte-identical to its `.i3d`, read back by `read_mi3d` (Python). The `.i3d` of `i3d.dll` are byte-identical before and after `Writer::encode`.
+
+Reading, the same way: `[ Rs , tags ] = read_MI3D( f , ... )` gives a cell, one R per member (`Rs{n}` is member n, a hole is `[]`), with the options of `read_I3D`. `mi3d.dll` gives each member's range (`mi3d_range`), and `read_I3D( f , 'Window' , [offset length] )` reads it IN PLACE inside the container (`i3d_open_window`), without copying it anywhere; `R.filename` is the container. MEASURED (the 20 stacks of `exampleDICOMS`, `'Data'` `all`, `first` and `none`): each R equal to `read_I3D` of the `.i3d` written by `write_I3D`, but for `filename`; a hole is `[]`; no new file while reading.
 
 ---
 
@@ -756,6 +782,10 @@ MEASURED: `tests/check_mi3d.py` (both readers on hand-made containers: text, `<h
 | 2026-11-05 | **the tests, back on the current API**: `check_roundtrip.m` rewritten over the DLL's writer (`calllib`), with RGB thumbnails, `info.*` read by the three readers (`$$`, a `$DICOMDIR$` path, a lone `$`), determinism, `i3d_rewrite` text ↔ I3Db and a path of 300 characters; `dll_selftest.m`, `check_num2str.m` (`i3d_num2str`) and `check_dicom.m` on `read_I3D`; the MATLAB tests of what is gone (`check_mi3d.m`, `try_*.m`, `convert_study.m`, `probe_jpll.m`) removed. The Python reference gives `I['info']` / `I['info_errors']` as the DLL (section 2: variables in `info.*`), `i3d_ctypes.py` binds `i3d_info_*`, C# gains `Info` / `InfoErrors`, and `tests/make_cs_refs.py` (the lost `make_refs.py`) makes the C# tests run again: 2 392 checks. Section 7: only `PatientName` is written as `Family^Given`; the other person names go by `uneval` |
 | 2026-11-05 | **variables are replaced in the strings of `info.*` too** (section 2), with the same rules as in a path: `$$` is a literal `$`, and a lone `$` or an undefined variable is `badVariable` for THAT info (the file still opens). `info.planes.Filename = "$DICOMDIR$/x.dcm"` reads as the real path, also with a `$DICOMDIR$` given at open. `write_I3D` writes every `$` of an info string as `$$`. Files written before with a `$` in an info string read that info as an error. The reader's C API gains `i3d_info_count/key/type/length/numbers/text` (type `numbers`, `text`, `other` or `error`), so a caller no longer parses `i3d_entry_value`. MEASURED (the 626 info strings of `exampleDICOMS` against an independent decoder; synthetic `$$`, lone `$`, undefined variable, `i3d_open_vars`) |
 | 2026-11-05 | **MATLAB without thunk**: `matlab\` holds `i3d.dll` and `i3d_proto.m` only; the prototype calls the DLL with calltype `cdecl` (not documented by MathWorks for 64 bits; MEASURED on R2022a). calllib then takes at most 6 arguments, so `i3d_add_info_rows_numbers` loses `integer` (all-integer rows are written as integers) and `cpp\matlab_proto.m` fails the build if a function takes more. The reader's `i3d_grid_length/copy( f , axis , ... )` become `i3d_Xgrid_length( f )` / `i3d_Xgrid_copy( f , out , n )` and the same for Y Z T |
+| 2026-11-05 | **`write_I3D` also takes a struct R** like the one of `read_I3D` (section 9.1): a DICOMstack or an `@I3D` is first converted to an R, and the R is written; `planes.Filename` holds absolute paths and the writer puts them under `$DICOMDIR$`, the common folder of all of them. The info written from a DICOMstack is the same as before (MEASURED: the entries of the 20 stacks of `exampleDICOMS`), and `write_I3D( read_I3D( f ) , g )` gives `f` byte for byte; `PlaneName` goes to `INFO.PlaneName` (an info), and the first comment takes it from there |
+| 2026-11-06 | **`read_MI3D`** (section 14.6): a cell of Rs, one per member, each read in place by `read_I3D( f , 'Window' , [offset length] )` (`i3d_open_window`) from the range of `mi3d_range`; no DLL changes. MEASURED: equal to `read_I3D` of each `.i3d` on the 20 stacks of `exampleDICOMS` |
+| 2026-11-06 | **writing a `.mi3d` from memory** (section 14.6): `mi3d.dll` gains a writer with the API of the `.i3d` one (`mi3d_new`, `mi3d_add_stack`, `mi3d_set_*` / `mi3d_add_*` as `i3d_*` on the member in progress, `mi3d_add_hole`, `mi3d_write`); the by-path `mi3d_write` becomes `mi3d_write_files`. In C++, `Writer::encode` (the file in memory) and `File` over bytes. MATLAB: `write_MI3D` (DICOMstacks, Rs or I3D), through `write_I3D( S , callmi3d )`; `build.bat` copies `mi3d.dll` and its `mi3d_proto.m` (no thunk) to `matlab\`, and `buildI3Dlibrary` rebuilds both. MEASURED: byte-identical to writing each `.i3d` and joining them, for the 20 stacks of `exampleDICOMS` as DICOMstacks, Rs and I3D |
+| 2026-11-06 | **`write_I3D` audited** (section 9.1): a struct or a cell (a DICOM sequence, a person name) is written by `uneval` again when it takes less than 10 kB; control characters in every text become ` | `; `involvedSeries` with one series and `series.*` / `planes.*` without `planeIdx` are written (they were lost without a word when rewriting a `read_I3D`); a plane without DICOM is `""`, not `"$DICOMDIR$"`; an R without `PlaneName` writes. `read_I3D` gives `series.planeIdx` / `planes.planeIdx` and the texts of `series.*` / `planes.*` as a cell also with one plane. MEASURED: `write_I3D( read_I3D( f ) , g )` byte-identical on the 20 stacks of `exampleDICOMS`, and the same entries as the previous `write_I3D` plus `PlaneName` and the common `Series*` |
 | 2026-11-04 | **RGB thumbnails**: `thumbnail = <png uint8 {rows cols 3 frames}>`, ONE 8-bit RGB PNG with the frames side by side (sections 4, 7, 9); `i3d_set_thumbnail` takes uint8 `{rows cols 3 frames}` and the readers (C++, Python) give it back. Grey thumbnails are unchanged. MEASURED (`tests/dll_selftest.m` and a roundtrip of `{r c}`, `{r c 1 f}`, `{r c 3}`, `{r c 3 f}`) |
 | 2026-11-04 | **long paths on Windows**: the C++ core opens, renames and deletes a path of 200 characters or more through `\\?\` (absolute), so `MAX_PATH` (260, with the `.partNNNN` temporary of the atomic write) no longer cuts it. MEASURED (335 characters absolute, 254 relative) |
 | 2026-11-03 | **no version in the magic**: the first line is `I3D` (`MI3D` for the container), optionally with a comment; `I3D 0.1` and anything else after the magic is `badMagic`, so files written before are no longer read (section 1, open item 12) |

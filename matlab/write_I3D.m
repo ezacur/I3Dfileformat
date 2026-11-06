@@ -1,6 +1,30 @@
 function write_I3D( S , fname )
+%WRITE_I3D   escribe un .i3d con i3d.dll (calllib)
+%
+%   write_I3D( DS , fname )     un DICOMstack (una pila)
+%   write_I3D( I , fname )      un I3D con su DICOMstack en I.INFO.DICOMstack
+%   write_I3D( R , fname )      una struct como la de read_I3D:
+%                                 R.X R.Y R.Z R.T, R.SpatialTransform, R.data,
+%                                 R.thumbnail (opcional), R.INFO
+%
+% Un DICOMstack o un I3D se convierte primero en una R, y se escribe esa R:
+% write_I3D( read_I3D( f ) , g ) reescribe f.
+%
+% R.INFO: un numero o una fila de numeros, un char, o un cell de char (una
+% fila por texto); un struct anida (INFO.a.b es info.a.b). A la vista van
+% involvedSeries, series.*, planes.* y las de ATTS_VISIBLES; las demas, en la
+% parte oculta. series.* y planes.* con un valor por plano [nK nT] van al final,
+% una fila por plano; planes.Filename lleva rutas absolutas, que se escriben
+% relativas a $DICOMDIR$, la carpeta comun de todas.
+%
+% write_I3D( S , callmi3d ) es lo que usa write_MI3D: S, un miembro NUEVO de su
+% escritor (mi3d.dll), con las mismas llamadas, sin pasar por disco.
+%
+% See also read_I3D, write_MI3D.
 
 ATTS_VISIBLES = {...
+  'PlaneName' ;...
+  'SeriesNumber';'SeriesDescription';'SeriesInstanceUID';'SeriesDate';'SeriesTime';'xSeriesDatenum' ;...
   'PatientID';'AcquisitionContrast';'AcquisitionDate';'AcquisitionDateTime';...
   'AcquisitionDuration';'AcquisitionGroupLength';'AcquisitionMatrix';'AcquisitionNumber';...
   'AcquisitionTime';'AcquisitionType';'AcquisitionsInSeries';...
@@ -53,141 +77,244 @@ ATTS_VISIBLES = {...
   'xSegmentNumber';'xSeriesDatenum';'xStudyDatenum';'xZ'
   };
 
-  loadlibrary_();
-  
+  if isstruct( S ) && isscalar( S ) && isfield( S , 'data' )
+    R = S;                                                % una R, como la de read_I3D
+  else
+    R = toR_( S );                                        % un DICOMstack o un I3D
+  end
+
+  if isa( fname , 'function_handle' )                     % write_MI3D: un miembro nuevo de SU escritor
+    calli3d = fname;
+  else
+    loadI3Dlibrary();
+    i3dnew = calllib( 'i3d' , 'i3d_new' ); CLEAN = onCleanup( @() calllib( 'i3d' , 'i3d_free' , i3dnew ) );
+    calli3d = @(api,varargin) chk_( calllib( 'i3d' , ['i3d_',api] , i3dnew , varargin{:} ) , i3dnew , api );   % un rc ~= 0: error (add_*: aviso)
+  end
+  dollar  = @(s) strrep( s , '$' , '$$' );   % un texto de info.*: el lector sustituye $VARIABLES$, y un $ literal es $$ (SPEC 2)
+  clean   = @(s) regexprep( s , '[\x00-\x1F\x7F]+' , ' | ' );   % la DLL no acepta caracteres de control en un texto
+
+  % el comentario de cabecera: NNN.descripcion (plano)  [ I x J x K x T x C ]
+  szData = size( R.data );  szData(end+1:5) = 1;
+  sn = NaN; try, v = R.INFO.series.SeriesNumber(:); v = v( isfinite( v ) & v ~= 0 ); if ~isempty( v ), sn = min( v ); end; end   % sin los 0 de un plano vacio
+  sd = 'unknown_SeriesDescription'; try, v = cellstr( R.INFO.series.SeriesDescription ); v = v( ~cellfun( 'isempty' , v ) ); if ~isempty( v ), sd = v{1}; end; end
+  pn = ''; try, pn = [ ' (' , R.INFO.PlaneName , ')' ]; end                % una R sin PlaneName: sin el
+  if isa( fname , 'function_handle' )
+    calli3d( 'add_stack' ,   sprintf( '%03d.%s%s' , sn , clean( sd ) , clean( pn ) ) );   % la etiqueta del miembro: lo mismo que el comentario
+  end
+  calli3d( 'add_comment' ,   sprintf( '\b%03d.%s%s  [ %s ]' , sn , clean( sd ) , clean( pn ) , strjoin( arrayfun(@num2str,szData,'un',0) , ' x ' ) ) );
+
+  calli3d( 'set_Xgrid' ,     double( R.X ) , numel( R.X ) );
+  calli3d( 'set_Ygrid' ,     double( R.Y ) , numel( R.Y ) );
+  calli3d( 'set_Zgrid' ,     double( R.Z ) , numel( R.Z ) );
+  calli3d( 'set_Tgrid' ,     double( R.T ) , numel( R.T ) );
+  calli3d( 'set_transform' , reshape( double( R.SpatialTransform ).' , 1 , [] ) );   % POR FILAS
+  calli3d( 'set_data' ,      R.data , class( R.data ) , ndims( R.data ) , size( R.data ) );
+  if isfield( R , 'thumbnail' ) && ~isempty( R.thumbnail )
+  calli3d( 'set_thumbnail' , R.thumbnail , class( R.thumbnail ) , ndims( R.thumbnail ) , size( R.thumbnail ) );
+  end
+
+  if isfield( R.INFO , 'involvedSeries' ), try
+  is = R.INFO.involvedSeries; R.INFO = rmfields( R.INFO , 'involvedSeries' );
+  if ischar( is ), is = cellstr( is ); end                                 % una sola serie: read_I3D da un char
+  is = tidyColumns( is , 'Ditto' , '~' );
+  calli3d( 'add_info_rows_text' , 'involvedSeries' , numel( is ) , dollar( clean( is(:) ) ) , repmat( {''} , numel(is) ,1) , true );
+  catch E, warning( 'write_I3D:involvedSeries' , 'info.involvedSeries not written: %s' , E.message );
+  end; end
+
+  % las infos, en su orden; series.* y planes.*, despues
+  for key = fieldnames( R.INFO ).', key = key{1};
+    if strcmp( key ,'series'), continue; end
+    if strcmp( key ,'planes'), continue; end
+    val = R.INFO.(key); R.INFO = rmfields( R.INFO , key );
+    if isnumeric( val ) && ~isempty( val ) && all( isnan( val(:) ) ), continue; end
+    humanReadable = ismember( key , ATTS_VISIBLES );
+
+    if 0
+    elseif iscellstr( val )
+      calli3d( 'add_info_rows_text' , key , numel( val ) , dollar( clean( val(:) ) ) , repmat( {''} , numel( val ) , 1 ) , humanReadable );
+    elseif ischar( val )
+      calli3d( 'add_info_text' , key , dollar( strtrim( clean( val ) ) ) , humanReadable , '' );
+    elseif ( isnumeric( val ) || islogical( val ) ) && ~isempty( val ) && isvector( val) && numel( val ) < 20 && all( isfinite( val(:) ) )
+      calli3d( 'add_info_numbers' , key , double( val(:).' ) , numel( val ) , humanReadable , '' );
+    elseif ( isnumeric( val ) || islogical( val ) ) && numel( val ) >= 200      % p.ej. los privados CSA de Siemens: uneval, caro y sin utilidad como texto
+      continue;
+    elseif isnumeric( val ) || islogical( val )
+      calli3d( 'add_info_text' , key , uneval(val) , humanReadable , '' );
+    elseif ( isstruct( val ) || iscell( val ) ) && bytes_( val ) < 1e4   % una secuencia DICOM, un nombre de persona...: uneval, si no es muy grande
+      try,     calli3d( 'add_info_text' , key , dollar( strtrim( clean( uneval( val ) ) ) ) , humanReadable , '' );
+      catch E, warning( 'write_I3D:skipped' , 'info.%s: uneval of a %s failed: %s' , key , class( val ) , E.message );
+      end
+    else, warning( 'write_I3D:skipped' , 'info.%s: a %s (%d bytes) is not written' , key , class( val ) , bytes_( val ) );
+    end
+  end
+
+  if isfield( R.INFO ,'planes' ) && isfield( R.INFO.planes ,'Filename' ), try   % sin nombres de fichero (un I3D, una R): no hay $DICOMDIR$
+    fn = R.INFO.planes.Filename;
+    fn = cellstr( fn );
+    DICOMDIR = commonFolder_( fn );
+    if ~isempty( DICOMDIR ), calli3d( 'set_variable' , 'DICOMDIR' , DICOMDIR ); end
+    for f = 1:numel(fn)
+      if     isempty( fn{f} ),     continue;                                % un plano sin DICOM: ''
+      elseif isempty( DICOMDIR ),  fn{f} = dollar( fn{f} );                  % sin carpeta comun (otra unidad): la ruta tal cual
+      else,                        fn{f} = [ '$DICOMDIR$' , dollar( fn{f}( numel( DICOMDIR )+1:end ) ) ];
+      end
+    end
+    R.INFO.planes.Filename = fn;
+  catch E, warning( 'write_I3D:Filename' , 'info.planes.Filename: %s' , E.message );
+  end; end
+
+  if isfield( R.INFO ,'series' )
+    Q = R.INFO.series;
+    calli3d( 'add_comment' , ' Series (planes: k fastest, then t)' );
+    if isfield( Q ,'SeriesNumber' ),      try, calli3d( 'add_info_rows_numbers' , 'series.SeriesNumber'      , numel( Q.SeriesNumber      ) ,                double( Q.SeriesNumber )      , planeIdx_( Q , numel( Q.SeriesNumber      ) ) , 1 ); catch E, warning( 'write_I3D:series' , 'info.series.SeriesNumber: %s'      , E.message ); end; end
+    if isfield( Q ,'SeriesDescription' ), try, calli3d( 'add_info_rows_text' ,    'series.SeriesDescription' , numel( Q.SeriesDescription ) , dollar( clean( Q.SeriesDescription ) ) , planeIdx_( Q , numel( Q.SeriesDescription ) ) , 1 ); catch E, warning( 'write_I3D:series' , 'info.series.SeriesDescription: %s' , E.message ); end; end
+    if isfield( Q ,'SeriesInstanceUID' ), try, calli3d( 'add_info_rows_text' ,    'series.SeriesInstanceUID' , numel( Q.SeriesInstanceUID ) , dollar( clean( Q.SeriesInstanceUID ) ) , planeIdx_( Q , numel( Q.SeriesInstanceUID ) ) , 1 ); catch E, warning( 'write_I3D:series' , 'info.series.SeriesInstanceUID: %s' , E.message ); end; end
+    R.INFO = rmfields( R.INFO , 'series' );
+  end
+  if isfield( R.INFO ,'planes' )
+    Q = R.INFO.planes;
+    calli3d( 'add_comment' , ' Planes (planes: k fastest, then t)' );
+    if isfield( Q ,'Filename' ),                   try, calli3d( 'add_info_rows_text' , 'planes.Filename'                   , numel( Q.Filename                   ) ,                Q.Filename                     , planeIdx_( Q , numel( Q.Filename                   ) ) , 1 ); catch E, warning( 'write_I3D:planes' , 'info.planes.Filename: %s'                   , E.message ); end; end   % ya con $DICOMDIR$ y sus $$
+    if isfield( Q ,'MediaStorageSOPInstanceUID' ), try, calli3d( 'add_info_rows_text' , 'planes.MediaStorageSOPInstanceUID' , numel( Q.MediaStorageSOPInstanceUID ) , dollar( clean( Q.MediaStorageSOPInstanceUID ) ) , planeIdx_( Q , numel( Q.MediaStorageSOPInstanceUID ) ) , 1 ); catch E, warning( 'write_I3D:planes' , 'info.planes.MediaStorageSOPInstanceUID: %s' , E.message ); end; end
+    R.INFO = rmfields( R.INFO , 'planes' );
+  end
+
+  if ~isa( fname , 'function_handle' ), calli3d( 'write' , fname ); end   % un miembro: lo escribe write_MI3D, con los demas
+  clearvars('CLEAN');
+end
+
+
+function R = toR_( S )
+%TOR_  un DICOMstack (o un I3D que lleva el suyo en INFO.DICOMstack) -> una R como
+% la de read_I3D: X Y Z T SpatialTransform data thumbnail INFO. En INFO, los
+% atributos comunes ya en su forma de escribir (fila de numeros o texto),
+% series.* y planes.* [nK nT], y planes.Filename con las rutas absolutas
   if isa( S ,'I3D') && isfield( S.INFO ,'DICOMstack')
     I = S;
     S = S.INFO.DICOMstack;
   elseif isa( S ,'DICOMstack') && numel( S ) == 1
     I = S.IMAGE;
   elseif isa( S ,'DICOMstack') && numel( S ) > 1
-    error( 'A single stack was expected.' );
+    error( 'write_I3D:input' , 'A single stack was expected.' );
   else
-    error( 'A single DICOMstack or an I3D was expected.');
+    error( 'write_I3D:input' , 'A single DICOMstack, an I3D or a struct like the one of read_I3D was expected.');
   end
+
+  R = struct();
+  R.X = double( I.X(:) );
+  R.Y = double( I.Y(:) );
+  R.Z = double( I.Z(:) );
+  R.T = double( I.T(:) );
+  R.SpatialTransform = double( I.SpatialTransform );
+  R.data = I.data;
+  if isfield( I.INFO , 'thumbnail' ), R.thumbnail = I.INFO.thumbnail; end
   
+  % la info comun
+  R.INFO = S.commonINFO;
+  R.INFO = rmfields( R.INFO ,'Filename');   % Filename: una ruta absoluta (las rutas van en planes.Filename)
+  R.INFO.PlaneName = S.PlaneName;
+  f = fieldnames( R.INFO );
+  w = fun( 'UID$'                   , f ); f = [ f( w) ; f(~w) ];
+  w = fun( 'Date$|Time$|Datenum$'   , f ); f = [ f( w) ; f(~w) ];
+  w = fun( '^DeviceSerialNumber'    , f ); f = [ f( w) ; f(~w) ];
+  w = fun( '^ManufacturerModelName' , f ); f = [ f( w) ; f(~w) ];
+  w = fun( '^Manufacturer'          , f ); f = [ f( w) ; f(~w) ];
+  w = fun( '^InstitutionName'       , f ); f = [ f( w) ; f(~w) ];
+  w = fun( '^AcquisitionTime'       , f ); f = [ f( w) ; f(~w) ];
+  w = fun( '^AcquisitionDate'       , f ); f = [ f( w) ; f(~w) ];
+  w = fun( '^PixelSpacing'          , f ); f = [ f( w) ; f(~w) ];
+  w = fun( '^ImageType'             , f ); f = [ f( w) ; f(~w) ];
+  w = fun( '^ProtocolName'          , f ); f = [ f( w) ; f(~w) ];
+  w = fun( '^SequenceName'          , f ); f = [ f( w) ; f(~w) ];
+  w = fun( '^BodyPartExamined'      , f ); f = [ f( w) ; f(~w) ];
+  w = fun( '^xSeries.*'             , f ); f = [ f( w) ; f(~w) ];
+  w = fun( '^Series.*'              , f ); f = [ f( w) ; f(~w) ];
+  w = fun( '^xStudy.*'              , f ); f = [ f( w) ; f(~w) ];
+  w = fun( '^Study.*'               , f ); f = [ f( w) ; f(~w) ];
+  w = fun( '^xPatient.*'            , f ); f = [ f( w) ; f(~w) ];
+  w = fun( '^Patient.*'             , f ); f = [ f( w) ; f(~w) ];
+  w = fun( '^PlaneName'             , f ); f = [ f( w) ; f(~w) ];
+  w = fun( '^Modality'              , f ); f = [ f( w) ; f(~w) ];
+  w = fun( '^Private_'              , f ); f = [ f(~w) ; f( w) ];
+  R.INFO = reorderstructure( R.INFO , f{:} );
 
-  i3dnew = calllib( 'i3d' , 'i3d_new' ); CLEAN = onCleanup( @() calllib( 'i3d' , 'i3d_free' , i3dnew ) );
-
-  calli3d = @(api,varargin) chk_( calllib( 'i3d' , ['i3d_',api] , i3dnew , varargin{:} ) , i3dnew , api );   % un rc ~= 0: error (add_*: aviso)
-  dollar  = @(s) strrep( s , '$' , '$$' );   % un texto de info.*: el lector sustituye $VARIABLES$, y un $ literal es $$ (SPEC 2)
-
-  calli3d( 'add_comment' ,   sprintf( '\b%03d.%s (%s)   [ %s ]' , S.SeriesNumber , S.SeriesDescription , S.PlaneName , strjoin( arrayfun(@num2str,size(S),'un',0) , ' x ' ) ) );
-
-  calli3d( 'set_Xgrid' ,     double( I.X ) , numel( I.X ) );
-  calli3d( 'set_Ygrid' ,     double( I.Y ) , numel( I.Y ) );
-  calli3d( 'set_Zgrid' ,     double( I.Z ) , numel( I.Z ) );
-  calli3d( 'set_Tgrid' ,     double( I.T ) , numel( I.T ) );
-  calli3d( 'set_transform' , reshape( double( I.SpatialTransform ).' , 1 , [] ) );   % POR FILAS
-  calli3d( 'set_data' ,      I.data , class( I.data ) , ndims( I.data ) , size( I.data ) );
-
-  if isfield( I.INFO , 'thumbnail' )
-    th = I.INFO.thumbnail;
-    calli3d( 'set_thumbnail' , th , class(th) , ndims( th ) , size( th ) );
-  end
-
-  if true %write the Involved Series
-    [~,is] = S.allInvolvedSeries;
-    is = tidyColumns( is , 'Ditto' , '~' );   % ASCII: el '·' por defecto es UTF-8 de dos bytes, y un editor que no lo detecta muestra 'Â·'
-    calli3d( 'add_info_rows_text' ,    'involvedSeries' , numel( is ) , dollar( is ) , repmat( {''} , numel(is) ,1) , 1 );
-  end
-
-  if true %write the common info
+  % las series involucradas
+  [~,R.INFO.involvedSeries] = S.allInvolvedSeries;
+  
+  % plano a plano: la serie y el DICOM de cada uno
+  try
     C = S.commonINFO;
-    C = rmfields( C , 'SeriesNumber','SeriesDescription','SeriesInstanceUID','SeriesDate','SeriesTime','xSeriesDatenum','Filename');   % Filename: una ruta absoluta (las rutas van en planes.Filename, relativas a $DICOMDIR$)
-    f = fieldnames( C );
-    w = fun( 'UID$'                   , f ); f = [ f( w) ; f(~w) ];
-    w = fun( 'Date$|Time$|Datenum$'   , f ); f = [ f( w) ; f(~w) ];
-    w = fun( '^DeviceSerialNumber'    , f ); f = [ f( w) ; f(~w) ];
-    w = fun( '^ManufacturerModelName' , f ); f = [ f( w) ; f(~w) ];
-    w = fun( '^Manufacturer'          , f ); f = [ f( w) ; f(~w) ];
-    w = fun( '^InstitutionName'       , f ); f = [ f( w) ; f(~w) ];
-    w = fun( '^AcquisitionTime'       , f ); f = [ f( w) ; f(~w) ];
-    w = fun( '^AcquisitionDate'       , f ); f = [ f( w) ; f(~w) ];
-    w = fun( '^PixelSpacing'          , f ); f = [ f( w) ; f(~w) ];
-    w = fun( '^ImageType'             , f ); f = [ f( w) ; f(~w) ];
-    w = fun( '^ProtocolName'          , f ); f = [ f( w) ; f(~w) ];
-    w = fun( '^SequenceName'          , f ); f = [ f( w) ; f(~w) ];
-    w = fun( '^BodyPartExamined'      , f ); f = [ f( w) ; f(~w) ];
-    w = fun( '^xStudy.*'              , f ); f = [ f( w) ; f(~w) ];
-    w = fun( '^Study.*'               , f ); f = [ f( w) ; f(~w) ];
-    w = fun( '^xPatient.*'            , f ); f = [ f( w) ; f(~w) ];
-    w = fun( '^Patient.*'             , f ); f = [ f( w) ; f(~w) ];
-    w = fun( '^Modality'              , f ); f = [ f( w) ; f(~w) ];
-    w = fun( '^Private_'              , f ); f = [ f(~w) ; f( w) ];
-    C = reorderstructure( C , f{:} );
-    for attr = fieldnames( C ).', attr = attr{1};
-      value = C.(attr); %C = rmfields( C ,attr);
-      if isnumeric( value ) && ~isempty( value ) && all( isnan( value(:) ) ), continue; end
-      humanReadable = ismember( attr , ATTS_VISIBLES );
-      if 0
-      elseif isnumeric( value ) && ~isempty( value ) && isvector( value) && numel( value ) < 20 && all( isfinite( value(:) ) )
-        calli3d( 'add_info_numbers' , attr , double( value(:).' ) , numel( value ) , humanReadable , '' );
-      elseif ischar( value )
-        calli3d( 'add_info_text' ,    attr , dollar( strtrim( regexprep( value , '[\x00-\x1F\x7F]+' , ' | ' ) ) ) , humanReadable , '' );
-      elseif numel( value ) >= 200      % p.ej. los privados CSA de Siemens: uneval, caro y sin utilidad como texto
-        continue;
-      else
-        calli3d( 'add_info_text' ,    attr , dollar( strtrim( uneval(value) ) ) , humanReadable , '' );
+    Suid  = repmat( {''} , size(S,3:4) );     % '' (no NaN ni []): un plano sin DICOM
+    Sn    = zeros( size(S,3:4) );
+    Sd    = repmat( {''} , size(S,3:4) );
+    Iuid  = repmat( {''} , size(S,3:4) );
+    Ifn   = repmat( {''} , size(S,3:4) );
+    planeIdx = repmat( {''} , size(S,3:4) );
+    for k = 1:size( S ,3)
+      for f = 1:size( S ,4)
+        planeIdx{k,f} = sprintf( 'data(:,:,%d,%d)' , k , f );
+        
+        Q = S.infos{k,f};  if ~isstruct( Q ), Q = struct(); end      % un plano sin DICOM: sin infos
+
+        if     isfield( C , 'SeriesInstanceUID' ),  Suid{k,f} = C.SeriesInstanceUID;
+        elseif isfield( Q , 'SeriesInstanceUID' ),  Suid{k,f} = Q.SeriesInstanceUID;
+        end
+
+        if     isfield( C , 'SeriesNumber' ),       Sn(k,f) = C.SeriesNumber;
+        elseif isfield( Q , 'SeriesNumber' ),       Sn(k,f) = Q.SeriesNumber;
+        end
+
+        if     isfield( C , 'SeriesDescription' ),  Sd{k,f} = C.SeriesDescription;
+        elseif isfield( Q , 'SeriesDescription' ),  Sd{k,f} = Q.SeriesDescription;
+        end
+
+        if     isfield( C , 'SOPInstanceUID' ),     Iuid{k,f} = C.SOPInstanceUID;
+        elseif isfield( Q , 'MediaStorageSOPInstanceUID' ), Iuid{k,f} = Q.MediaStorageSOPInstanceUID;
+        end
+
+        Ifn{k,f} = char( S.ffiles{k,f} );         % la ruta absoluta; el escritor la pone relativa a $DICOMDIR$
       end
     end
+    R.INFO.series = struct( 'SeriesNumber' , Sn , 'SeriesDescription' , {Sd} , 'SeriesInstanceUID' , {Suid} , 'planeIdx' , {planeIdx} );
+    R.INFO.planes = struct( 'Filename' , {Ifn} , 'MediaStorageSOPInstanceUID' , {Iuid} , 'planeIdx' , {planeIdx} );
+
+  catch LE
+    warning( 'write_I3D:planes' , 'info.series / info.planes not written: %s' , LE.message );
   end
 
-  if true, try  %write the plane-by-plane dicom reference
-      C = S.commonINFO;
-      Suid  = repmat( {''} , size(S,3:4) );     % '' (no NaN ni []): un plano sin DICOM
-      Sn    = zeros( size(S,3:4) );
-      Sd    = repmat( {''} , size(S,3:4) );
-      Iuid  = repmat( {''} , size(S,3:4) );
-      Ifn   = repmat( {''} , size(S,3:4) );
-      slice = cell( size(S,3:4) );
-
-      DICOMDIR = S.commonFolder;  DICOMDIR = DICOMDIR(1:end-1);   % la carpeta comun del stack, sin su filesep final; todos sus DICOM cuelgan de ella
-      calli3d( 'set_variable' , 'DICOMDIR' , DICOMDIR );
-      for k = 1:size( S ,3)
-        for f = 1:size( S ,4)
-          slice{k,f} = sprintf( 'data(:,:,%d,%d)' , k , f );
-          Q = S.infos{k,f};  if ~isstruct( Q ), Q = struct(); end      % un plano sin DICOM: sin infos
-
-          if     isfield( C , 'SeriesInstanceUID' ),  Suid{k,f} = C.SeriesInstanceUID;
-          elseif isfield( Q , 'SeriesInstanceUID' ),  Suid{k,f} = Q.SeriesInstanceUID;
-          end
-
-          if     isfield( C , 'SeriesNumber' ),       Sn(k,f) = C.SeriesNumber;
-          elseif isfield( Q , 'SeriesNumber' ),       Sn(k,f) = Q.SeriesNumber;
-          end
-
-          if     isfield( C , 'SeriesDescription' ),  Sd{k,f} = C.SeriesDescription;
-          elseif isfield( Q , 'SeriesDescription' ),  Sd{k,f} = Q.SeriesDescription;
-          end
-
-          if     isfield( C , 'SOPInstanceUID' ),     Iuid{k,f} = C.SOPInstanceUID;
-          elseif isfield( Q , 'MediaStorageSOPInstanceUID' ), Iuid{k,f} = Q.MediaStorageSOPInstanceUID;
-          end
-
-          fn = char( S.ffiles{k,f} );               % '$DICOMDIR$\sub\fichero'; un '$' de la ruta es '$$' (SPEC 2)
-          if ~isempty( fn ), Ifn{k,f} = [ '$DICOMDIR$' , strrep( fn( numel( DICOMDIR )+1:end ) , '$' , '$$' ) ]; end
-        end
-      end
-
-      calli3d( 'add_comment' ,           '-- Series and planes (planes: k fastest, then t)' );
-      calli3d( 'add_info_rows_numbers' , 'series.SeriesNumber'               , numel( Sn )   , Sn   , slice , 1 );   % enteros: se escriben como enteros
-      calli3d( 'add_info_rows_text' ,    'series.SeriesDescription'          , numel( Sd )   , dollar( Sd ) , slice , 1 );
-      calli3d( 'add_info_rows_text' ,    'series.SeriesInstanceUID'          , numel( Suid ) , dollar( Suid ) , slice , 1 );
-      calli3d( 'add_info_rows_text' ,    'planes.Filename'                   , numel( Ifn )  , Ifn      , slice , 1 );   % ya con $DICOMDIR$ y sus $$
-      calli3d( 'add_info_rows_text' ,    'planes.MediaStorageSOPInstanceUID' , numel( Iuid ) , dollar( Iuid ) , slice , 1 );
-    catch E
-      warning( 'write_I3D:planes' , 'info.series / info.planes not written: %s' , E.message );
-  end; end
-
-  calli3d( 'write' , fname );
-  clearvars('CLEAN');
- 
 end
 
 
-function loadlibrary_()
-%LOADLIBRARY_  i3d.dll de esta carpeta, una vez (lo mismo en read_I3D)
+function c = planeIdx_( Q , n )
+%PLANEIDX_  los comentarios de las n filas de series.* / planes.*: Q.planeIdx
+% ('data(:,:,k,t)'); vacios si Q no lo trae (o no son n)
+  if isfield( Q , 'planeIdx' ) && iscellstr( Q.planeIdx ) && numel( Q.planeIdx ) == n
+    c = Q.planeIdx(:);
+  else
+    c = repmat( {''} , n , 1 );
+  end
+end
+
+
+function b = bytes_( v )
+%BYTES_  lo que ocupa v en memoria
+  w = whos( 'v' );  b = w.bytes;
+end
+
+
+function d = commonFolder_( files )
+%COMMONFOLDER_  la carpeta comun de todos los ficheros (sin el separador final)
+  files = files( ~cellfun( 'isempty' , files ) );
+  if isempty( files ), d = ''; return; end
+  M = char( files(:) );
+  n = find( any( M ~= M(1,:) , 1 ) , 1 ) - 1;               % lo comun, caracter a caracter
+  if isempty( n ), n = size( M , 2 ); end
+  d = fileparts( M( 1 , 1:n ) );
+end
+
+
+function loadI3Dlibrary()
+  % loadI3Dlibrary  i3d.dll de esta carpeta, una vez (lo mismo en read_I3D)
   if libisloaded( 'i3d' ), return; end
   if ~strcmpi( feature( 'DefaultCharacterSet' ) , 'UTF-8' )
     error( 'write_I3D:charset' , 'MATLAB passes strings to the DLL in %s, and it takes UTF-8: set feature(''DefaultCharacterSet'',''UTF-8'').' , feature( 'DefaultCharacterSet' ) );

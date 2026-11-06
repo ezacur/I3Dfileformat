@@ -21,6 +21,12 @@ namespace mi3d {
 // uno nuevo (o encima del que haya), todo o nada
 void write( const std::string &f , const std::vector<std::string> &files , const std::vector<std::string> *tags ,
             int64_t reserve , const std::string &comment , bool lazykeep );
+// un miembro EN MEMORIA: los bytes de un .i3d entero (Writer::encode) y su
+// etiqueta; bytes nullptr es un HUECO
+struct Stack { std::shared_ptr<const std::vector<uint8_t>> bytes;  std::string tag; };
+// uno nuevo desde miembros en memoria, todo o nada: el mismo .mi3d que write()
+// con esos mismos bytes en ficheros y las mismas etiquetas, sin pasar por disco
+void write( const std::string &f , const std::vector<Stack> &stacks , int64_t reserve , const std::string &comment , bool lazykeep );
 // al final, sin reescribir el fichero si la cabecera cabe en su reserva; si f no
 // existe, lo crea. Devuelve el numero del primero que anade
 int  append( const std::string &f , const std::vector<std::string> &files , const std::vector<std::string> *tags ,

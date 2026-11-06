@@ -5,6 +5,9 @@ function R = read_I3D( fname , varargin )
 %   R = read_I3D( fname , 'Data' , 'first' )                       solo data(:,:,:,1,...)
 %   R = read_I3D( fname , 'Data' , 'none' )                        sin data: lo demas
 %   R = read_I3D( fname , 'Variables' , { 'DICOMDIR' , 'E:\x' } )  mandan sobre las del fichero
+%   R = read_I3D( fname , 'Window' , [ offset length ] )           los bytes [offset, offset+length)
+%                                                                   de fname como un .i3d: un miembro
+%                                                                   de un .mi3d (lo que usa read_MI3D)
 %
 %   R.filename            el fichero
 %   R.X R.Y R.Z R.T       las rejillas, columnas
@@ -13,20 +16,24 @@ function R = read_I3D( fname , varargin )
 %   R.thumbnail           uint8 {filas cols 1 frames} gris o {filas cols 3 frames} RGB; [] si no hay
 %   R.INFO                info.a.b = ... -> R.INFO.a.b, visibles y ocultas:
 %                           numeros -> fila double;  textos -> char (uno) o cell (varios)
-%                           planes.* y series.* con una fila por plano -> [nK nT]
+%                           planes.* y series.* con una fila por plano -> [nK nT] (los textos,
+%                           cell aunque sea un plano), y su planeIdx: {data(:,:,k,t)} [nK nT]
 %                           las $VARIABLES$ ($DICOMDIR$...) ya sustituidas
 %
 % Un info.* que no se puede leer (cita una variable que no existe, o un $ suelto
 % de un fichero antiguo) es un aviso, y no se devuelve.
 %
-% See also write_I3D.
+% See also write_I3D, read_MI3D.
 
-  [ VARS , DATA ] = options_( varargin{:} );
-  loadlibrary_();
+  [ VARS , DATA , WINDOW ] = options_( varargin{:} );
+  loadI3Dlibrary();
 
   % abrir
-  if isempty( VARS ), h = calllib( 'i3d' , 'i3d_open' , fname );
-  else,               h = calllib( 'i3d' , 'i3d_open_vars' , fname , int32( size( VARS , 2 ) ) , VARS(1,:) , VARS(2,:) );
+  if ~isempty( WINDOW )                    % un miembro de un .mi3d, leido en su sitio
+    if isempty( VARS ), V = { '' ; '' }; else, V = VARS; end              % con n = 0 no se miran
+    h = calllib( 'i3d' , 'i3d_open_window' , fname , int64( WINDOW(1) ) , int64( WINDOW(2) ) , int32( size( VARS , 2 ) ) , V(1,:) , V(2,:) );
+  elseif isempty( VARS ), h = calllib( 'i3d' , 'i3d_open' , fname );
+  else,                   h = calllib( 'i3d' , 'i3d_open_vars' , fname , int32( size( VARS , 2 ) ) , VARS(1,:) , VARS(2,:) );
   end
   if isNull( h )
     error( [ 'read_I3D:' calllib( 'i3d' , 'i3d_last_error_id' , [] ) ] , '%s' , calllib( 'i3d' , 'i3d_last_error' , [] ) );
@@ -91,20 +98,26 @@ function R = read_I3D( fname , varargin )
       case 'other',   v = calli3d( 'info_text' , i , 0 );
       case 'error',   warning( 'read_I3D:info' , 'info.%s not read: %s' , key , calli3d( 'last_error' ) );  continue;
     end
-    if startsWith( key , { 'planes.' , 'series.' } ) && n > 1 && n == nK*nT     % una fila por plano, k la mas rapida
+    if startsWith( key , { 'planes.' , 'series.' } ) && n == nK*nT              % una fila por plano, k la mas rapida
+      if ischar( v ), v = { v }; end                                           % tambien si hay un solo plano
       v = reshape( v , nK , nT );
     end
     p = strsplit( key , '.' );
     R.INFO = setfield( R.INFO , p{:} , v );
   end
 
+  % el plano de cada fila de series.* y planes.*, como lo pone write_I3D
+  planeIdx = arrayfun( @( k , t ) sprintf( 'data(:,:,%d,%d)' , k , t ) , repmat( ( 1:nK ).' , 1 , nT ) , repmat( 1:nT , nK , 1 ) , 'un' , 0 );
+  if isfield( R.INFO , 'series' ) && isstruct( R.INFO.series ), R.INFO.series.planeIdx = planeIdx; end
+  if isfield( R.INFO , 'planes' ) && isstruct( R.INFO.planes ), R.INFO.planes.planeIdx = planeIdx; end
+
   clearvars('CLEAN');
 end
 
 
-function [ VARS , DATA ] = options_( varargin )
-%OPTIONS_  'Variables' { nombre , valor , ... } -> 2 x n;  'Data' 'all' | 'first' | 'none'
-  VARS = cell( 2 , 0 );  DATA = 'all';
+function [ VARS , DATA , WINDOW ] = options_( varargin )
+%OPTIONS_  'Variables' { nombre , valor , ... } -> 2 x n;  'Data' 'all' | 'first' | 'none';  'Window' [ offset length ]
+  VARS = cell( 2 , 0 );  DATA = 'all';  WINDOW = [];
   if mod( numel( varargin ) , 2 ), error( 'read_I3D:options' , 'options go in pairs: ''Data'' , ''first''' ); end
   for o = 1:2:numel( varargin )
     switch lower( varargin{o} )
@@ -115,15 +128,18 @@ function [ VARS , DATA ] = options_( varargin )
         VARS(1,:) = regexprep( VARS(1,:) , '^\$(.*)\$$' , '$1' );   % 'DICOMDIR' o '$DICOMDIR$'
       case 'data'
         DATA = validatestring( varargin{o+1} , { 'all' , 'first' , 'none' } );
+      case 'window'
+        WINDOW = double( varargin{o+1} );
+        if numel( WINDOW ) ~= 2 || any( ~isfinite( WINDOW ) | WINDOW < 0 ), error( 'read_I3D:options' , '''Window'' is [ offset length ], both >= 0' ); end
       otherwise
-        error( 'read_I3D:options' , 'unknown option ''%s'' (Data, Variables)' , varargin{o} );
+        error( 'read_I3D:options' , 'unknown option ''%s'' (Data, Variables, Window)' , varargin{o} );
     end
   end
 end
 
 
-function loadlibrary_()
-%LOADLIBRARY_  i3d.dll de esta carpeta, una vez (lo mismo en write_I3D)
+function loadI3Dlibrary()
+  % loadI3Dlibrary  i3d.dll de esta carpeta, una vez (lo mismo en read_I3D)
   if libisloaded( 'i3d' ), return; end
   if ~strcmpi( feature( 'DefaultCharacterSet' ) , 'UTF-8' )
     error( 'read_I3D:charset' , 'MATLAB passes strings to the DLL in %s, and it takes UTF-8: set feature(''DefaultCharacterSet'',''UTF-8'').' , feature( 'DefaultCharacterSet' ) );

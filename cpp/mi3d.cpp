@@ -369,6 +369,29 @@ void write( const std::string &f , const std::vector<std::string> &files , const
   write_full_( f , L , (int)files.size() , reserve_( reserve ) , comment_( comment , "mi3d_write" , L.size() ) );
 }
 
+// lo mismo, con los miembros en memoria: cada uno se lee (su cabecera, para el
+// resumen y sus dimensiones) y se copia byte a byte, como el de un fichero
+void write( const std::string &f , const std::vector<Stack> &stacks , int64_t reserve , const std::string &comment , bool lazykeep ){
+  if( stacks.empty() ) throw Error( "badInput" , "no stacks: give the .i3d to put in the container" );
+  std::vector<M> L;
+  for( size_t i = 0 ; i < stacks.size() ; i++ ){
+    const Stack &s = stacks[i];
+    if( !s.bytes ) continue;                                     // un hueco
+    const std::string name = "stack " + i2s( (int64_t)i + 1 );
+    File S( s.bytes , name );                                    // un .mi3d da badMagic
+    std::string tag = s.tag;
+    for( char &c : tag ) if( (unsigned char)c < 32 ) c = ' ';
+    detail::Chunk src;  src.b = s.bytes.get();  src.len = (int64_t)s.bytes->size();
+    M m = member_( S , tag , src );
+    if( m.lazyrel && !lazykeep )
+      throw Error( "lazyFolder" , name + " is Lazy with RELATIVE paths, and in the container they would resolve from the folder of '" +
+                   f + "' (SPEC 14.2). Pass LazyKeep if that is what you want." );
+    m.n = (int)i + 1;
+    L.push_back( m );
+  }
+  write_full_( f , L , (int)stacks.size() , reserve_( reserve ) , comment_( comment , "mi3d_write" , L.size() ) );
+}
+
 void compact( const std::string &f , bool renumber , int64_t reserve , const std::string &comment ){
   int N = 0;  std::unique_ptr<Container> C;
   std::vector<M> L = load_( f , N , C );

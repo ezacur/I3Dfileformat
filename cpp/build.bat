@@ -3,7 +3,7 @@ rem build.bat -- compila el lector .i3d con MSVC 2022 (el mismo que usa mex):
 rem   i3d.dll + i3d.lib   la libreria, con la API en C (i3d_c.h)
 rem   i3dinfo.exe         la herramienta de linea de comandos, cliente de la DLL
 rem   mi3d.dll            el contenedor .mi3d, con la API en C (mi3d_c.h)
-rem y deja en matlab\ i3d.dll con su prototipo, sin thunk (calllib; matlab_proto.m)
+rem y deja en matlab\ i3d.dll y mi3d.dll con sus prototipos, sin thunk (calllib; matlab_proto.m)
 rem
 rem Dentro, compiladas desde third_party/ (copias verbatim, ver sus ORIGIN.txt):
 rem   zlib 1.3.2     inflate para <zlib> y crc32 para el 'crc' de un bloque
@@ -57,18 +57,23 @@ rem directorio: el nucleo se compila con otras opciones
 if not exist build\mi3d mkdir build\mi3d
 cl /nologo /std:c++17 /O2 /DNDEBUG /EHsc /W4 /fp:precise /MD /DMI3D_BUILD_DLL /DI3D_HAVE_ZLIB /DI3D_HAVE_CHARLS /DCHARLS_STATIC /DI3D_HAVE_LODEPNG /I%Z% /I%C%\include /I%P% /LD i3d.cpp i3d_write.cpp mi3d.cpp mi3d_c.cpp %ZOBJ% %COBJ% build\lodepng.obj /Fobuild\mi3d\ /Febuild\mi3d.dll || exit /b 1
 
-rem lo que usa MATLAB (calllib, sin cabecera ni compilador): en matlab\ la DLL,
-rem su prototipo i3d_proto.m (sin thunk), generado desde i3d_c.h (matlab_proto.m)
+rem lo que usa MATLAB (calllib, sin cabecera ni compilador): en matlab\ las DLL,
+rem i3d.dll y mi3d.dll, con sus prototipos i3d_proto.m y mi3d_proto.m (sin
+rem thunk), generados desde i3d_c.h y mi3d_c.h (matlab_proto.m)
 copy /y build\i3d.dll ..\matlab\ >nul || (
   echo build.bat: cannot copy i3d.dll to matlab\ -- a MATLAB has it loaded: unloadlibrary i3d
   exit /b 1
 )
-where matlab >nul 2>nul || (
-  echo build.bat: no matlab on the PATH -- matlab\i3d_proto.m NOT regenerated
+copy /y build\mi3d.dll ..\matlab\ >nul || (
+  echo build.bat: cannot copy mi3d.dll to matlab\ -- a MATLAB has it loaded: unloadlibrary mi3d
   exit /b 1
 )
-matlab -batch "cd('%~dp0'); matlab_proto('%~dp0..\matlab')" || (
-  echo build.bat: matlab_proto failed -- matlab\i3d_proto.m NOT regenerated
+where matlab >nul 2>nul || (
+  echo build.bat: no matlab on the PATH -- matlab\i3d_proto.m and mi3d_proto.m NOT regenerated
+  exit /b 1
+)
+matlab -batch "cd('%~dp0'); matlab_proto('%~dp0..\matlab'); matlab_proto('%~dp0..\matlab','mi3d')" || (
+  echo build.bat: matlab_proto failed -- matlab\i3d_proto.m / mi3d_proto.m NOT regenerated
   exit /b 1
 )
 echo build.bat: ok

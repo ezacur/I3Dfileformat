@@ -674,6 +674,26 @@ static std::string key_of_( const std::string &l ){
 
 // ====================================================================== write
 void Writer::write( const std::string &path ) const {
+  std::vector<std::vector<uint8_t>> P;
+  encode_( P );
+  std::vector<Chunk> ch;
+  for( const auto &p : P ) ch.push_back( { &p } );
+  detail::write_atomic( path , ch );
+}
+
+std::vector<uint8_t> Writer::encode() const {
+  std::vector<std::vector<uint8_t>> P;
+  encode_( P );
+  size_t n = 0;  for( const auto &p : P ) n += p.size();
+  std::vector<uint8_t> out;  out.reserve( n );
+  for( auto &p : P ){ out.insert( out.end() , p.begin() , p.end() );  std::vector<uint8_t>().swap( p ); }
+  return out;
+}
+
+// el fichero entero, en sus trozos: la cabecera, el bloque <hidden> (si lo hay) y
+// los bloques de data y aux, en el orden del fichero
+void Writer::encode_( std::vector<std::vector<uint8_t>> &pieces ) const {
+  pieces.clear();
   if( D_.empty() ) throw Error( "badData" , "no data: set_data first" );
   const Type T = type_;
   const int64_t es = (int64_t)type_size( T );
@@ -987,11 +1007,9 @@ void Writer::write( const std::string &path ) const {
   std::vector<uint8_t> head;
   if( hidden_ ) head = i3db_( text );                    // la MISMA cabecera, sin el '---'
   else { text += "---\n";  head.assign( text.begin() , text.end() ); }
-  std::vector<Chunk> ch;
-  ch.push_back( { &head } );
-  if( !z.empty() ) ch.push_back( { &z } );
-  for( const auto &b : B ) ch.push_back( { &b } );
-  detail::write_atomic( path , ch );
+  pieces.push_back( std::move( head ) );
+  if( !z.empty() ) pieces.push_back( std::move( z ) );
+  for( auto &b : B ) pieces.push_back( std::move( b ) );
 }
 
 // ====================================================================== rewrite

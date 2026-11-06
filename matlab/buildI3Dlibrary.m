@@ -1,77 +1,97 @@
 function buildI3Dlibrary()
-%BUILDI3DLIBRARY   recompila i3d.dll (cpp\build.bat) y la deja en esta carpeta
+%BUILDI3DLIBRARY   recompila i3d.dll y mi3d.dll (cpp\build.bat) y las deja en esta carpeta
 %
 %   buildI3Dlibrary
 %
 % En este orden, y parando en el primer fallo:
-%   1. unloadlibrary i3d, si esta cargada en ESTE MATLAB. Falla si quedan
-%      lib.pointer vivos (un i3dfile abierto...): el error dice cuales del
+%   1. unloadlibrary i3d y mi3d, si estan cargadas en ESTE MATLAB. Falla si
+%      quedan lib.pointer vivos (un i3dfile abierto...): el error dice cuales del
 %      workspace base son.
-%   2. borra la i3d.dll de esta carpeta. Si otro proceso la tiene cargada (otro
-%      MATLAB, un Python, un C#...), Windows no deja: el error dice que PID y que
-%      programa la tienen. Antes se guarda una copia, por si el paso 3 falla.
-%   3. cpp\build.bat: compila, copia build\i3d.dll aqui y regenera i3d_proto.m
-%      (matlab_proto.m, en otro MATLAB). Si falla, vuelve la i3d.dll de antes.
-%   4. comprueba que la i3d.dll de aqui es la recien compilada.
+%   2. borra la i3d.dll y la mi3d.dll de esta carpeta. Si otro proceso tiene una
+%      cargada (otro MATLAB, un Python, un C#...), Windows no deja: el error dice
+%      que PID y que programa la tienen. Antes se guarda una copia, por si el
+%      paso 3 falla.
+%   3. cpp\build.bat: compila, copia build\i3d.dll y build\mi3d.dll aqui y
+%      regenera i3d_proto.m y mi3d_proto.m (matlab_proto.m, en otro MATLAB). Si
+%      falla, vuelven las DLL de antes.
+%   4. comprueba que las de aqui son las recien compiladas.
 %
-% La libreria queda DESCARGADA: la siguiente llamada a write_I3D o read_I3D
-% carga la nueva.
+% Las librerias quedan DESCARGADAS: la siguiente llamada a write_I3D, read_I3D o
+% write_MI3D carga la nueva.
 %
-% See also write_I3D, read_I3D.
+% See also write_I3D, read_I3D, write_MI3D.
 
   here = fileparts( mfilename( 'fullpath' ) );
-  dll  = fullfile( here , 'i3d.dll' );
   bat  = fullfile( fileparts( here ) , 'cpp' , 'build.bat' );
-  new  = fullfile( fileparts( here ) , 'cpp' , 'build' , 'i3d.dll' );
   assert( isfile( bat ) , 'buildI3Dlibrary:noBuild' , 'buildI3Dlibrary: %s not found' , bat );
+  LIBS = { 'i3d' , 'mi3d' };
+  dll  = cellfun( @( L ) fullfile( here , [ L '.dll' ] ) , LIBS , 'un' , 0 );
+  new  = cellfun( @( L ) fullfile( fileparts( here ) , 'cpp' , 'build' , [ L '.dll' ] ) , LIBS , 'un' , 0 );
 
-  % 1. descargarla de este MATLAB
-  if libisloaded( 'i3d' )
+  % 1. descargarlas de este MATLAB
+  for q = 1:numel( LIBS )
+    if ~libisloaded( LIBS{q} ), continue; end
     try
-      unloadlibrary( 'i3d' );
+      unloadlibrary( LIBS{q} );
     catch E
       P = basePointers_();
       if isempty( P ), P = '  (none in the base workspace: look in functions, globals, onCleanup objects...)';
       else,            P = sprintf( '  %s\n' , P{:} );  P = P(1:end-1);
       end
-      error( 'buildI3Dlibrary:unload' , [ 'buildI3Dlibrary: cannot unload i3d from this MATLAB (%s)\n' ...
+      error( 'buildI3Dlibrary:unload' , [ 'buildI3Dlibrary: cannot unload %s from this MATLAB (%s)\n' ...
              'Variables still holding objects of the library (clear them, close their files):\n%s\n' ...
-             'Nothing was rebuilt.' ] , E.message , P );
+             'Nothing was rebuilt.' ] , LIBS{q} , E.message , P );
     end
   end
 
-  % 2. borrarla de aqui (si otro proceso la tiene cargada, Windows no deja)
-  bak = '';
-  if isfile( dll )
-    bak = [ tempname , '_i3d.dll' ];
-    copyfile( dll , bak );
+  % 2. borrarlas de aqui (si otro proceso tiene una cargada, Windows no deja)
+  bak = cell( size( LIBS ) );
+  for q = 1:numel( LIBS )
+    if ~isfile( dll{q} ), continue; end
+    bak{q} = [ tempname , '_' , LIBS{q} , '.dll' ];
+    copyfile( dll{q} , bak{q} );
     [ msg0 , id0 ] = lastwarn( '' );  ws = warning( 'off' , 'MATLAB:DELETE:Permission' );
-    delete( dll );
+    delete( dll{q} );
     warning( ws );  lastwarn( msg0 , id0 );
-    if isfile( dll )
-      delete( bak );
+    if isfile( dll{q} )
+      restore_( dll , bak );
       error( 'buildI3Dlibrary:locked' , [ 'buildI3Dlibrary: cannot delete %s: another process has it loaded.\n%s\n' ...
-             'Close it there (in a MATLAB: clear the handles, then unloadlibrary i3d). Nothing was rebuilt.' ] , dll , holders_( dll ) );
+             'Close it there (in a MATLAB: clear the handles, then unloadlibrary %s). Nothing was rebuilt.' ] , dll{q} , holders_( dll{q} ) , LIBS{q} );
     end
   end
 
-  % 3. compilar (build.bat copia build\i3d.dll aqui y regenera i3d_proto.m)
+  % 3. compilar (build.bat copia build\*.dll aqui y regenera los prototipos)
   fprintf( 'buildI3Dlibrary: %s\n' , bat );
   st = system( [ '"' , bat , '"' ] , '-echo' );
   if st ~= 0
-    if ~isempty( bak ) && ~isfile( dll ), movefile( bak , dll ); restored = ' The previous i3d.dll is back in place.';
-    else, restored = ''; end
-    error( 'buildI3Dlibrary:build' , 'buildI3Dlibrary: cpp\\build.bat failed (exit %d, its output is above).%s' , st , restored );
+    restored = restore_( dll , bak );
+    error( 'buildI3Dlibrary:build' , 'buildI3Dlibrary: cpp\build.bat failed (exit %d, its output is above).%s' , st , restored );
   end
-  if ~isempty( bak ) && isfile( bak ), delete( bak ); end
+  for q = 1:numel( LIBS ), if ~isempty( bak{q} ) && isfile( bak{q} ), delete( bak{q} ); end, end
 
-  % 4. la de aqui es la recien compilada
-  assert( isfile( dll ) && isequal( fileread_( dll ) , fileread_( new ) ) , 'buildI3Dlibrary:copy' , ...
-          'buildI3Dlibrary: %s is not the freshly built %s' , dll , new );
-  clear i3d_proto                                        % el prototipo nuevo, no el que MATLAB tenia en memoria
+  % 4. las de aqui son las recien compiladas
+  for q = 1:numel( LIBS )
+    assert( isfile( dll{q} ) && isequal( fileread_( dll{q} ) , fileread_( new{q} ) ) , 'buildI3Dlibrary:copy' , ...
+            'buildI3Dlibrary: %s is not the freshly built %s' , dll{q} , new{q} );
+  end
+  clear i3d_proto mi3d_proto                             % los prototipos nuevos, no los que MATLAB tenia en memoria
   rehash
-  d = dir( dll );
-  fprintf( 'buildI3Dlibrary: ok -- %s (%s, %d bytes); not loaded yet\n' , dll , d.date , d.bytes );
+  for q = 1:numel( LIBS )
+    d = dir( dll{q} );
+    fprintf( 'buildI3Dlibrary: ok -- %s (%s, %d bytes); not loaded yet\n' , dll{q} , d.date , d.bytes );
+  end
+end
+
+function txt = restore_( dll , bak )
+% las DLL de antes, en su sitio (las que se borraron)
+  txt = '';
+  for q = 1:numel( dll )
+    if ~isempty( bak{q} ) && isfile( bak{q} ) && ~isfile( dll{q} )
+      movefile( bak{q} , dll{q} );  txt = [ txt , ' ' , dll{q} , ' is back in place.' ];   %#ok<AGROW>
+    elseif ~isempty( bak{q} ) && isfile( bak{q} )
+      delete( bak{q} );
+    end
+  end
 end
 
 function P = basePointers_()

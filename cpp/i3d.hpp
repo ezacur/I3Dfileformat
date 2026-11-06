@@ -22,6 +22,7 @@
 #include <map>
 #include <stdexcept>
 #include <filesystem>
+#include <memory>
 
 namespace i3d {
 
@@ -82,6 +83,9 @@ public:
   // path se leen como si fueran el fichero entero. Las rutas relativas, respecto
   // al directorio de path (el del contenedor). Lo normal es Container::open
   File( const std::string &path , const std::map<std::string,std::string> &overrides , int64_t base , int64_t size );
+  // un .i3d EN MEMORIA (los bytes de Writer::encode, p.ej.): name solo para los
+  // mensajes, y las rutas relativas se resuelven desde su carpeta
+  File( std::shared_ptr<const std::vector<uint8_t>> bytes , const std::string &name , const std::map<std::string,std::string> &overrides = {} );
 
   // la ruta de un descriptor, con las $VARIABLES$ sustituidas y resuelta
   // respecto al directorio del .i3d
@@ -133,6 +137,7 @@ public:
 private:
   std::string path_ , header_;
   int64_t base_ = 0 , size_ = 0;                // la ventana del fichero: [base_, base_+size_)
+  std::shared_ptr<const std::vector<uint8_t>> mem_;   // en memoria: sus bytes (path_ es solo un nombre)
   bool hidden_ = false;
   std::map<std::string,std::string> vars_;      // "$NOMBRE$" -> valor (fichero + overrides)
   std::vector<uint8_t> read_dicom_( const Descriptor &d , size_t expected ) const;
@@ -253,6 +258,8 @@ public:
   // referencias (sin darla: la raiz comun de los .dcm)
   void set_variable( const std::string &name , const std::string &value );
   void write( const std::string &path ) const;
+  // el fichero entero EN MEMORIA, los mismos bytes que escribiria write()
+  std::vector<uint8_t> encode() const;
 
   struct Notes {                                 // los comentarios de add_comment de una pieza
     std::vector<std::string> pre;                // las lineas '# ...' de encima
@@ -268,6 +275,7 @@ public:
   };
 
 private:
+  void encode_( std::vector<std::vector<uint8_t>> &out ) const;
   std::vector<double> G_[4];  bool hasG_[4] = { false , false , false , false };
   double A_[16] = { 1,0,0,0 , 0,1,0,0 , 0,0,1,0 , 0,0,0,1 };
   std::vector<uint8_t> D_;  Type type_ = Type::none;  std::vector<int64_t> dims_;
