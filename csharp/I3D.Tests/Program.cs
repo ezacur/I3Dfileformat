@@ -167,6 +167,38 @@ static class Program
             try { f.ReadData( new ushort[23].AsSpan() ); Ok( false , "short buffer accepted" ); } catch( I3DException e ) { Ok( e.Id == "badBuffer" , "short buffer" ); }
         }
 
+        // el contenedor .mi3d: cada miembro, por MI3DFile.Member (i3d_open_window), con
+        // los datos de su referencia; el hueco, null; fuera de 1..N, badIndex
+        {
+            var cj = JsonDocument.Parse( File.ReadAllText( Path.Combine( specialDir , "container.json" ) ) ).RootElement;
+            var members = cj.GetProperty( "members" ).EnumerateArray().Select( e => e.ValueKind == JsonValueKind.Null ? null : e.GetString() ).ToArray();
+            using var c = MI3DFile.Open( Path.Combine( specialDir , "container.mi3d" ) );
+            Ok( c.Count == members.Length , $"mi3d: Count {c.Count}" );
+            for( int n = 1 ; n <= members.Length ; n++ )
+            {
+                string? tag = members[n - 1];
+                using var f = c.Member( n );
+                if( tag is null ) { Ok( f is null && !c.Present( n ) , $"mi3d: member {n} is a hole" ); continue; }
+                Ok( f is not null && c.Present( n ) , $"mi3d: member {n} present" );
+                if( f is null ) continue;
+                Ok( c.Tag( n ) == tag , $"mi3d: Tag({n}) = {c.Tag( n )}" );
+                var (data, _) = f.ReadData();
+                Ok( Bytes( data ).SequenceEqual( File.ReadAllBytes( Path.Combine( refDir , tag + ".data.bin" ) ) ) , $"mi3d: member {n} data" );
+                var (first, _) = f.ReadFirstFrame();
+                Ok( Bytes( first ).SequenceEqual( File.ReadAllBytes( Path.Combine( refDir , tag + ".first.bin" ) ) ) , $"mi3d: member {n} first frame" );
+                var (o, l) = c.Range( n );
+                using var w = I3DFile.OpenWindow( Path.Combine( specialDir , "container.mi3d" ) , o , l );
+                Ok( w.Header == f.Header , $"mi3d: OpenWindow({n}) == Member({n})" );
+            }
+            Ok( c.Entries.Count( e => e.Key == "i3d" ) == members.Count( m => m is not null ) , "mi3d: Entries i3d(n)" );
+            Ok( c.Header.StartsWith( "MI3D" ) , "mi3d: Header" );
+            try { c.Present( members.Length + 1 ); Ok( false , "mi3d: n > N accepted" ); }
+            catch( I3DException e ) { Ok( e.Id == "badIndex" , $"mi3d: n > N -> {e.Id}" ); }
+            try { using var x = MI3DFile.Open( Path.Combine( specialDir , "utf8.i3d" ) ); Ok( false , "mi3d: an .i3d accepted" ); }
+            catch( I3DException e ) { Ok( e.Id == "badMagic" , $"mi3d: an .i3d -> {e.Id}" ); Console.WriteLine( $"  mi3d: an .i3d -> [{e.Id}]" ); }
+            Console.WriteLine( $"  mi3d: {members.Length} members ({members.Count( m => m is null )} hole) read through MI3DFile" );
+        }
+
         Console.WriteLine( $"{nok} checks ok, {nbad} failed" );
         return nbad == 0 ? 0 : 1;
     }

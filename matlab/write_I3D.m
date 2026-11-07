@@ -1,4 +1,4 @@
-function write_I3D( S , fname )
+function R0 = write_I3D( S , fname )
 %WRITE_I3D   escribe un .i3d con i3d.dll (calllib)
 %
 %   write_I3D( DS , fname )     un DICOMstack (una pila)
@@ -19,6 +19,8 @@ function write_I3D( S , fname )
 %
 % write_I3D( S , callmi3d ) es lo que usa write_MI3D: S, un miembro NUEVO de su
 % escritor (mi3d.dll), con las mismas llamadas, sin pasar por disco.
+% R = write_I3D( ... ) da ademas la R que escribe (la de un DICOMstack o un I3D,
+% convertida). R = write_I3D( S ), sin fichero: solo la convierte, no escribe nada.
 %
 % See also read_I3D, write_MI3D.
 
@@ -82,6 +84,8 @@ ATTS_VISIBLES = {...
   else
     R = toR_( S );                                        % un DICOMstack o un I3D
   end
+  if nargout, R0 = R; end                                 % la R que se escribe (write_MI3D: sus notas)
+  if nargin < 2, return; end                              % R = write_I3D( S ): solo convertir
 
   if isa( fname , 'function_handle' )                     % write_MI3D: un miembro nuevo de SU escritor
     calli3d = fname;
@@ -95,7 +99,7 @@ ATTS_VISIBLES = {...
 
   % el comentario de cabecera: NNN.descripcion (plano)  [ I x J x K x T x C ]
   szData = size( R.data );  szData(end+1:5) = 1;
-  sn = NaN; try, v = R.INFO.series.SeriesNumber(:); v = v( isfinite( v ) & v ~= 0 ); if ~isempty( v ), sn = min( v ); end; end   % sin los 0 de un plano vacio
+  sn = NaN; try, v = R.INFO.series.SeriesNumber(:); if iscell( v ), v = str2double( v ); end; v = v( isfinite( v ) & v ~= 0 ); if ~isempty( v ), sn = min( v ); end; end   % sin los 0 de un plano vacio; texto si tenia huecos
   sd = 'unknown_SeriesDescription'; try, v = cellstr( R.INFO.series.SeriesDescription ); v = v( ~cellfun( 'isempty' , v ) ); if ~isempty( v ), sd = v{1}; end; end
   pn = ''; try, pn = [ ' (' , R.INFO.PlaneName , ')' ]; end                % una R sin PlaneName: sin el
   if isa( fname , 'function_handle' )
@@ -166,7 +170,10 @@ ATTS_VISIBLES = {...
   if isfield( R.INFO ,'series' )
     Q = R.INFO.series;
     calli3d( 'add_comment' , ' Series (planes: k fastest, then t)' );
-    if isfield( Q ,'SeriesNumber' ),      try, calli3d( 'add_info_rows_numbers' , 'series.SeriesNumber'      , numel( Q.SeriesNumber      ) ,                double( Q.SeriesNumber )      , planeIdx_( Q , numel( Q.SeriesNumber      ) ) , 1 ); catch E, warning( 'write_I3D:series' , 'info.series.SeriesNumber: %s'      , E.message ); end; end
+    if isfield( Q ,'SeriesNumber' ),      try, Q.SeriesNumber = seriesNumber_( Q.SeriesNumber );   % con huecos: texto, "" en los huecos
+      if isnumeric( Q.SeriesNumber ),     calli3d( 'add_info_rows_numbers' , 'series.SeriesNumber'      , numel( Q.SeriesNumber      ) ,                double( Q.SeriesNumber )      , planeIdx_( Q , numel( Q.SeriesNumber      ) ) , 1 );
+      elseif ~isempty( Q.SeriesNumber ),  calli3d( 'add_info_rows_text' ,    'series.SeriesNumber'      , numel( Q.SeriesNumber      ) , dollar( clean( Q.SeriesNumber ) )      , planeIdx_( Q , numel( Q.SeriesNumber      ) ) , 1 );
+      end;                                                                                  catch E, warning( 'write_I3D:series' , 'info.series.SeriesNumber: %s'      , E.message ); end; end
     if isfield( Q ,'SeriesDescription' ), try, calli3d( 'add_info_rows_text' ,    'series.SeriesDescription' , numel( Q.SeriesDescription ) , dollar( clean( Q.SeriesDescription ) ) , planeIdx_( Q , numel( Q.SeriesDescription ) ) , 1 ); catch E, warning( 'write_I3D:series' , 'info.series.SeriesDescription: %s' , E.message ); end; end
     if isfield( Q ,'SeriesInstanceUID' ), try, calli3d( 'add_info_rows_text' ,    'series.SeriesInstanceUID' , numel( Q.SeriesInstanceUID ) , dollar( clean( Q.SeriesInstanceUID ) ) , planeIdx_( Q , numel( Q.SeriesInstanceUID ) ) , 1 ); catch E, warning( 'write_I3D:series' , 'info.series.SeriesInstanceUID: %s' , E.message ); end; end
     R.INFO = rmfields( R.INFO , 'series' );
@@ -293,6 +300,22 @@ function c = planeIdx_( Q , n )
   else
     c = repmat( {''} , n , 1 );
   end
+end
+
+
+function v = seriesNumber_( v )
+%SERIESNUMBER_  series.SeriesNumber: numeros si son todos finitos; con huecos (un plano
+% sin SeriesNumber, NaN), texto con "" en los huecos (los numeros por i3d_num2str, como
+% los escribe la DLL); todos huecos: {} (no se escribe). Un cell (read_I3D de un
+% fichero con huecos) ya es texto
+  if iscell( v ), return; end
+  v = double( v );
+  if all( isfinite( v(:) ) ), return; end
+  if ~any( isfinite( v(:) ) ), v = {}; return; end
+  loadI3Dlibrary();                                  % write_MI3D no la carga
+  t = repmat( {''} , size( v ) );
+  for i = find( isfinite( v(:) ) ).', t{i} = calllib( 'i3d' , 'i3d_num2str' , v(i) ); end
+  v = t;
 end
 
 

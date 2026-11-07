@@ -8,3 +8,6 @@ tests/out_*/
 # autoguardado de MATLAB, cache de Python
 *.asv
 __pycache__/
+
+# el ejecutable de build_convert (MATLAB Compiler)
+dist/

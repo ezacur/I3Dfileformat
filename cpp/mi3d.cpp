@@ -28,7 +28,28 @@ struct M {
   std::vector<std::string> keys , vals;     // sus info.*, en orden, el valor crudo
   std::vector<bool> vis;                    // cada una, a la vista (y el fichero no es I3Db)
   bool lazyrel = false;                     // un <dicom> con ruta relativa
+  std::vector<std::string> note;            // su NOTA: lineas de comentario en la cabecera (SPEC 14.7)
 };
+
+// una nota: sus lineas (separadas por LF), sin otros caracteres de control, sin
+// blancos al final y sin lineas vacias
+static std::vector<std::string> note_lines_( const std::string &t ){
+  std::vector<std::string> L;
+  for( size_t a = 0 ; a <= t.size() ; ){
+    size_t b = t.find( '\n' , a );  if( b == std::string::npos ) b = t.size();
+    std::string l = t.substr( a , b - a );
+    for( char &c : l ) if( (unsigned char)c < 32 || c == 127 ) c = ' ';
+    const size_t e = l.find_last_not_of( ' ' );
+    if( e != std::string::npos ) L.push_back( l.substr( 0 , e + 1 ) );
+    a = b + 1;
+  }
+  return L;
+}
+static std::string note_head_( const std::string &t ){
+  std::string h = t;  for( char &c : h ) if( (unsigned char)c < 32 || c == 127 ) c = ' ';
+  const size_t a = h.find_first_not_of( ' ' ) , b = h.find_last_not_of( ' ' );
+  return a == std::string::npos ? std::string( "notes" ) : h.substr( a , b - a + 1 );
+}
 
 // un valor "..." sin las comillas ni los escapes; si no es una cadena, tal cual
 static std::string unq_( const std::string &v ){
@@ -133,13 +154,25 @@ static std::string tagsp_( const std::string &t ){ return t.empty() ? "" : t + "
 // la cabecera rellena hasta R bytes con la reserva: '#' espacios LF '---' LF.
 // R < 0: la justa, con la reserva minima. Vacia si no cabe en R
 static std::string text_( const std::vector<M> &L , int N , const std::string &comment , const std::vector<std::string> &V ,
-                          int64_t ha , int64_t hb , int64_t R ){
+                          int64_t ha , int64_t hb , int64_t R , const std::string &nhead ){
   std::vector<std::string> lines = { comment.empty() ? std::string( "MI3D" ) : "MI3D  # " + comment };
   std::vector<std::string> D;  size_t w = 0;
   for( const M &m : L ){ D.push_back( "i3d(" + i2s( m.n ) + ") = <i3d @" + i2s( m.at ) + ":" + i2s( m.at + m.src.len - 1 ) + ">" );  w = std::max( w , D.back().size() ); }
   for( size_t i = 0 ; i < L.size() ; i++ ) lines.push_back( D[i] + std::string( w - D[i].size() , ' ' ) + "  # " + tagsp_( L[i].tag ) + "[ " + L[i].dims + " ]" );
   int maxn = 0;  for( const M &m : L ) maxn = std::max( maxn , m.n );
   if( N > 0 && maxn < N ) lines.push_back( "i3d(" + i2s( N ) + ") = <missing>" );
+  // las NOTAS (SPEC 14.7): "# -- <titulo>", y de cada miembro con nota sus lineas,
+  // la primera tras su i3d(n), todas desde la misma columna
+  size_t wn = 0;
+  for( const M &m : L ) if( !m.note.empty() ) wn = std::max( wn , ( "i3d(" + i2s( m.n ) + ")" ).size() );
+  if( wn > 0 ){
+    lines.push_back( "" );  lines.push_back( "# -- " + note_head_( nhead ) );
+    for( const M &m : L ){
+      const std::string t = "i3d(" + i2s( m.n ) + ")";
+      for( size_t i = 0 ; i < m.note.size() ; i++ )
+        lines.push_back( "#  " + ( i == 0 ? t + std::string( wn - t.size() , ' ' ) : std::string( wn , ' ' ) ) + "  " + m.note[i] );
+    }
+  }
   if( ha >= 0 ){ lines.push_back( "" );  lines.push_back( "header = <hidden @" + i2s( ha ) + ":" + i2s( hb ) + ">  # the rest of the header" ); }
   if( !V.empty() ){ lines.push_back( "" );  lines.push_back( "# -- common to every stack" );  lines.insert( lines.end() , V.begin() , V.end() ); }
   std::string c;  for( const auto &l : lines ) c += l + "\n";
@@ -156,7 +189,7 @@ static std::string close_sep_( const M &m ){ return "\n++++++ # " + m.tag + "\n"
 // el .mi3d entero, todo o nada. El binario: cada miembro entre sus separadores y
 // el bloque <hidden> del resumen el ULTIMO. Los offsets son del binario, asi que la
 // cabecera no depende de su propia longitud: R = la justa + la reserva
-static void write_full_( const std::string &f , std::vector<M> L , int N , int64_t reserve , const std::string &comment ){
+static void write_full_( const std::string &f , std::vector<M> L , int N , int64_t reserve , const std::string &comment , const std::string &nhead ){
   std::vector<std::string> V , H;
   summary_( L , V , H );
   const std::vector<uint8_t> hb = hide_( H );
@@ -174,8 +207,8 @@ static void write_full_( const std::string &f , std::vector<M> L , int N , int64
   }
   int64_t ha = -1 , hz = -1;
   if( !hb.empty() ){ ha = pos;  hz = pos + (int64_t)hb.size() - 1;  detail::Chunk h;  h.b = &hb;  ch.push_back( h ); }
-  const std::string h0 = text_( L , N , comment , V , ha , hz , -1 );
-  const std::string head = text_( L , N , comment , V , ha , hz , (int64_t)h0.size() - 2 + reserve );
+  const std::string h0 = text_( L , N , comment , V , ha , hz , -1 , nhead );
+  const std::string head = text_( L , N , comment , V , ha , hz , (int64_t)h0.size() - 2 + reserve , nhead );
   const std::vector<uint8_t> hv( head.begin() , head.end() );
   ch[0].b = &hv;
   detail::write_atomic( f , ch );
@@ -245,11 +278,51 @@ std::map<int,std::string> tags( const Container &C ){
   return T;
 }
 
-// los miembros PRESENTES de un .mi3d, en orden de n; su src es su rango en f
-static std::vector<M> load_( const std::string &f , int &N , std::unique_ptr<Container> &C ){
+// las NOTAS de un .mi3d (SPEC 14.7): el bloque "# -- <titulo>" cuya linea siguiente
+// es "#  i3d(n)"; cada "#  i3d(n)" empieza la nota de n, y las lineas "#" que la
+// siguen (hasta una que no empieza por '#' o vacia) la continuan. El texto, desde
+// la columna en que lo escribe text_: tras el i3d(n) mas largo y dos blancos
+std::map<int,std::vector<std::string>> notes( const Container &C , std::string &head ){
+  std::map<int,std::vector<std::string>> NT;  head.clear();
+  std::vector<std::string> H;
+  const std::string &h = C.header();
+  for( size_t a = 0 ; a < h.size() ; ){
+    size_t b = h.find( '\n' , a );  if( b == std::string::npos ) b = h.size();
+    std::string l = h.substr( a , b - a );  if( !l.empty() && l.back() == '\r' ) l.pop_back();
+    H.push_back( l );  a = b + 1;
+  }
+  // n del "i3d(n)" en la columna 3 de l, y donde acaba; 0 si no
+  auto tok = []( const std::string &l , size_t &e ) -> int {
+    if( l.compare( 0 , 7 , "#  i3d(" ) != 0 ) return 0;
+    size_t q = 7;  while( q < l.size() && isdigit( (unsigned char)l[q] ) ) q++;
+    if( q == 7 || q - 7 > 9 || q >= l.size() || l[q] != ')' ) return 0;
+    e = q + 1;  return std::stoi( l.substr( 7 , q - 7 ) );
+  };
+  for( size_t i = 0 ; i + 1 < H.size() ; i++ ){
+    size_t e = 0;
+    if( H[i].compare( 0 , 5 , "# -- " ) != 0 || !tok( H[i+1] , e ) ) continue;
+    head = H[i].substr( 5 );
+    size_t j = i + 1 , col = 0;
+    for( ; j < H.size() && !H[j].empty() && H[j][0] == '#' ; j++ ) if( tok( H[j] , e ) ) col = std::max( col , e + 2 );
+    int n = 0;
+    for( size_t k = i + 1 ; k < j ; k++ ){
+      const int t = tok( H[k] , e );  if( t ) n = t;
+      std::string s = H[k].size() > col ? H[k].substr( col ) : "";
+      const size_t z = s.find_last_not_of( ' ' );
+      if( z != std::string::npos ) NT[n].push_back( s.substr( 0 , z + 1 ) );     // sin las vacias (la de la reserva)
+    }
+    break;
+  }
+  return NT;
+}
+
+// los miembros PRESENTES de un .mi3d, en orden de n; su src es su rango en f; y
+// el titulo de sus notas
+static std::vector<M> load_( const std::string &f , int &N , std::unique_ptr<Container> &C , std::string &nhead ){
   C.reset( new Container( f ) );
   N = C->count();
   const auto T = tags( *C );
+  const auto NT = notes( *C , nhead );
   std::vector<M> L;
   for( int n = 1 ; n <= N ; n++ ){
     if( !C->present( n ) ) continue;
@@ -260,6 +333,7 @@ static std::vector<M> load_( const std::string &f , int &N , std::unique_ptr<Con
     auto t = T.find( n );
     M m = member_( S , t == T.end() ? "" : t->second , src );
     m.n = n;
+    auto o = NT.find( n );  if( o != NT.end() ) m.note = o->second;
     L.push_back( m );
   }
   return L;
@@ -277,7 +351,7 @@ static std::string comment_( const std::string &c , const char *who , size_t k )
 // Si la cabecera nueva no cabe en R: el fichero entero, con una reserva nueva.
 // keephidden: si el <hidden> nuevo es IGUAL al de ahora, se queda donde esta
 static bool commit_( const std::string &f , const Container &C , std::vector<M> L , int N , int64_t reserve ,
-                     const std::string &comment , bool keephidden ){
+                     const std::string &comment , bool keephidden , const std::string &nhead ){
   const int64_t R = C.binary_start();
   std::error_code ec;
   int64_t pos = (int64_t)std::filesystem::file_size( u8p( f ) , ec ) - R;     // el final, desde el binario
@@ -316,10 +390,10 @@ static bool commit_( const std::string &f , const Container &C , std::vector<M> 
     }
     if( !same ){ ha = pos;  hz = pos + (int64_t)hb.size() - 1;  detail::Chunk h;  h.b = &hb;  app.push_back( h ); }
   }
-  const std::string head = text_( L , N , comment , V , ha , hz , R );
+  const std::string head = text_( L , N , comment , V , ha , hz , R , nhead );
   if( head.empty() ){
     for( M &m : L ) m.at = -1;
-    write_full_( f , L , N , reserve , comment );
+    write_full_( f , L , N , reserve , comment , nhead );
     return true;
   }
   // 1, 2: al final
@@ -366,12 +440,13 @@ void write( const std::string &f , const std::vector<std::string> &files , const
   if( files.empty() ) throw Error( "badInput" , "no files: give the .i3d files to put in the container" );
   std::vector<int> ns;  for( size_t i = 0 ; i < files.size() ; i++ ) ns.push_back( (int)i + 1 );
   std::vector<M> L = new_( f , files , ns , tg , lazykeep );
-  write_full_( f , L , (int)files.size() , reserve_( reserve ) , comment_( comment , "mi3d_write" , L.size() ) );
+  write_full_( f , L , (int)files.size() , reserve_( reserve ) , comment_( comment , "mi3d_write" , L.size() ) , "" );
 }
 
 // lo mismo, con los miembros en memoria: cada uno se lee (su cabecera, para el
 // resumen y sus dimensiones) y se copia byte a byte, como el de un fichero
-void write( const std::string &f , const std::vector<Stack> &stacks , int64_t reserve , const std::string &comment , bool lazykeep ){
+void write( const std::string &f , const std::vector<Stack> &stacks , int64_t reserve , const std::string &comment , bool lazykeep ,
+            const std::string &nhead ){
   if( stacks.empty() ) throw Error( "badInput" , "no stacks: give the .i3d to put in the container" );
   std::vector<M> L;
   for( size_t i = 0 ; i < stacks.size() ; i++ ){
@@ -387,17 +462,18 @@ void write( const std::string &f , const std::vector<Stack> &stacks , int64_t re
       throw Error( "lazyFolder" , name + " is Lazy with RELATIVE paths, and in the container they would resolve from the folder of '" +
                    f + "' (SPEC 14.2). Pass LazyKeep if that is what you want." );
     m.n = (int)i + 1;
+    m.note = note_lines_( s.note );
     L.push_back( m );
   }
-  write_full_( f , L , (int)stacks.size() , reserve_( reserve ) , comment_( comment , "mi3d_write" , L.size() ) );
+  write_full_( f , L , (int)stacks.size() , reserve_( reserve ) , comment_( comment , "mi3d_write" , L.size() ) , nhead );
 }
 
 void compact( const std::string &f , bool renumber , int64_t reserve , const std::string &comment ){
   int N = 0;  std::unique_ptr<Container> C;
-  std::vector<M> L = load_( f , N , C );
+  std::string nh;  std::vector<M> L = load_( f , N , C , nh );
   if( renumber ){ for( size_t i = 0 ; i < L.size() ; i++ ) L[i].n = (int)i + 1;  N = (int)L.size(); }
   C.reset();
-  write_full_( f , L , N , reserve_( reserve ) , comment_( comment , "mi3d_compact" , L.size() ) );
+  write_full_( f , L , N , reserve_( reserve ) , comment_( comment , "mi3d_compact" , L.size() ) , nh );
 }
 
 int append( const std::string &f , const std::vector<std::string> &files , const std::vector<std::string> *tg , int64_t reserve ,
@@ -410,23 +486,23 @@ int append( const std::string &f , const std::vector<std::string> &files , const
     return 1;
   }
   int N = 0;  std::unique_ptr<Container> C;
-  std::vector<M> L = load_( f , N , C );
+  std::string nh;  std::vector<M> L = load_( f , N , C , nh );
   std::vector<int> ns;  for( size_t i = 0 ; i < files.size() ; i++ ) ns.push_back( N + (int)i + 1 );
   std::vector<M> A = new_( f , files , ns , tg , lazykeep );
   L.insert( L.end() , A.begin() , A.end() );
-  commit_( f , *C , L , ns.back() , reserve_( reserve ) , comment_( comment , "mi3d_append" , L.size() ) , false );
+  commit_( f , *C , L , ns.back() , reserve_( reserve ) , comment_( comment , "mi3d_append" , L.size() ) , false , nh );
   return N + 1;
 }
 
 void remove( const std::string &f , const std::vector<int> &ns , const std::string &comment ){
   int N = 0;  std::unique_ptr<Container> C;
-  std::vector<M> L = load_( f , N , C );
+  std::string nh;  std::vector<M> L = load_( f , N , C , nh );
   if( ns.empty() ) throw Error( "badInput" , "no members to remove" );
   for( int n : ns )
     if( std::none_of( L.begin() , L.end() , [n]( const M &m ){ return m.n == n; } ) )
       throw Error( "badInput" , "member " + i2s( n ) + " is not in '" + f + "' (1.." + i2s( N ) + ", not the holes)" );
   L.erase( std::remove_if( L.begin() , L.end() , [&]( const M &m ){ return std::count( ns.begin() , ns.end() , m.n ) > 0; } ) , L.end() );
-  commit_( f , *C , L , N , 8192 , comment_( comment , "mi3d_remove" , L.size() ) , true );
+  commit_( f , *C , L , N , 8192 , comment_( comment , "mi3d_remove" , L.size() ) , true , nh );
 }
 
 } // namespace mi3d

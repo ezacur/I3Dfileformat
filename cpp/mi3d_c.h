@@ -80,6 +80,10 @@ MI3D_API int64_t     mi3d_binary_start( mi3d_file *m );
  * resultado es el mismo .mi3d que escribir cada miembro con i3d_write y juntarlos
  * con mi3d_write_files (con las mismas etiquetas), sin ningun fichero intermedio.
  * mi3d_add_hole: un HUECO (un numero sin miembro).
+ * mi3d_set_note( m , n , text ): la NOTA del miembro n (uno ya empezado; NULL o "":
+ * ninguna), lineas separadas por LF, en un bloque de comentarios bajo las lineas
+ * i3d(n) (SPEC 14.7); n = 0: el titulo del bloque (sin darlo, "notes"). La
+ * conservan mi3d_append, mi3d_remove y mi3d_compact.
  * Opciones del CONTENEDOR (mi3d_set_option, en cualquier momento): Comment (el de
  * la primera linea; sin darla, "mi3d_write <fecha>, K stacks"), Reserve (los bytes
  * de la reserva; 0: 8192), LazyKeep (1: acepta un miembro Lazy con rutas
@@ -107,6 +111,7 @@ MI3D_API int mi3d_set_thumbnail( mi3d_writer *m , const void *data , const char 
 MI3D_API int mi3d_set_plane_ref( mi3d_writer *m , int64_t k , int64_t t , const char *path );
 MI3D_API int mi3d_set_option( mi3d_writer *m , const char *name , const char *value );
 MI3D_API int mi3d_set_variable( mi3d_writer *m , const char *name , const char *value );
+MI3D_API int mi3d_set_note( mi3d_writer *m , int n , const char *text );
 MI3D_API int mi3d_write( mi3d_writer *m , const char *path );           /* todo o nada */
 
 /* ---- por ruta: con .i3d que ya estan en disco ---------------------------------- */

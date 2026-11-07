@@ -140,6 +140,7 @@ struct mi3d_writer {
   std::unique_ptr<i3d::Writer> W;               // el miembro en curso
   std::string tag;                              // su etiqueta
   int64_t reserve = 0;  std::string comment;  bool lazykeep = false;
+  std::map<int,std::string> notes;  std::string nhead;   // las notas de cada miembro (mi3d_set_note) y su titulo
   std::string err , err_id;
 };
 
@@ -236,12 +237,22 @@ int mi3d_set_option( mi3d_writer *m , const char *name , const char *value ){
     else cur_( m ).set_option( N , V );
   } );
 }
+int mi3d_set_note( mi3d_writer *m , int n , const char *text ){
+  GUARD( m , {
+    const int K = (int)m->S.size() + ( m->W ? 1 : 0 );
+    if( n == 0 ){ m->nhead = s_( text );  return 0; }
+    if( n < 0 || n > K ) throw i3d::Error( "badInput" , "mi3d_set_note: no member " + std::to_string( n ) + " (0 for the title, or 1.." + std::to_string( K ) + ")" );
+    if( n <= (int)m->S.size() && !m->S[n-1].bytes ) throw i3d::Error( "badInput" , "mi3d_set_note: member " + std::to_string( n ) + " is a hole" );
+    if( text && *text ) m->notes[n] = text;  else m->notes.erase( n );
+  } );
+}
 int mi3d_set_variable( mi3d_writer *m , const char *name , const char *value ){ GUARD( m , { cur_( m ).set_variable( s_( name ) , s_( value ) ); } ); }
 int mi3d_write( mi3d_writer *m , const char *path ){
   GUARD( m , {
     path_( path );
     flush_( m );
-    i3d::mi3d::write( path , m->S , m->reserve , m->comment , m->lazykeep );
+    for( auto &t : m->notes ) m->S[t.first-1].note = t.second;
+    i3d::mi3d::write( path , m->S , m->reserve , m->comment , m->lazykeep , m->nhead );
   } );
 }
 

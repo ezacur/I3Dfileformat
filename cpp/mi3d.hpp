@@ -22,11 +22,13 @@ namespace mi3d {
 void write( const std::string &f , const std::vector<std::string> &files , const std::vector<std::string> *tags ,
             int64_t reserve , const std::string &comment , bool lazykeep );
 // un miembro EN MEMORIA: los bytes de un .i3d entero (Writer::encode) y su
-// etiqueta; bytes nullptr es un HUECO
-struct Stack { std::shared_ptr<const std::vector<uint8_t>> bytes;  std::string tag; };
+// etiqueta; bytes nullptr es un HUECO. note: su NOTA (SPEC 14.7), lineas separadas por LF
+struct Stack { std::shared_ptr<const std::vector<uint8_t>> bytes;  std::string tag;  std::string note; };
 // uno nuevo desde miembros en memoria, todo o nada: el mismo .mi3d que write()
 // con esos mismos bytes en ficheros y las mismas etiquetas, sin pasar por disco
-void write( const std::string &f , const std::vector<Stack> &stacks , int64_t reserve , const std::string &comment , bool lazykeep );
+// nhead: el titulo del bloque de notas ("": "notes")
+void write( const std::string &f , const std::vector<Stack> &stacks , int64_t reserve , const std::string &comment , bool lazykeep ,
+            const std::string &nhead = "" );
 // al final, sin reescribir el fichero si la cabecera cabe en su reserva; si f no
 // existe, lo crea. Devuelve el numero del primero que anade
 int  append( const std::string &f , const std::vector<std::string> &files , const std::vector<std::string> *tags ,
@@ -38,6 +40,8 @@ void remove( const std::string &f , const std::vector<int> &ns , const std::stri
 void compact( const std::string &f , bool renumber , int64_t reserve , const std::string &comment );
 // las etiquetas: los comentarios de las lineas i3d(n), sin el [ dims ] del final
 std::map<int,std::string> tags( const Container &C );
+// las notas (SPEC 14.7): las lineas de cada miembro, y en head el titulo del bloque
+std::map<int,std::vector<std::string>> notes( const Container &C , std::string &head );
 
 } // namespace mi3d
 } // namespace i3d

@@ -18,6 +18,10 @@
     <None Include="..\..\cpp\build\i3d.dll" Link="i3d.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <!-- y la del contenedor .mi3d (MI3DFile) -->
+    <None Include="..\..\cpp\build\mi3d.dll" Link="mi3d.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

@@ -1,6 +1,7 @@
 // I3DFile.cs -- el lector .i3d (SPEC.md) para .NET 8, sobre la API en C de
 // cpp/i3d_c.h (i3d.dll). Es un envoltorio fino: toda la logica del formato esta
-// en la DLL, la misma que usan MATLAB (MEX) y Python (ctypes).
+// en la DLL, la misma que usan MATLAB (calllib) y Python (ctypes). El contenedor
+// .mi3d, en MI3DFile.cs (mi3d.dll).
 //
 //   using var f = I3DFile.Open( "serie.i3d" );
 //   double[] X = f.X;                      // las rejillas, exactas
@@ -49,6 +50,10 @@ internal static class Native
     // clasico no admite LPUTF8Str como ArraySubType (MarshalDirectiveException)
     public static extern I3DHandle i3d_open_vars( [MarshalAs( UnmanagedType.LPUTF8Str )] string path , int n ,
                                                   IntPtr[] names , IntPtr[] values );
+    // un miembro de un .mi3d: los bytes [offset, offset+length) de path
+    [DllImport( Lib , CallingConvention = CallingConvention.Cdecl )]
+    public static extern I3DHandle i3d_open_window( [MarshalAs( UnmanagedType.LPUTF8Str )] string path , long offset , long length ,
+                                                    int n , IntPtr[]? names , IntPtr[]? values );
     [DllImport( Lib , CallingConvention = CallingConvention.Cdecl )]
     public static extern void i3d_close( IntPtr f );
     [DllImport( Lib , CallingConvention = CallingConvention.Cdecl )]
@@ -124,34 +129,50 @@ public sealed class I3DFile : IDisposable
     {
         // la auditoria: un NULL a i3d_open tira el proceso; aqui nunca llega
         ArgumentNullException.ThrowIfNull( path );
-        I3DHandle hd;
-        if( variables is { Count: > 0 } )
+        return Opened( variables is { Count: > 0 }
+            ? WithVariables( variables , ( n , names , values ) => Native.i3d_open_vars( path , n , names , values ) )
+            : Native.i3d_open( path ) );
+    }
+
+    /// <summary>Los bytes [offset, offset+length) de <paramref name="path"/>, leidos como
+    /// un .i3d entero: un miembro de un .mi3d (su rango lo da <see cref="MI3DFile.Range"/>;
+    /// lo normal es <see cref="MI3DFile.Member"/>). Las rutas relativas, desde la carpeta de path.</summary>
+    public static I3DFile OpenWindow( string path , long offset , long length , IReadOnlyDictionary<string, string>? variables = null )
+    {
+        ArgumentNullException.ThrowIfNull( path );
+        return Opened( variables is { Count: > 0 }
+            ? WithVariables( variables , ( n , names , values ) => Native.i3d_open_window( path , offset , length , n , names , values ) )
+            : Native.i3d_open_window( path , offset , length , 0 , null , null ) );
+    }
+
+    // las variables, como dos arrays de punteros a UTF-8 (la DLL espera el nombre sin '$')
+    static I3DHandle WithVariables( IReadOnlyDictionary<string, string> variables , Func<int, IntPtr[], IntPtr[], I3DHandle> open )
+    {
+        var names = new IntPtr[variables.Count];
+        var values = new IntPtr[variables.Count];
+        try
         {
-            var names = new IntPtr[variables.Count];
-            var values = new IntPtr[variables.Count];
-            try
+            int k = 0;
+            foreach( var kv in variables )
             {
-                int k = 0;
-                foreach( var kv in variables )
-                {
-                    ArgumentNullException.ThrowIfNull( kv.Key );
-                    ArgumentNullException.ThrowIfNull( kv.Value );
-                    names[k] = Marshal.StringToCoTaskMemUTF8( kv.Key.Trim( '$' ) );   // la DLL espera el nombre sin '$'
-                    values[k] = Marshal.StringToCoTaskMemUTF8( kv.Value );
-                    k++;
-                }
-                hd = Native.i3d_open_vars( path , names.Length , names , values );
+                ArgumentNullException.ThrowIfNull( kv.Key );
+                ArgumentNullException.ThrowIfNull( kv.Value );
+                names[k] = Marshal.StringToCoTaskMemUTF8( kv.Key.Trim( '$' ) );
+                values[k] = Marshal.StringToCoTaskMemUTF8( kv.Value );
+                k++;
             }
-            finally
-            {
-                foreach( var p in names ) if( p != IntPtr.Zero ) Marshal.FreeCoTaskMem( p );
-                foreach( var p in values ) if( p != IntPtr.Zero ) Marshal.FreeCoTaskMem( p );
-            }
+            return open( names.Length , names , values );
         }
-        else
+        finally
         {
-            hd = Native.i3d_open( path );
+            foreach( var p in names ) if( p != IntPtr.Zero ) Marshal.FreeCoTaskMem( p );
+            foreach( var p in values ) if( p != IntPtr.Zero ) Marshal.FreeCoTaskMem( p );
         }
+    }
+
+    // el handle de un open, o la I3DException con el error de la DLL
+    static I3DFile Opened( I3DHandle hd )
+    {
         if( hd.IsInvalid )
         {
             hd.Dispose();

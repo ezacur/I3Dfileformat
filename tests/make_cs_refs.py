@@ -14,7 +14,8 @@
 #   <tag>.thumbnail.bin   el thumbnail, si hay
 # Y en <dir de especiales>, los ficheros de las pruebas especificas: utf8.i3d,
 # hidden.i3d (I3Db, por i3d_rewrite), png.i3d, vars.i3d (una ruta $DICOMDIR$ que
-# no existe), invalid_coverage.i3d, invalid_rawlen.i3d.
+# no existe), invalid_coverage.i3d, invalid_rawlen.i3d; y container.mi3d (tres
+# de las referencias y un hueco, por mi3d_write_files) con container.json.
 import sys, os, glob, json
 import ctypes as C
 import numpy as np
@@ -77,4 +78,16 @@ write('vars.i3d', ['I3D', 'X = 0.0 1.0', 'Y = 0.0 1.0', 'Z = 0.0', 'T = 0.0',
 write('invalid_coverage.i3d', G[:3] + ['Z = 0.0 1.0', 'T = 0.0', 'data(:,:,1,1) = <raw uint16 @0:11>'], np.zeros(6, '<u2').tobytes())
 # un raw con menos bytes de los que pide su forma: badBlock al leer
 write('invalid_rawlen.i3d', G + ['data(:,:,:,1) = <raw uint16 @0:45>'], d.tobytes()[:46])
+# un contenedor .mi3d (SPEC 14), por mi3d.dll: tres de las referencias y un hueco,
+# [ r1 , hueco , r2 , r3 ]; container.json dice que referencia es cada miembro
+refs = sorted(f for f in glob.glob(os.path.join(src, '*.i3d')) if not os.path.basename(f)[:-4].endswith(('_corrupt', '_crcbad')))
+pick = [refs[0], '', refs[len(refs) // 2], refs[-1]]
+M = i3d_ctypes._mlib()
+M.mi3d_write_files.argtypes = [C.c_char_p, C.c_int, C.POINTER(C.c_char_p), C.POINTER(C.c_char_p), C.c_int64, C.c_char_p, C.c_int]
+arr = (C.c_char_p * len(pick))(*[p.encode('utf-8') for p in pick])
+tags = (C.c_char_p * len(pick))(*[os.path.basename(p)[:-4].encode('utf-8') for p in pick])
+if M.mi3d_write_files(os.path.join(special, 'container.mi3d').encode('utf-8'), len(pick), arr, tags, 0, b'make_cs_refs', 0):
+    raise SystemExit('mi3d_write_files failed: ' + M.mi3d_last_error(None).decode())
+with open(os.path.join(special, 'container.json'), 'w', encoding='utf-8') as o:
+    json.dump({'members': [os.path.basename(p)[:-4] if p else None for p in pick]}, o)
 print(f'{n} references in {refdir}; specials in {special}')

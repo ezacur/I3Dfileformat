@@ -12,6 +12,15 @@ function write_MI3D( S , fname , varargin )
 % disco. El resultado es el mismo .mi3d que escribir cada uno con write_I3D y
 % juntarlos con mi3d_write_files, con las mismas etiquetas.
 %
+% En la cabecera del .mi3d, bajo las lineas i3d(n), una NOTA de cada miembro (SPEC
+% 14.7): sus series, de su involvedSeries, una por linea, numero, descripcion y hora
+% (y fecha si no son todas del mismo dia), alineadas, con '~' donde la descripcion
+% o la fecha repiten la de la linea de arriba del mismo miembro:
+%   # -- series of each stack: number, description, time
+%   #  i3d(1)   1  loc        10:02:11
+%   #  i3d(2)   5  SA cine    10:14:40
+%   #           6  ~          10:19:30
+%
 % El cell puede mezclar DICOMstacks, I3D y Rs. La etiqueta de cada miembro (el
 % comentario de su linea i3d(n)) es NNN.descripcion (plano), la del comentario
 % de su cabecera. En memoria quedan solo los miembros ya comprimidos (y la pila
@@ -44,11 +53,73 @@ function write_MI3D( S , fname , varargin )
   callmi3d = @(api,varargin) chk_( calllib( 'mi3d' , ['mi3d_',api] , mi3dnew , varargin{:} ) , mi3dnew , api );   % un rc ~= 0: error (add_*: aviso)
 
   if ~isempty( COMMENT ), callmi3d( 'set_option' , 'Comment' , COMMENT ); end
+  rows = cell( 1 , numel( S ) );
   for s = 1:numel( S )
-    write_I3D( S{s} , callmi3d );                         % mi3d_add_stack y las mismas llamadas que un .i3d
+    R = write_I3D( S{s} , callmi3d );                     % mi3d_add_stack y las mismas llamadas que un .i3d
+    rows{s} = series_( R );  clear R                      % sus series, para su nota
   end
+  [ head , notes ] = notes_( rows );                      % las notas: las series de cada miembro
+  callmi3d( 'set_note' , int32( 0 ) , head );
+  for s = 1:numel( S ), callmi3d( 'set_note' , int32( s ) , notes{s} ); end
   callmi3d( 'write' , fname );
   clearvars('CLEAN');
+end
+
+
+function Q = series_( R )
+%SERIES_  las series de una R: { numero , descripcion , fecha , hora }, una fila por
+% serie, de su info.involvedSeries (las filas de allInvolvedSeries: 'N.''desc''
+% fecha hora UID (n files)', con '~' donde repiten la de arriba si vienen de un
+% .i3d); sin el, de series.* (sin fecha ni hora)
+  Q = cell( 0 , 4 );
+  if isfield( R.INFO , 'involvedSeries' )
+    is = R.INFO.involvedSeries;  if ischar( is ), is = cellstr( is ); end
+    is = is(:);
+    for i = 2:numel( is )                                 % deshacer los '~': la columna de la de arriba
+      a = is{i};  b = is{i-1};  w = find( a == '~' );  w = w( w <= numel( b ) );
+      a( w ) = b( w );  is{i} = a;
+    end
+    for i = 1:numel( is )
+      t = regexp( is{i} , '^\s*(\S*?)\.''(.*)''\s+(\d{4}-\d{2}-\d{2})?\s*(\d{2}:\d{2}:\d{2})?' , 'tokens' , 'once' );
+      if isempty( t ), t = { strtrim( is{i} ) , '' , '' , '' }; end
+      Q( end+1 , : ) = t; %#ok<AGROW>
+    end
+  elseif isfield( R.INFO , 'series' ) && isfield( R.INFO.series , 'SeriesNumber' )
+    n = R.INFO.series.SeriesNumber(:);  if ~iscell( n ), n = arrayfun( @( x ) sprintf( '%g' , x ) , n , 'un' , 0 ); n( strcmp( n , 'NaN' ) ) = {''}; end
+    d = repmat( {''} , numel( n ) , 1 );
+    if isfield( R.INFO.series , 'SeriesDescription' ), d = cellstr( R.INFO.series.SeriesDescription(:) ); end
+    [ ~ , u ] = unique( strcat( n , char( 1 ) , d ) , 'stable' );
+    Q = [ n(u) , d(u) , repmat( {''} , numel( u ) , 2 ) ];
+  end
+end
+
+
+function [ head , notes ] = notes_( rows )
+%NOTES_  las notas del .mi3d: de cada miembro, una linea por serie, 'numero  descripcion
+% hora' (y la fecha si no todas son del mismo dia), alineadas en TODO el contenedor;
+% dentro de un miembro, '~' donde la descripcion o la fecha repiten la de arriba
+  for s = 1:numel( rows )                                 % sin caracteres de control; una descripcion larga, cortada
+    d = regexprep( rows{s}(:,2) , '[\x00-\x1F\x7F]+' , ' ' );
+    long = cellfun( 'length' , d ) > 40;  d( long ) = cellfun( @( x ) [ x(1:39) , '…' ] , d( long ) , 'un' , 0 );
+    rows{s}(:,2) = d;
+  end
+  A = vertcat( rows{:} );  if isempty( A ), A = cell( 0 , 4 ); end
+  withDate = numel( unique( A( ~cellfun( 'isempty' , A(:,3) ) , 3 ) ) ) > 1;
+  wn = max( [ 1 ; cellfun( 'length' , A(:,1) ) ] );  wd = max( [ 1 ; cellfun( 'length' , A(:,2) ) ] );
+  head = 'series of each stack: number, description, time';  if withDate, head = 'series of each stack: number, description, date and time'; end
+  notes = cell( 1 , numel( rows ) );
+  for s = 1:numel( rows )
+    Q = rows{s};  L = cell( size( Q , 1 ) , 1 );
+    for i = 1:size( Q , 1 )
+      d = Q{i,2};  f = Q{i,3};
+      if i > 1 && strcmp( d , Q{i-1,2} ), d = '~'; end
+      if i > 1 && strcmp( f , Q{i-1,3} ), f = '~'; end
+      if isempty( d ), d = '''''';  end
+      t = Q{i,4};  if withDate, t = strtrim( [ f , ' ' , t ] ); end
+      L{i} = sprintf( '%*s  %-*s  %s' , wn , Q{i,1} , wd , d , t );
+    end
+    notes{s} = strjoin( L , newline );
+  end
 end
 
 
